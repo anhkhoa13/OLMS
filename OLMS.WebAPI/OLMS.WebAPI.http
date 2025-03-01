@@ -1,6 +1,0 @@
-@OLMS.WebAPI_HostAddress = http://localhost:5191
-
-GET {{OLMS.WebAPI_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
