@@ -1,0 +1,84 @@
+@{
+    ViewData["Title"] = "Login & Register";
+}
+
+<div class="login-area bg-light py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 text-center">
+                <img src="/assets/images/login.jpg" alt="Login Image" class="img-fluid rounded">
+            </div>
+            <div class="col-lg-6">
+                <div class="login-content p-4 shadow rounded bg-white">
+                    <ul class="nav nav-pills mb-3 justify-content-center" id="auth-tabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab">Log in</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#register" type="button" role="tab">Register</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="auth-tabs-content">
+                        <!-- Login Form -->
+                        <div class="tab-pane fade show active" id="login" role="tabpanel">
+                            <h3 class="text-center fw-bold">Log in to your account</h3>
+                            <form>
+                                <div class="mb-3">
+                                    <input type="text" class="form-control" placeholder="Email" required>
+                                </div>
+                                <div class="mb-3 position-relative">
+                                    <input type="password" id="passwordInput" class="form-control" placeholder="Password" required>
+                                    @* <button type="button" class="btn btn-sm btn-outline-secondary position-absolute end-0 me-2" id="togglePassword"> *@
+                                        @* <i class="fa-regular fa-eye-slash"></i> *@
+                                    @* </button> *@
+                                </div>
+                                <div class="text-end mb-3">
+                                    <a href="#" class="text-decoration-none">Forgot your Password?</a>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100 py-2">Log in</button>
+                                <!--<p class="text-center mt-3">Or log in with</p>
+                                <div class="d-flex justify-content-center gap-2">
+                                    <button type="button" class="btn btn-outline-dark">
+                                        <i class="fa-brands fa-apple"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-dark">
+                                        <i class="fa-brands fa-github"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger">
+                                        <i class="fa-brands fa-google"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary">
+                                        <i class="fa-brands fa-facebook-f"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-info">
+                                        <i class="fa-brands fa-windows"></i>
+                                    </button>
+                                </div>-->
+                            </form>
+                        </div>
+                        
+                        <!-- Register Form -->
+                        <div class="tab-pane fade" id="register" role="tabpanel">
+                            <h3 class="text-center fw-bold">Create an account</h3>
+                            <form>
+                                <div class="mb-3">
+                                    <input type="text" class="form-control" placeholder="Full Name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="email" class="form-control" placeholder="Email" required>
+                                </div>
+                                <div class="mb-3 position-relative">
+                                    <input type="password" class="form-control" placeholder="Password" required>
+                                </div>
+                                <div class="mb-3 position-relative">
+                                    <input type="password" class="form-control" placeholder="Confirm Password" required>
+                                </div>
+                                <button type="submit" class="btn btn-success w-100 py-2">Register</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
