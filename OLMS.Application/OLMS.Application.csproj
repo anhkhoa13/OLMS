@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Feature\Course\" />
     <Folder Include="Feature\Student\" />
   </ItemGroup>
 
