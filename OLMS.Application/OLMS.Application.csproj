@@ -7,17 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Feature\Course\**" />
+    <Compile Remove="Feature\Student\**" />
+    <EmbeddedResource Remove="Feature\Course\**" />
+    <EmbeddedResource Remove="Feature\Student\**" />
+    <None Remove="Feature\Course\**" />
+    <None Remove="Feature\Student\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MediatR" Version="12.4.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\OLMS.Domain\OLMS.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Feature\Course\" />
-    <Folder Include="Feature\Student\" />
   </ItemGroup>
 
 </Project>
