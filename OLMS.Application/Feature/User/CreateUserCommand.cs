@@ -3,10 +3,10 @@ using OLMS.Domain.Entities;
 
 namespace OLMS.Application.Feature.User;
 
-public record CreateUserCommand(Guid Id, 
-                                string Name, 
+public sealed record CreateUserCommand(string Username,
+                                string Password,
+                                string FullName, 
                                 string Email, 
-                                string Password, 
                                 Role Role) : IRequest<Guid>
 {
 }
