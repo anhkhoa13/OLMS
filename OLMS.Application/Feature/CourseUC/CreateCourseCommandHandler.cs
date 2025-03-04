@@ -25,7 +25,7 @@ public class CreateCourseCommandHandler : IRequestHandler<CreateCourseCommand, G
         }
         Course course = Course.Create(request.Id, request.Title, request.Description, instructor);
         await _courseRepository.AddAsync(course);
-        //await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return course.Id;
     }
 }
