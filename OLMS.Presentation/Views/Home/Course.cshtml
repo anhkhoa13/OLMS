@@ -1,0 +1,82 @@
+@{
+    ViewData["Title"] = "Course List";
+}
+
+<h2>Course List</h2>
+
+<!-- Search Input -->
+<input type="number" id="searchInput" placeholder="Enter course ID..." />
+<button onclick="searchCourses()">Search</button>
+
+<!-- Display Courses -->
+<div id="coursesContainer"></div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        loadCourses();
+    });
+
+    function loadCourses() {
+        fetch('/Home/GetCourses')
+            .then(response => response.json())
+            .then(courses => {
+                let container = document.getElementById("coursesContainer");
+                container.innerHTML = ""; // Clear previous content
+
+                courses.forEach(course => {
+                    let courseTable = `
+                        <table class="courseTable" data-course-id="${course.id}">
+                            <tr>
+                                <th>ID:</th>
+                                <td>${course.id}</td>
+                            </tr>
+                            <tr>
+                                <th>Name:</th>
+                                <td>${course.name}</td>
+                            </tr>
+                            <tr>
+                                <th>Description:</th>
+                                <td>${course.description}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <a class="btn btn-primary" href="/Home/JoinCourse?id=${course.id}">Join Course</a>
+                                </td>
+                            </tr>
+                        </table>
+                    `;
+                    container.innerHTML += courseTable;
+                });
+            })
+            .catch(error => console.error("Error loading courses:", error));
+    }
+
+    function searchCourses() {
+        let input = document.getElementById("searchInput").value.trim();
+        let courses = document.querySelectorAll(".courseTable");
+
+        courses.forEach(course => {
+            let courseId = course.getAttribute("data-course-id");
+            if (courseId === input || input === "") {
+                course.style.display = "";
+            } else {
+                course.style.display = "none";
+            }
+        });
+    }
+</script>
+
+<!-- CSS for Styling -->
+<style>
+    .courseTable {
+        margin-bottom: 20px;
+        border: 1px solid black;
+        padding: 10px;
+        width: fit-content;
+    }
+    .courseTable th {
+        text-align: left;
+        padding-right: 10px;
+    }
+</style>
+
