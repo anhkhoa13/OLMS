@@ -7,7 +7,10 @@ public class Student : UserBase
 {
     private readonly List<Enrollment> _enrollments = new();
     public IReadOnlyCollection<Enrollment> Enrollments => _enrollments.AsReadOnly();
-    public Student(Guid id, Username username, Password password, FullName fullname, Email email) : base(id, username, password, fullname, email, Role.Student)
+
+    public string? Major { get; set; }
+    public DateTime? EnrollmentDate { get; set; }
+    public Student(Guid id, Username username, Password password, FullName fullname, Email email, int age) : base(id, username, password, fullname, email, age, Role.Student)
     {
     }
     internal void EnrollInCourse(Enrollment enrollment)
@@ -17,4 +20,5 @@ public class Student : UserBase
 
         _enrollments.Add(enrollment);
     }
+    
 }

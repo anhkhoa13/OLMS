@@ -8,7 +8,7 @@ public sealed class EnrollmentConfiguration : IEntityTypeConfiguration<Enrollmen
 {
     public void Configure(EntityTypeBuilder<Enrollment> builder)
     {
-        builder.ToTable("Enrollments");
+        builder.ToTable("Enrollment");
 
         builder.HasKey(e => new { e.StudentId, e.CourseId });
 

@@ -8,7 +8,7 @@ namespace OLMS.Domain.ValueObjects;
 
 public class Username : ValueObject
 {
-    private static readonly Regex usernameRegex = new Regex(@"^[a-zA-Z0-9]{3,20}$", RegexOptions.Compiled);
+    private static readonly Regex usernameRegex = new Regex(@"^[a-zA-Z0-9]{3,50}$", RegexOptions.Compiled);
     public string Value { get; }
     private Username(string value)
     {

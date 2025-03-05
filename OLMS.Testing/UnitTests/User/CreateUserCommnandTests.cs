@@ -12,7 +12,7 @@ namespace OLMS.Testing.UnitTests.User;
 
 public class CreateUserCommnandTests
 {
-    private static readonly CreateUserCommand CMD = new("tTestId", "Testing123@", "Teacher 1", "teacher.testing@mail.com", Role.Instructor);
+    private static readonly CreateUserCommand CMD = new("tTestId", "Testing123@", "Teacher 1", "teacher.testing@mail.com", 38, Role.Instructor);
 
     private readonly CreateUserCommandHandler _handler;
     private readonly IUnitOfWork _unitOfWorkMock;
@@ -126,6 +126,7 @@ public class CreateUserCommnandTests
                 u.Password.Value == cmd.Password &&
                 u.FullName.Value == cmd.FullName &&
                 u.Email.Value == cmd.Email &&
+                u.Age == cmd.Age &&
                 u.Role == cmd.Role
         ));
         await _unitOfWorkMock.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
@@ -140,7 +141,6 @@ public class CreateUserCommnandTests
 
         _userRepositoryMock.IsUsernameUniqueAsync(Arg.Is<Username>(u => u.Value == CMD.Username))
             .Returns(true);
-
 
         //Act
         Func<Task> act = async () => await _handler.Handle(CMD, default);

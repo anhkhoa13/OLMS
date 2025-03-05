@@ -6,6 +6,7 @@ namespace OLMS.Domain.ValueObjects;
 
 public sealed class FullName : ValueObject
 {
+    private const int Length = 100;
     public string Value { get; }
 
     private FullName(string value)
@@ -18,6 +19,10 @@ public sealed class FullName : ValueObject
         if (string.IsNullOrWhiteSpace(value))
         {
             throw new ArgumentException(EmptyName);
+        }
+        if (value.Length > Length)
+        {
+            throw new ArgumentException(InvalidFullName);
         }
         return new FullName(value);
     }

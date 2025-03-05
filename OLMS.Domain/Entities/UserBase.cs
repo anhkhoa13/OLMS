@@ -10,28 +10,27 @@ public abstract class UserBase : Entity
     public FullName FullName { get; private set; }
     public Email Email { get; private set; }
     public Password Password { get; private set; }
+    public int Age { get; private set; }
     public Role Role { get; private set; }
-    protected UserBase(Guid id, Username username, Password password, FullName fullname, Email email, Role role) : base(id)
+    protected UserBase(Guid id, Username username, Password password, FullName fullname, Email email, int age, Role role) : base(id)
     {
         Username = username;
         Password = password;
         FullName = fullname;
         Email = email;
+        Age = age;
         Role = role;
     }
 
-    public static UserBase CreateUser(Guid id, Username username, Password password, FullName fullname, Email email, Role role)
+    public static UserBase CreateUser(Guid id, Username username, Password password, FullName fullname, Email email, int age, Role role)
     {   
         if(id == Guid.Empty) throw new ArgumentException(EmptyGuid);
-        //if(string.IsNullOrWhiteSpace(username)) throw new ArgumentException(EmptyUsername);
-        //if (string.IsNullOrWhiteSpace(fullname)) throw new ArgumentException(EmptyName);
-        //if (string.IsNullOrWhiteSpace(email)) throw new ArgumentException(EmptyEmail);
-        //if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException(EmptyPassword);
+        if (age <= 0) throw new ArgumentException(NegativeAge);
 
         return role switch
         {
-            Role.Student => new Student(id, username, password, fullname, email),
-            Role.Instructor => new Instructor(id, username, password, fullname, email),
+            Role.Student => new Student(id, username, password, fullname, email, age),
+            Role.Instructor => new Instructor(id, username, password, fullname, email, age),
             _ => throw new InvalidOperationException("Invalid role")
         };
     }

@@ -12,10 +12,17 @@ public sealed class CourseConfiguration : IEntityTypeConfiguration<Course>
 
         builder.HasKey(c => c.Id); // Khóa chính
 
+        builder.Property(c => c.Id).HasColumnName("Id_course");
+        builder.OwnsOne(c => c.Code, c =>
+        {
+            c.Property(c => c.Value)
+             .HasColumnName("Code")
+             .IsRequired()
+             .HasMaxLength(6);
+        });
         builder.Property(c => c.Title)
                .IsRequired()
                .HasMaxLength(255);
-
         builder.Property(c => c.Description)
                .HasMaxLength(1000);
 
@@ -24,6 +31,8 @@ public sealed class CourseConfiguration : IEntityTypeConfiguration<Course>
                .HasForeignKey(c => c.InstructorId)
                .IsRequired()
                .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasIndex("Code").IsUnique();
 
     }
 }

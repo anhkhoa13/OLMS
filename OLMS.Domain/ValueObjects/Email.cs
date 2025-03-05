@@ -7,7 +7,7 @@ namespace OLMS.Domain.ValueObjects;
 
 public class Email : ValueObject
 {
-    private static readonly Regex emailRegex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.Compiled);
+    private static readonly Regex emailRegex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]{3,100}$", RegexOptions.Compiled);
     public string Value { get; }
 
     private Email(string value)

@@ -7,6 +7,7 @@ public sealed record CreateUserCommand(string Username,
                                 string Password,
                                 string FullName, 
                                 string Email, 
+                                int Age,
                                 Role Role) : IRequest<Guid>
 {
 }

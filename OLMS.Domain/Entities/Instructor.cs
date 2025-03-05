@@ -7,7 +7,10 @@ public class Instructor : UserBase
 {
     private readonly List<Course> _courses = new();
     public IReadOnlyCollection<Course> Courses => _courses.AsReadOnly();
-    public Instructor(Guid id, Username username, Password password, FullName fullname, Email email) : base(id, username, password, fullname, email, Role.Instructor)
+
+    public string? Department { get;  set; }
+    public DateTime? HireDate { get; set; }
+    public Instructor(Guid id, Username username, Password password, FullName fullname, Email email, int age) : base(id, username, password, fullname, email, age, Role.Instructor)
     {
     }
     public Course CreateCourse(string title, string description)

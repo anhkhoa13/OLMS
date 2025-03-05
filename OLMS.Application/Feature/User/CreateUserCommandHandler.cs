@@ -36,6 +36,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Guid>
                                        password, 
                                        fullName,
                                        email, 
+                                       request.Age,
                                        request.Role);
 
         await _userRepository.AddAsync(user);

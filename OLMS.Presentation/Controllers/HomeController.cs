@@ -36,6 +36,7 @@ namespace OLMS.Presentation.Controllers
         {
             return View();
         }
+
         // Mocked course list (replace with a database if needed)
         private List<dynamic> GetCourseList()
         {
