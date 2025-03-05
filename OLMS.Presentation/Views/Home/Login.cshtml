@@ -5,8 +5,8 @@
 <div class="login-register-area bg-light py-5">
     <div class="container">
         <div class="col-lg-6 text-center">
-                <img src="/assets/images/login.jpg" alt="Login Image" class="img-fluid rounded">
-            </div>
+            <img src="/assets/images/login.jpg" alt="Login Image" class="img-fluid rounded">
+        </div>
         <div class="row justify-content-center">
             <div class="col-lg-6">
                 <div class="login-register-content p-4 shadow rounded bg-white">
@@ -23,34 +23,21 @@
                         <!-- Login Tab -->
                         <div class="tab-pane fade show active" id="login">
                             <h3 class="text-center fw-bold">Log in to your account</h3>
-
-                            <!-- Role Selection 
-                            <div class="mb-3 d-flex align-items-center">
-                                <label for="loginRole" class="form-label w-auto">You are:</label>
-                                <select id="loginRole" class="form-select w-50">
-                                    <option value="student">Student</option>
-                                    <option value="professor">Professor</option>
-                                </select>
-                            </div>-->
-
-                            <!-- Student Login Form -->
-                            <form id="studentLoginForm">
+                            <form id="loginForm">
                                 <div class="mb-3">
                                     <input type="text" class="form-control" placeholder="ID" required>
                                 </div>
-                                <div class="mb-3">
-                                    <input type="password" class="form-control" placeholder="Password" required>
+                                <div class="mb-3 d-flex align-items-center position-relative">
+                                    <input type="password" class="form-control flex-grow-1 me-2" id="loginPassword" placeholder="Password" required style="width: calc(100% - 50px);">
+                                    <button type="button" class="btn btn-outline-secondary" id="toggleLoginPassword">Show</button>
                                 </div>
-                                <button type="submit" class="btn btn-primary w-100 py-2">Log in</button>
-                            </form>
-
-                            <!-- Professor Login Form -->
-                            <form id="professorLoginForm" class="d-none">
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" placeholder="ID" required>
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="rememberMe">
+                                    <label class="form-check-label" for="rememberMe">Remember Me</label>
                                 </div>
                                 <div class="mb-3">
-                                    <input type="password" class="form-control" placeholder="Password" required>
+                                    @* <a href="/PasswordReset">Forgot Password?</a> *@
+                                    <a asp-controller="Home" asp-action="PasswordReset">Forgot Password?</a>
                                 </div>
                                 <button type="submit" class="btn btn-primary w-100 py-2">Log in</button>
                             </form>
@@ -59,18 +46,7 @@
                         <!-- Register Tab -->
                         <div class="tab-pane fade" id="register">
                             <h3 class="text-center fw-bold">Create a new account</h3>
-
-                            <!-- Role Selection -->
-                            <div class="mb-3 d-flex align-items-center">
-                                <label for="registerRole" class="form-label w-auto">You are:</label>
-                                <select id="registerRole" class="form-select w-50">
-                                    <option value="student">Student</option>
-                                    <option value="professor">Professor</option>
-                                </select>
-                            </div>
-
-                            <!-- Student Register Form -->
-                            <form id="studentRegisterForm">
+                            <form id="registerForm">
                                 <div class="mb-3">
                                     <input type="text" class="form-control" placeholder="ID" required>
                                 </div>
@@ -80,29 +56,21 @@
                                 <div class="mb-3">
                                     <input type="email" class="form-control" placeholder="Email" required>
                                 </div>
-                                <div class="mb-3">
-                                    <input type="password" class="form-control" placeholder="Password" required>
+                                <div class="mb-3 d-flex align-items-center position-relative">
+                                    <input type="password" class="form-control flex-grow-1 me-2" id="registerPassword" placeholder="Password" required style="width: calc(100% - 50px);">
+                                    <button type="button" class="btn btn-outline-secondary" id="toggleRegisterPassword">Show</button>
+                                </div>
+                                <div class="mb-3 d-flex align-items-center position-relative">
+                                    <input type="password" class="form-control flex-grow-1 me-2" id="confirmPassword" placeholder="Confirm Password" required style="width: calc(100% - 50px);">
+                                    <button type="button" class="btn btn-outline-secondary" id="toggleConfirmPassword">Show</button>
+                                </div>
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="termsConditions" required>
+                                    <label class="form-check-label" for="termsConditions">I agree to the <a href="/terms">Terms & Conditions</a></label>
                                 </div>
                                 <button type="submit" class="btn btn-success w-100 py-2">Register</button>
                             </form>
-
-                            <!-- Professor Register Form -->
-                            <form id="professorRegisterForm" class="d-none">
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" placeholder="ID" required>
-                                </div>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" placeholder="Full Name" required>
-                                </div>
-                                <div class="mb-3">
-                                    <input type="email" class="form-control" placeholder="Email" required>
-                                </div>
-                                <div class="mb-3">
-                                    <input type="password" class="form-control" placeholder="Password" required>
-                                </div>
-                                <button type="submit" class="btn btn-success w-100 py-2">Register</button>
-                            </form>
-                        </div> <!-- End Register Tab -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -111,16 +79,37 @@
 </div>
 
 <script>
-    document.getElementById("loginRole").addEventListener("change", function () {
-        let selectedRole = this.value;
-        document.getElementById("studentLoginForm").classList.toggle("d-none", selectedRole !== "student");
-        document.getElementById("professorLoginForm").classList.toggle("d-none", selectedRole !== "professor");
+    document.getElementById("toggleLoginPassword").addEventListener("click", function () {
+        var passwordField = document.getElementById("loginPassword");
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            this.textContent = "Hide";
+        } else {
+            passwordField.type = "password";
+            this.textContent = "Show";
+        }
     });
 
-    document.getElementById("registerRole").addEventListener("change", function () {
-        let selectedRole = this.value;
-        document.getElementById("studentRegisterForm").classList.toggle("d-none", selectedRole !== "student");
-        document.getElementById("professorRegisterForm").classList.toggle("d-none", selectedRole !== "professor");
+    document.getElementById("toggleRegisterPassword").addEventListener("click", function () {
+        var passwordField = document.getElementById("registerPassword");
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            this.textContent = "Hide";
+        } else {
+            passwordField.type = "password";
+            this.textContent = "Show";
+        }
+    });
+
+    document.getElementById("toggleConfirmPassword").addEventListener("click", function () {
+        var passwordField = document.getElementById("confirmPassword");
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            this.textContent = "Hide";
+        } else {
+            passwordField.type = "password";
+            this.textContent = "Show";
+        }
     });
 </script>
 
