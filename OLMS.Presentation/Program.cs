@@ -1,25 +1,19 @@
 using OLMS.Application;
-using OLMS.Domain.Repositories;
 using OLMS.Infrastructure;
-using OLMS.Infrastructure.Database;
 
 namespace OLMS.Presentation;
 
-namespace OLMS.Presentation
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
-            {
-                builder.Services.AddControllersWithViews();
+        var builder = WebApplication.CreateBuilder(args);
 
-                builder.Services.AddMediatR(configuration =>
-                {
-                    configuration.RegisterServicesFromAssembly(typeof(Program).Assembly);
-                });
-                builder.Services.AddApplication();
+        ////builder.Services.AddMediatR(configuration =>
+        ////{
+        ////    configuration.RegisterServicesFromAssembly(typeof(Program).Assembly);
+        ////});
+        //builder.Services.AddApplication();
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
@@ -43,20 +37,16 @@ namespace OLMS.Presentation
         app.UseHttpsRedirection();
         app.UseStaticFiles();
 
-                app.UseRouting();
+        app.UseRouting();
 
-                app.UseAuthorization();
-
+        app.UseAuthorization();
 
         app.MapControllerRoute(
             name: "default",
             pattern: $"{{controller={defaultController}}}/{{action={defaultAction}}}/{{id?}}");
 
-
-
-                app.Run();
-            }
+        app.Run();
             
-        }
     }
 }
+

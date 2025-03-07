@@ -9,7 +9,7 @@ using Xunit;
   
 namespace OLMS.Testing.UnitTests.CourseTest;
 public class CreateCourseCommandTest {
-    private static readonly CreateCourseCommand CMD = new(new Guid(), "Operating System", "Hard", new Guid());
+    private static readonly CreateCourseCommand CMD = new("Operating System", "Hard", new Guid());
 
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICourseRepository _courseRepository;
@@ -35,7 +35,7 @@ public class CreateCourseCommandTest {
             .Returns(instructor);
          
         // Act
-        var result = await _handler.Handle(new CreateCourseCommand(Guid.NewGuid(), "Operating System", "Hard", instructor.Id), CancellationToken.None);
+        var result = await _handler.Handle(new CreateCourseCommand("Operating System", "Hard", instructor.Id), CancellationToken.None);
 
         // Assert
         result.Should().NotBeEmpty();
@@ -47,7 +47,7 @@ public class CreateCourseCommandTest {
     [Fact]
     public async Task Handle_Should_Throw_Exception_When_Instructor_Is_Invalid() {
         // Arrange
-        var command = new CreateCourseCommand(Guid.NewGuid(), "Test Course", "Test Description", Guid.NewGuid());
+        var command = new CreateCourseCommand("Test Course", "Test Description", Guid.NewGuid());
         _userRepository.GetByIdAsync(command.InstructorId, Arg.Any<CancellationToken>()).Returns(Task.FromResult<UserBase>(null));
 
         // Act

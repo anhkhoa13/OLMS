@@ -23,7 +23,11 @@ public class CreateCourseCommandHandler : IRequestHandler<CreateCourseCommand, G
         {
             throw new Exception("Invalid instructor.");
         }
-        Course course = Course.Create(request.Id, request.Title, request.Description, instructor);
+        Course course = Course.Create(Guid.NewGuid(), 
+                                      request.Title, 
+                                      request.Description, 
+                                      instructor);
+
         await _courseRepository.AddAsync(course);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         return course.Id;   
