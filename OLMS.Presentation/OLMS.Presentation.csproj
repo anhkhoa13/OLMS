@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OLMS.Application\OLMS.Application.csproj" />
+    <ProjectReference Include="..\OLMS.Infrastructure\OLMS.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
