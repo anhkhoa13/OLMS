@@ -9,13 +9,19 @@ public class UserRepository : Repository<UserBase>, IUserRepository
 {
     public UserRepository(ApplicationDbContext context) : base(context) {}
 
-    public Task<bool> IsEmailUniqueAsync(Email email, CancellationToken cancellationToken = default)
+    public async Task<bool> IsEmailUniqueAsync(Email email, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        if(email == null)
+            throw new ArgumentNullException(nameof(email), "Email cannot be null");
+
+        return !await _context.Users.AnyAsync(u => u.Email.Value == email.Value, cancellationToken);
     }
 
-    public Task<bool> IsUsernameUniqueAsync(Username userName, CancellationToken cancellationToken = default)
+    public async Task<bool> IsUsernameUniqueAsync(Username userName, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        if (userName == null)
+            throw new ArgumentNullException(nameof(userName), "Username cannot be null");
+
+        return !await _context.Users.AnyAsync(u => u.Username.Value == userName.Value, cancellationToken);
     }
 }

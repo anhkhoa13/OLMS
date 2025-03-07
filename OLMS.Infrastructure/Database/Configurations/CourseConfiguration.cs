@@ -12,13 +12,15 @@ public sealed class CourseConfiguration : IEntityTypeConfiguration<Course>
 
         builder.HasKey(c => c.Id); // Khóa chính
 
-        builder.Property(c => c.Id).HasColumnName("Id_course");
+        //builder.Property(c => c.Id).HasColumnName("Id_course");
         builder.OwnsOne(c => c.Code, c =>
         {
             c.Property(c => c.Value)
              .HasColumnName("Code")
              .IsRequired()
              .HasMaxLength(6);
+
+            c.HasIndex(c => c.Value).IsUnique();
         });
         builder.Property(c => c.Title)
                .IsRequired()
@@ -26,13 +28,16 @@ public sealed class CourseConfiguration : IEntityTypeConfiguration<Course>
         builder.Property(c => c.Description)
                .HasMaxLength(1000);
 
+        builder.Property(c => c.InstructorId)
+               .HasColumnName("InstructorID");
+
         builder.HasOne(c => c.Instructor)  // Một Course có một Instructor
                .WithMany(i => i.Courses)
                .HasForeignKey(c => c.InstructorId)
                .IsRequired()
                .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasIndex("Code").IsUnique();
+        //builder.HasIndex(c => c.Code.Value).IsUnique();
 
     }
 }

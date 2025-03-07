@@ -10,9 +10,7 @@ public sealed class StudentConfiguration : IEntityTypeConfiguration<Student>
     {
         builder.ToTable("Student");
 
-        builder.HasKey(s => s.Id); // Khóa chính dùng chung từ UserBase
-
-        builder.Property(s => s.Id).HasColumnName("Id_student");
+        //builder.Property(s => s.Id).HasColumnName("Id_student");
         builder.Property(s => s.Major)
                .HasColumnName("Major")
                .HasMaxLength(100);

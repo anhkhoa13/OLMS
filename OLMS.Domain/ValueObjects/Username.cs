@@ -1,8 +1,5 @@
-﻿
-using OLMS.Domain.Primitives;
+﻿using OLMS.Domain.Primitives;
 using System.Text.RegularExpressions;
-
-using static OLMS.Domain.Error.Error.User;
 
 namespace OLMS.Domain.ValueObjects;
 
@@ -18,10 +15,10 @@ public class Username : ValueObject
     public static Username Create(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException(EmptyUsername);
+            throw new ArgumentNullException(nameof(value), "Username cannot be null or empty");
 
         if (!IsValidUsername(value))
-            throw new ArgumentException(InvalidUsername);
+            throw new ArgumentException("Username must be 3-50 characters long and contain only letters, and numbers", nameof(value));
 
         return new Username(value);
     }

@@ -3,6 +3,7 @@
 public abstract class Entity : IEquatable<Entity>
 {
     #region Constructors
+    protected Entity() { }
     protected Entity(Guid id)
     {
         Id = id;

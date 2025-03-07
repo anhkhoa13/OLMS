@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OLMS.Domain.Repositories;
 using OLMS.Infrastructure.Database;
+using OLMS.Infrastructure.Database.Repositories;
 
 namespace OLMS.Infrastructure;
 
@@ -12,6 +14,10 @@ public static class DependencyInjection
         var connectionString = configuration.GetConnectionString("DefaultConnection");
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(connectionString));
+
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IUserRepository, UserRepository>();
+
         return services;
     }
 }

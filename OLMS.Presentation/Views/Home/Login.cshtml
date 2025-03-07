@@ -23,12 +23,12 @@
                         <!-- Login Tab -->
                         <div class="tab-pane fade show active" id="login">
                             <h3 class="text-center fw-bold">Log in to your account</h3>
-                            <form id="loginForm">
+                            <form asp-controller="Authentication" asp-action="Login" method="post">
                                 <div class="mb-3">
-                                    <input type="text" class="form-control" placeholder="ID" required>
+                                    <input type="text" class="form-control" name="Username" placeholder="Username" required>
                                 </div>
                                 <div class="mb-3 d-flex align-items-center position-relative">
-                                    <input type="password" class="form-control flex-grow-1 me-2" id="loginPassword" placeholder="Password" required style="width: calc(100% - 50px);">
+                                    <input type="password" class="form-control flex-grow-1 me-2" name="Password" id="loginPassword" placeholder="Password" required style="width: calc(100% - 50px);">
                                     <button type="button" class="btn btn-outline-secondary" id="toggleLoginPassword">Show</button>
                                 </div>
                                 <div class="mb-3 form-check">
@@ -37,7 +37,7 @@
                                 </div>
                                 <div class="mb-3">
                                     @* <a href="/PasswordReset">Forgot Password?</a> *@
-                                    <a asp-controller="Home" asp-action="PasswordReset">Forgot Password?</a>
+                                    <a asp-controller="Home" asp-action="PasswordReset" method="Get">Forgot Password?</a>
                                 </div>
                                 <button type="submit" class="btn btn-primary w-100 py-2">Log in</button>
                             </form>
@@ -46,23 +46,38 @@
                         <!-- Register Tab -->
                         <div class="tab-pane fade" id="register">
                             <h3 class="text-center fw-bold">Create a new account</h3>
-                            <form id="registerForm">
+                            <form asp-controller="Authentication" asp-action="Register" method="post">
                                 <div class="mb-3">
-                                    <input type="text" class="form-control" placeholder="ID" required>
+                                    <input type="text" class="form-control" name="Username" placeholder="Username" required>
                                 </div>
                                 <div class="mb-3">
-                                    <input type="text" class="form-control" placeholder="Full Name" required>
+                                    <input type="text" class="form-control" name="Email" placeholder="Full Name" required>
                                 </div>
                                 <div class="mb-3">
-                                    <input type="email" class="form-control" placeholder="Email" required>
+                                    <input type="email" class="form-control" name="FullName" placeholder="Email" required>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="number" class="form-control" name="Age" placeholder="Age" required min="1">
                                 </div>
                                 <div class="mb-3 d-flex align-items-center position-relative">
-                                    <input type="password" class="form-control flex-grow-1 me-2" id="registerPassword" placeholder="Password" required style="width: calc(100% - 50px);">
-                                    <button type="button" class="btn btn-outline-secondary" id="toggleRegisterPassword">Show</button>
+                                    <input type="password" class="form-control flex-grow-1 me-2" name="Password" id="registerPassword" placeholder="Password" required style="width: calc(100% - 50px);">
+                                    @* <button type="button" class="btn btn-outline-secondary" id="toggleRegisterPassword">Show</button> *@
                                 </div>
                                 <div class="mb-3 d-flex align-items-center position-relative">
-                                    <input type="password" class="form-control flex-grow-1 me-2" id="confirmPassword" placeholder="Confirm Password" required style="width: calc(100% - 50px);">
-                                    <button type="button" class="btn btn-outline-secondary" id="toggleConfirmPassword">Show</button>
+                                    <input type="password" class="form-control flex-grow-1 me-2" name="ConfirmPassword" id="confirmPassword" placeholder="Confirm Password" required style="width: calc(100% - 50px);">
+                                    <div id="passwordError" class="text-danger mt-1" style="display: none;">Passwords do not match</div>
+                                    @* <button type="button" class="btn btn-outline-secondary" id="toggleConfirmPassword">Show</button> *@
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="role" value="Student" required>
+                                        <label class="form-check-label">Student</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="role" value="Instructor" required>
+                                        <label class="form-check-label">Instructor</label>
+                                    </div>
                                 </div>
                                 <div class="mb-3 form-check">
                                     <input type="checkbox" class="form-check-input" id="termsConditions" required>
@@ -90,25 +105,38 @@
         }
     });
 
-    document.getElementById("toggleRegisterPassword").addEventListener("click", function () {
-        var passwordField = document.getElementById("registerPassword");
-        if (passwordField.type === "password") {
-            passwordField.type = "text";
-            this.textContent = "Hide";
-        } else {
-            passwordField.type = "password";
-            this.textContent = "Show";
-        }
-    });
+    // document.getElementById("toggleRegisterPassword").addEventListener("click", function () {
+    //     var passwordField = document.getElementById("registerPassword");
+    //     if (passwordField.type === "password") {
+    //         passwordField.type = "text";
+    //         this.textContent = "Hide";
+    //     } else {
+    //         passwordField.type = "password";
+    //         this.textContent = "Show";
+    //     }
+    // });
 
-    document.getElementById("toggleConfirmPassword").addEventListener("click", function () {
-        var passwordField = document.getElementById("confirmPassword");
-        if (passwordField.type === "password") {
-            passwordField.type = "text";
-            this.textContent = "Hide";
+    // document.getElementById("toggleConfirmPassword").addEventListener("click", function () {
+    //     var passwordField = document.getElementById("confirmPassword");
+    //     if (passwordField.type === "password") {
+    //         passwordField.type = "text";
+    //         this.textContent = "Hide";
+    //     } else {
+    //         passwordField.type = "password";
+    //         this.textContent = "Show";
+    //     }
+    // });
+
+    document.getElementById("registerForm").addEventListener("submit", function (e) {
+        var password = document.getElementById("password").value;
+        var confirmPassword = document.getElementById("confirmPassword").value;
+        var errorDiv = document.getElementById("passwordError");
+
+        if (password !== confirmPassword) {
+            e.preventDefault(); // Ngãn form submit
+            errorDiv.style.display = "block";
         } else {
-            passwordField.type = "password";
-            this.textContent = "Show";
+            errorDiv.style.display = "none";
         }
     });
 </script>

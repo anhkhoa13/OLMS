@@ -10,6 +10,7 @@ public class Instructor : UserBase
 
     public string? Department { get;  set; }
     public DateTime? HireDate { get; set; }
+    private Instructor() : base() { }
     public Instructor(Guid id, Username username, Password password, FullName fullname, Email email, int age) : base(id, username, password, fullname, email, age, Role.Instructor)
     {
     }

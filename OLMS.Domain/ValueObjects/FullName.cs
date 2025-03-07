@@ -1,14 +1,11 @@
 ﻿using OLMS.Domain.Primitives;
 
-using static OLMS.Domain.Error.Error.User;
-
 namespace OLMS.Domain.ValueObjects;
 
 public sealed class FullName : ValueObject
 {
     private const int Length = 100;
     public string Value { get; }
-
     private FullName(string value)
     {
         Value = value;
@@ -18,11 +15,11 @@ public sealed class FullName : ValueObject
     {
         if (string.IsNullOrWhiteSpace(value))
         {
-            throw new ArgumentException(EmptyName);
+            throw new ArgumentNullException(nameof(value), "Full name cannot be null or empty");
         }
         if (value.Length > Length)
         {
-            throw new ArgumentException(InvalidFullName);
+            throw new ArgumentException("FullName must be 3-100 characters long and contain only letters, numbers, and spaces.");
         }
         return new FullName(value);
     }

@@ -10,7 +10,7 @@ public sealed class UserBaseConfigurations : IEntityTypeConfiguration<UserBase>
         builder.ToTable("User");
 
         builder.HasKey(u => u.Id);
-        builder.Property(u => u.Id).HasColumnName("ID_user");
+        //builder.Property(u => u.Id).HasColumnName("ID_user");
 
         builder.OwnsOne(u => u.Username, username =>
         {
@@ -18,6 +18,8 @@ public sealed class UserBaseConfigurations : IEntityTypeConfiguration<UserBase>
              .HasColumnName("Username")
              .IsRequired()
              .HasMaxLength(50);
+
+            username.HasIndex(username => username.Value).IsUnique();
         });
         builder.OwnsOne(u => u.Password, password =>
         {
@@ -39,14 +41,12 @@ public sealed class UserBaseConfigurations : IEntityTypeConfiguration<UserBase>
              .HasColumnName("Email")
              .IsRequired()
              .HasMaxLength(100);
+
+            email.HasIndex(email => email.Value).IsUnique();
         });
         builder.Property(u => u.Role)
                .HasConversion<string>()
                .HasMaxLength(20)
                .IsRequired();
-        builder.Property(u => u.Age).HasColumnName("Age");
-
-        builder.HasIndex("Email").IsUnique(); 
-        builder.HasIndex("Username").IsUnique();
     }
 }

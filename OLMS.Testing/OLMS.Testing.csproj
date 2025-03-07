@@ -24,10 +24,7 @@
   <ItemGroup>
     <ProjectReference Include="..\OLMS.Application\OLMS.Application.csproj" />
     <ProjectReference Include="..\OLMS.Domain\OLMS.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="DatabaseTests\" />
+    <ProjectReference Include="..\OLMS.Infrastructure\OLMS.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

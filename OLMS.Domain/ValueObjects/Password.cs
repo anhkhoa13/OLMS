@@ -1,8 +1,6 @@
 ﻿using OLMS.Domain.Primitives;
 using System.Text.RegularExpressions;
 
-using static OLMS.Domain.Error.Error.User;
-
 namespace OLMS.Domain.ValueObjects;
 
 public sealed class Password : ValueObject
@@ -17,10 +15,10 @@ public sealed class Password : ValueObject
     public static Password Create(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException(EmptyPassword);
+            throw new ArgumentNullException(nameof(value), "Password cannot be null or empty");
 
         if (!PasswordRegex.IsMatch(value))
-            throw new ArgumentException(InvalidPassword);
+            throw new ArgumentException("Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.", nameof(value));
 
         return new Password(value);
     }
