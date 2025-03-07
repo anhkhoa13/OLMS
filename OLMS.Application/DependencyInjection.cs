@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using OLMS.Domain.Repositories;
 
 namespace OLMS.Application;
 

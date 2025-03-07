@@ -1,4 +1,6 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using OLMS.Application.Feature.User;
 using OLMS.Presentation.Models;
 using System.Diagnostics;
 namespace OLMS.Presentation.Controllers
@@ -6,20 +8,18 @@ namespace OLMS.Presentation.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private ISender _sender;
+        
+        public HomeController(ILogger<HomeController> logger, ISender _sender)
         {
             _logger = logger;
+            _sender = _sender;
         }
 
-        public IActionResult Register()
+        public IActionResult Index(CreateUserCommand createUserCommand)
         {
-            return View();
-        }
-
-        public IActionResult Index()
-        {
-            return View();
+            var dwa = _sender.Send(createUserCommand);
+            return View(dwa);
         }
 
         public IActionResult Privacy()

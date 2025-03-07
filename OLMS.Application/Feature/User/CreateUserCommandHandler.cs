@@ -14,7 +14,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Resul
     private readonly IUserRepository _userRepository;
     public CreateUserCommandHandler(IUnitOfWork unitOfWork, IUserRepository userRepository)
     {
-        _unitOfWork = unitOfWork;
+        _unitOfWork = unitOfWork; 
         _userRepository = userRepository;
     }
     public async Task<Result<Guid>> Handle(CreateUserCommand request, CancellationToken cancellationToken)

@@ -5,11 +5,21 @@ using OLMS.Infrastructure.Database;
 
 namespace OLMS.Presentation;
 
-public class Program
+namespace OLMS.Presentation
 {
-    public static void Main(string[] args)
+    public class Program
     {
-        var builder = WebApplication.CreateBuilder(args);
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
+            {
+                builder.Services.AddControllersWithViews();
+
+                builder.Services.AddMediatR(configuration =>
+                {
+                    configuration.RegisterServicesFromAssembly(typeof(Program).Assembly);
+                });
+                builder.Services.AddApplication();
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
@@ -33,9 +43,9 @@ public class Program
         app.UseHttpsRedirection();
         app.UseStaticFiles();
 
-        app.UseRouting();
+                app.UseRouting();
 
-        app.UseAuthorization();
+                app.UseAuthorization();
 
 
         app.MapControllerRoute(
@@ -44,6 +54,9 @@ public class Program
 
 
 
-        app.Run();
+                app.Run();
+            }
+            
+        }
     }
 }
