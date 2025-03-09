@@ -3,5 +3,5 @@ using System;
 
 namespace OLMS.Application.Feature.Enrollment
 {
-    public record EnrollCourseCommand(Guid StudentId, string CourseCode, object title) : IRequest<Guid>;
+    public record EnrollCourseCommand(Guid StudentId, string CourseCode, object title) : IRequest;
 }

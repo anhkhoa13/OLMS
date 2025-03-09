@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OLMS.Domain.Entities;
+using OLMS.Domain.Primitives;
 
 namespace OLMS.Infrastructure.Database.Configurations;
 
@@ -36,6 +37,11 @@ public sealed class CourseConfiguration : IEntityTypeConfiguration<Course>
                .HasForeignKey(c => c.InstructorId)
                .IsRequired()
                .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(c => c.Enrollments)
+              .WithOne()
+              .HasForeignKey(e => e.CourseId)
+              .OnDelete(DeleteBehavior.Cascade);
 
         //builder.HasIndex(c => c.Code.Value).IsUnique();
 

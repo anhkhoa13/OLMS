@@ -9,21 +9,21 @@ namespace OLMS.API.Controllers
     [ApiController]
     public class EnrollmentController : ControllerBase
     {
-        private readonly IMediator _mediator;
+        private readonly ISender _sender;
 
-        public EnrollmentController(IMediator mediator)
+        public EnrollmentController(ISender sender)
         {
-            _mediator = mediator;
+            _sender = sender;
         }
 
         [HttpPost]
-        [Authorize(Roles = "Student")]
+        //[Authorize(Roles = "Student")]
         public async Task<IActionResult> Enroll([FromBody] EnrollCourseCommand command)
         {
             try
             {
-                var enrollmentId = await _mediator.Send(command);
-                return Ok(new { EnrollmentId = enrollmentId });
+                await _sender.Send(command);
+                return Ok(new { EnrollmentId = command.CourseCode });
             }
             catch (Exception ex)
             {

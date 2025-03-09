@@ -13,7 +13,7 @@ public sealed class EnrollmentConfiguration : IEntityTypeConfiguration<Enrollmen
         builder.HasKey(e => new { e.StudentId, e.CourseId });
 
         builder.HasOne(e => e.Student)
-               .WithMany(s => s.Enrollments)
+               .WithMany()
                .HasForeignKey(e => e.StudentId)
                .OnDelete(DeleteBehavior.Cascade);
 
