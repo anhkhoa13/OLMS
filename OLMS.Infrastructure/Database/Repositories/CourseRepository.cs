@@ -6,5 +6,6 @@ namespace OLMS.Infrastructure.Database.Repositories;
 
 public class CourseRepository : Repository<Course>, ICourseRepository
 {
-    public CourseRepository(ApplicationDbContext context) : base(context) {}
+    public CourseRepository(ApplicationDbContext context) : base(context) { }
 }
+
