@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OLMS.Domain.Entities.Quiz;
 using OLMS.Domain.Repositories;
 using OLMS.Infrastructure.Database;
 using OLMS.Infrastructure.Database.Repositories;
@@ -17,7 +18,12 @@ public static class DependencyInjection
 
         // register
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        services.AddScoped<ICourseRepository, CourseRepository>();
+        services.AddScoped<IQuestionRepository, QuestionRepository>();
+        services.AddScoped<IQuizRepository, QuizRepository>();
+        services.AddScoped<IQuizAttemptRepository, QuizAttemptRepository>();
+        services.AddScoped<IStudentAnswerRepository, StudentAnswerRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
 
         return services;
     }

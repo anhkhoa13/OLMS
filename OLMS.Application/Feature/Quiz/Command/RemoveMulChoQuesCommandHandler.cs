@@ -4,7 +4,7 @@ using OLMS.Domain.Entities;
 using OLMS.Domain.Entities.Quiz;
 using OLMS.Domain.Repositories;
 
-namespace OLMS.Application.Feature.Quiz;
+namespace OLMS.Application.Feature.Quiz.Command;
 
 public class RemoveMulChoQuesCommandHandler : IRequestHandler<RemoveMulChoiceQuizCommand, bool>
 {

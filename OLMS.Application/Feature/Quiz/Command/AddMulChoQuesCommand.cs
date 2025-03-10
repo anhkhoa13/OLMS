@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace OLMS.Application.Feature.CourseUC;
+namespace OLMS.Application.Feature.Quiz.Command;
 
 public record AddMulChoQuesCommand(Guid QuizId,
                                 string Content,

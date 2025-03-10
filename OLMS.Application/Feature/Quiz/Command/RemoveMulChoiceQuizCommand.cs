@@ -7,13 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OLMS.Application.Feature.Quiz;
+namespace OLMS.Application.Feature.Quiz.Command;
 
-public record CreateMulChoiceQuizCommand(
-    string Title,
-    DateTime StartTime,
-    DateTime EndTime,
-    bool IsTimeLimited
-    ) : IRequest<Guid>
+public record RemoveMulChoiceQuizCommand(Guid QuizId, Guid QuestionId) : IRequest<bool>
 {
 }

@@ -4,7 +4,7 @@ using OLMS.Application.Feature.CourseUC;
 
 namespace OLMS.Presentation.Controllers;
 
-[Route("api/[controller]")]
+[Route("/[controller]")]
 [ApiController]
 public class CourseController : ControllerBase
 {
@@ -14,7 +14,7 @@ public class CourseController : ControllerBase
     {
         _sender = sender;
     }
-
+    [HttpPost("create")]
     public async Task<IActionResult> CreateCourse([FromBody] CreateCourseCommand command)
     {
         if (!ModelState.IsValid)

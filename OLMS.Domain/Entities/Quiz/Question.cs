@@ -14,8 +14,8 @@ public enum QuestionType
 }
 public abstract class Question : Entity
 {
-    public string Content { get; protected set; }
-    public abstract QuestionType Type { get; }
+    protected string Content { get; set; }
+    protected abstract QuestionType Type { get; }
 
     protected Question(Guid id, string content) : base(id)
     {

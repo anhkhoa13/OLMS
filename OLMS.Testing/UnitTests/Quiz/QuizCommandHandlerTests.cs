@@ -1,5 +1,5 @@
 ﻿using OLMS.Application.Feature.CourseUC;
-using OLMS.Application.Feature.Quiz;
+using OLMS.Application.Feature.Quiz.Command;
 using OLMS.Domain.Entities.Quiz;
 using OLMS.Domain.Repositories;
 using Xunit;

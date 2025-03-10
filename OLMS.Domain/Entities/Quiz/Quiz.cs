@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 
 namespace OLMS.Domain.Entities.Quiz;
 
-public abstract class Quiz : Entity
+public abstract class Quiz : Entity, IAggregateRoot
 {
-    public string Title { get; private set; }
-    public DateTime StartTime { get; private set; }
-    public DateTime EndTime { get; private set; }
-    public bool IsTimeLimited { get; private set; }
+    public string Title { get; protected set; }
+    public string Description { get; protected set; }
+    public DateTime StartTime { get; protected set; }
+    public DateTime EndTime { get; protected set; }
+    public bool IsTimeLimited { get; protected set; }
 
     public Quiz(Guid id, string title, DateTime startTime, DateTime endTime, bool isTimeLimited) : base(id)
     {

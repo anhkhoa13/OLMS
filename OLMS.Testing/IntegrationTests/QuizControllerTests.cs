@@ -1,31 +1,22 @@
-﻿/*using Moq;
-using Xunit;
+﻿using Moq;
 using FluentAssertions;
-using System.Net;
-using System.Net.Http.Json;
-using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.Mvc;
 using MediatR;
-using OLMS.Application.Feature.Quiz;
+using OLMS.Presentation.Controllers;
+using OLMS.Application.Feature.Quiz.Command;
+
 
 namespace OLMS.Testing.IntegrationTests;
 
-public class QuizControllerTests : IClassFixture<WebApplicationFactory<Program>>
+public class QuizControllerTests
 {
-    private readonly HttpClient _client;
     private readonly Mock<ISender> _mockSender;
+    private readonly QuizController _controller;
 
-    public QuizControllerTests(WebApplicationFactory<Program> factory)
+    public QuizControllerTests()
     {
         _mockSender = new Mock<ISender>();
-
-        _client = factory.WithWebHostBuilder(builder =>
-        {
-            builder.ConfigureServices(services =>
-            {
-                // Replace ISender with Mock version
-                services.AddSingleton(_mockSender.Object);
-            });
-        }).CreateClient();
+        _controller = new QuizController(_mockSender.Object);
     }
 
     [Fact]
@@ -40,12 +31,13 @@ public class QuizControllerTests : IClassFixture<WebApplicationFactory<Program>>
             .ReturnsAsync(expectedId);
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/quiz/create", command);
+        var result = await _controller.CreateQuiz(command) as OkObjectResult;
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var result = await response.Content.ReadFromJsonAsync<dynamic>();
-        ((string)result?.QuizId).Should().Be(expectedId.ToString());
+        result.Should().NotBeNull();
+        result.StatusCode.Should().Be(200);
+        var quizId = result.Value.GetType().GetProperty("QuizId")?.GetValue(result.Value, null);
+        quizId.Should().Be(expectedId);
     }
 
     [Fact]
@@ -53,17 +45,17 @@ public class QuizControllerTests : IClassFixture<WebApplicationFactory<Program>>
     {
         // Arrange
         var command = new RemoveMulChoiceQuizCommand(Guid.NewGuid(), Guid.NewGuid());
+
         _mockSender
             .Setup(sender => sender.Send(It.IsAny<RemoveMulChoiceQuizCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
 
         // Act
-        var response = await _client.DeleteAsJsonAsync("/api/quiz/remove-question", command);
+        var result = await _controller.RemoveQuestion(command) as NotFoundObjectResult;
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-        var result = await response.Content.ReadAsStringAsync();
-        result.Should().Contain("Question not found");
+        result.Should().NotBeNull();
+        result.StatusCode.Should().Be(404);
+        result.Value.Should().Be("Question not found");
     }
 }
-*/

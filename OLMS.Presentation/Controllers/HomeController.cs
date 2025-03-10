@@ -10,18 +10,15 @@ namespace OLMS.Presentation.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private ISender _sender;
         
         public HomeController(ILogger<HomeController> logger, ISender _sender)
         {
             _logger = logger;
-            _sender = _sender;
         }
 
-        public IActionResult Index(CreateUserCommand createUserCommand)
+        public IActionResult Index()
         {
-            var dwa = _sender.Send(createUserCommand);
-            return View(dwa);
+            return View();
         }
 
         public IActionResult Privacy()

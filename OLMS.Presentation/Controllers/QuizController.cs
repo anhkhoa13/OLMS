@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using OLMS.Application.Feature.CourseUC;
-using OLMS.Application.Feature.Quiz;
+using OLMS.Application.Feature.Quiz.Command;
 
 namespace OLMS.Presentation.Controllers;
 
@@ -37,5 +36,18 @@ public class QuizController : ControllerBase
         if (!result) return NotFound("Question not found");
 
         return Ok("Question removed successfully");
+    }
+
+    [HttpPost("attempts/start")]
+    public async Task<IActionResult> StartQuizAttempt([FromBody] StartQuizAttemptCommand command)
+    {
+        var attemptId = await _sender.Send(command);
+        return Ok(new { AttemptId = attemptId });
+    }
+    [HttpPost("attempts/submit")]
+    public async Task<IActionResult> SubmitQuiz([FromBody] SubmitQuizCommand command)
+    {
+        var result = await _sender.Send(command);
+        return result ? Ok("Quiz submitted successfully.") : BadRequest("Submission failed.");
     }
 }

@@ -11,7 +11,7 @@ public class MultipleChoiceQuestion : Question
     public List<string> Options { get; private set; }
     public int CorrectOptionIndex { get; private set; }
 
-    public override QuestionType Type => QuestionType.MultipleChoice;
+    protected override QuestionType Type => QuestionType.MultipleChoice;
 
     public MultipleChoiceQuestion(Guid id, string content, List<string> options, int correctOptionIndex) : base(id, content)
     {
