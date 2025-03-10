@@ -10,7 +10,14 @@ public sealed class InstructorConfiguration : IEntityTypeConfiguration<Instructo
     {
         builder.ToTable("Instructor");
 
-        builder.HasKey(i => i.Id); // Khóa chính dùng chung từ UserBase
+        //builder.Property(i => i.Id).HasColumnName("Id_instructor");
+
+        builder.Property(i => i.HireDate)
+               .HasColumnName("HireDate");
+
+        builder.Property(i => i.Department)
+               .HasColumnName("Department")
+               .HasMaxLength(100);
 
         builder.HasOne<UserBase>() 
                .WithOne()

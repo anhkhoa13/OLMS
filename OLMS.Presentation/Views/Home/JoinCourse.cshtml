@@ -1,0 +1,31 @@
+@model dynamic
+
+@{
+    ViewData["Title"] = "Join Course";
+}
+
+<h2>Join Course</h2>
+
+@if (Model != null)
+{
+    <table border="1" cellpadding="10" cellspacing="0">
+        <tr>
+            <td><strong>Course ID:</strong></td>
+            <td>@Model.Id</td>
+        </tr>
+        <tr>
+            <td><strong>Course Name:</strong></td>
+            <td>@Model.Name</td>
+        </tr>
+        <tr>
+            <td><strong>Description:</strong></td>
+            <td>@Model.Description</td>
+        </tr>
+    </table>
+}
+else
+{
+    <p>Course not found.</p>
+}
+
+

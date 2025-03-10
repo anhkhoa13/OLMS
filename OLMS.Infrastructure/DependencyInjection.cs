@@ -5,6 +5,7 @@ using OLMS.Domain.Entities.Quiz;
 using OLMS.Domain.Repositories;
 using OLMS.Infrastructure.Database;
 using OLMS.Infrastructure.Database.Repositories;
+//using OLMS.Infrastructure.Repositories;
 
 namespace OLMS.Infrastructure;
 
@@ -16,7 +17,6 @@ public static class DependencyInjection
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(connectionString));
 
-        // register
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<ICourseRepository, CourseRepository>();
         services.AddScoped<IQuestionRepository, QuestionRepository>();
@@ -25,6 +25,9 @@ public static class DependencyInjection
         services.AddScoped<IStudentAnswerRepository, StudentAnswerRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
 
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<ICourseRepository, CourseRepository>();
+        //services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
         return services;
     }
 }

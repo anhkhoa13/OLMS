@@ -1,11 +1,14 @@
-﻿namespace OLMS.Domain.Entities;
+﻿using OLMS.Domain.Primitives;
+
+namespace OLMS.Domain.Entities;
 
 public class Enrollment
 {
     public Guid StudentId { get; set; }
     public Guid CourseId { get; set; }
-    public Student Student { get; set; }
-    public Course Course { get; set; }
+    public Student Student { get; set; } = null!;
+    public Course Course { get; set; } = null!;
+    private Enrollment() { }
 
     public Enrollment(Guid studentId, Guid courseId)
     {

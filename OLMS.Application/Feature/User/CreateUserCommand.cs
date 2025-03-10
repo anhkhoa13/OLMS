@@ -1,13 +1,15 @@
 ﻿using MediatR;
 using OLMS.Domain.Entities;
+using OLMS.Domain.Result;
 
 namespace OLMS.Application.Feature.User;
 
-public record CreateUserCommand(Guid Id, 
-                                string Name, 
+public sealed record CreateUserCommand(string Username,
+                                string Password,
+                                string FullName, 
                                 string Email, 
-                                string Password, 
-                                Role Role) : IRequest<Guid>
+                                int Age,
+                                Role Role) : IRequest<Result<Guid>>
 {
 }
 

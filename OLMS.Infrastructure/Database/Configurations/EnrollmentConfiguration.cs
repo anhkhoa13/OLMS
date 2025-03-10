@@ -8,12 +8,12 @@ public sealed class EnrollmentConfiguration : IEntityTypeConfiguration<Enrollmen
 {
     public void Configure(EntityTypeBuilder<Enrollment> builder)
     {
-        builder.ToTable("Enrollments");
+        builder.ToTable("Enrollment");
 
         builder.HasKey(e => new { e.StudentId, e.CourseId });
 
         builder.HasOne(e => e.Student)
-               .WithMany(s => s.Enrollments)
+               .WithMany()
                .HasForeignKey(e => e.StudentId)
                .OnDelete(DeleteBehavior.Cascade);
 

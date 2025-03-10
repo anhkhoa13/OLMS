@@ -2,8 +2,8 @@
 
 public abstract class ValueObject : IEquatable<ValueObject>
 {
-	#region Methods
-	public abstract IEnumerable<object> GetAtomicValues();
+    #region Methods
+    public abstract IEnumerable<object> GetAtomicValues();
     public bool Equals(ValueObject? other)
     {
         return other is not null && ValueAreEqual(other);

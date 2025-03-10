@@ -1,57 +1,52 @@
-using OLMS.Application;
-using OLMS.Application.Feature.CourseUC;
-using OLMS.Domain.Repositories;
+﻿using OLMS.Application;
 using OLMS.Infrastructure;
-using OLMS.Infrastructure.Database.Repositories;
 
-namespace OLMS.Presentation
+namespace OLMS.Presentation;
+
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
+        var builder = WebApplication.CreateBuilder(args);
+
+        ////builder.Services.AddMediatR(configuration =>
+        ////{
+        ////    configuration.RegisterServicesFromAssembly(typeof(Program).Assembly);
+        ////});
+        //builder.Services.AddApplication();
+
+        // Add services to the container.
+        builder.Services.AddControllersWithViews();
+        builder.Services.AddApplication();
+        builder.Services.AddInfrastructure(builder.Configuration);
+
+        var app = builder.Build();
+
+        // Get default values from configuration
+        var defaultController = builder.Configuration["DefaultPage:Controller"] ?? "Authentication";
+        var defaultAction = builder.Configuration["DefaultPage:Action"] ?? "Login";
+
+        // Configure the HTTP request pipeline.
+        if (!app.Environment.IsDevelopment())
         {
-            var builder = WebApplication.CreateBuilder(args);
-            {
-                builder.Services.AddControllersWithViews();
-
-                builder.Services.AddMediatR(configuration =>
-                {
-                    configuration.RegisterServicesFromAssembly(typeof(Program).Assembly);
-                });
-                builder.Services.AddApplication();
-
-                /*builder.Services.AddScoped<IUserRepository, UserRepository>();
-                builder.Services.AddScoped<ICourseRepository, CourseRepository>();*/
-
-                builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateCourseCommandHandler).Assembly));
-                builder.Services.AddInfrastructure(builder.Configuration);
-            }
-            // Add services to the container.
-            
-
-            var app = builder.Build();
-            {
-                // Configure the HTTP request pipeline.
-                if (!app.Environment.IsDevelopment())
-                {
-                    app.UseExceptionHandler("/Home/Error");
-                    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                    app.UseHsts();
-                }
-                app.UseHttpsRedirection();
-                app.UseStaticFiles();
-
-                app.UseRouting();
-
-                app.UseAuthorization();
-
-                app.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-
-                app.Run();
-            }
-            
+            app.UseExceptionHandler("/Home/Error");
+            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            app.UseHsts();
         }
+
+        app.UseHttpsRedirection();
+        app.UseStaticFiles();
+
+        app.UseRouting();
+
+        app.UseAuthorization();
+
+        app.MapControllerRoute(
+            name: "default",
+            pattern: $"{{controller={defaultController}}}/{{action={defaultAction}}}/{{id?}}");
+
+        app.Run();
+            
     }
 }
+

@@ -1,6 +1,6 @@
 ﻿namespace OLMS.Domain.Repositories;
 
-public interface IUnitOfWork
+public interface IUnitOfWork : IDisposable
 {
-    Task SaveChangesAsync(CancellationToken cancellationToken = default);
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

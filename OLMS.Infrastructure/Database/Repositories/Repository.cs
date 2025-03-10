@@ -1,7 +1,6 @@
 ﻿using OLMS.Domain.Repositories;
 using OLMS.Domain.Primitives;
 using Microsoft.EntityFrameworkCore;
-using System.Threading;
 
 namespace OLMS.Infrastructure.Database.Repositories;
 
