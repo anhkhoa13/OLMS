@@ -16,7 +16,7 @@ namespace OLMS.API.Controllers
             _sender = sender;
         }
 
-        [HttpPost]
+        [HttpPost("enroll")]
         //[Authorize(Roles = "Student")]
         public async Task<IActionResult> Enroll([FromBody] EnrollCourseCommand command)
         {

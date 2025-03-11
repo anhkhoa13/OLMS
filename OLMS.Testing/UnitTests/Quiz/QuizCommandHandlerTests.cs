@@ -52,7 +52,7 @@ public class QuizCommandHandlerTests
         _mockQuizRepo.Setup(repo => repo.GetByIdAsync(quizId, It.IsAny<CancellationToken>())).ReturnsAsync(quiz);
         var handler = new RemoveMulChoQuesCommandHandler(_mockQuizRepo.Object);
 
-        var command = new RemoveMulChoiceQuizCommand(quizId, questionId);
+        var command = new RemoveMulChQuesCommand(quizId, questionId);
 
         // Act
         var result = await handler.Handle(command, CancellationToken.None);

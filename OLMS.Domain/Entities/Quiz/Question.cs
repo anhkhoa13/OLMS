@@ -14,11 +14,13 @@ public enum QuestionType
 }
 public abstract class Question : Entity
 {
-    protected string Content { get; set; }
-    protected abstract QuestionType Type { get; }
+    public string Content { get; set; }
+    public abstract QuestionType Type { get; protected set; }
+    public Guid QuizId { get; set; }
 
-    protected Question(Guid id, string content) : base(id)
+    protected Question(Guid id, string content, Guid quizId) : base(id)
     {
         Content = content;
+        QuizId = quizId;
     }
 }

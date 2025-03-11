@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace OLMS.Application.Feature.Quiz.Command;
-
+public record StartQuizAttemptCommand(Guid StudentId, Guid QuizId) : IRequest<Guid>;
 public class StartQuizAttemptCommandHandler : IRequestHandler<StartQuizAttemptCommand, Guid>
 {
     private readonly IQuizRepository _quizRepo;

@@ -18,6 +18,8 @@ public class QuizController : ControllerBase
     [HttpPost("create")]
     public async Task<IActionResult> CreateQuiz([FromBody] CreateMulChoiceQuizCommand command)
     {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
         var result = await _sender.Send(command); 
         return Ok(new { QuizId = result });
     }
@@ -25,12 +27,14 @@ public class QuizController : ControllerBase
     [HttpPost("add-question")]
     public async Task<IActionResult> AddQuestion([FromBody] AddMulChoQuesCommand command)
     {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        
         var result = await _sender.Send(command);
         return Ok(new { QuestionId = result });
     }
 
     [HttpDelete("remove-question")]
-    public async Task<IActionResult> RemoveQuestion([FromBody] RemoveMulChoiceQuizCommand command)
+    public async Task<IActionResult> RemoveQuestion([FromBody] RemoveMulChQuesCommand command)
     {
         var result = await _sender.Send(command);
         if (!result) return NotFound("Question not found");

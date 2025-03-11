@@ -3,7 +3,12 @@ using OLMS.Domain.Entities.Quiz;
 using OLMS.Domain.Repositories;
 
 namespace OLMS.Application.Feature.Quiz.Command;
-
+public record AddMulChoQuesCommand(Guid QuizId,
+                                string Content,
+                                List<string> Options,
+                                int CorrectOptionIndex) : IRequest<Guid>
+{
+}
 public class AddMulChoQuesCommandHandler : IRequestHandler<AddMulChoQuesCommand, Guid>
 {
     private readonly IQuizRepository _quizRepo;
@@ -20,7 +25,7 @@ public class AddMulChoQuesCommandHandler : IRequestHandler<AddMulChoQuesCommand,
         {
             throw new InvalidOperationException("Quiz type is not Multiple Choice Quiz");
         }
-        var question = new MultipleChoiceQuestion(Guid.NewGuid(), request.Content, request.Options, request.CorrectOptionIndex);
+        var question = new MultipleChoiceQuestion(Guid.NewGuid(), request.Content, request.Options, request.CorrectOptionIndex, request.QuizId);
         multipleChoiceQuiz.AddQuestion(question);
 
         await _quesRepo.AddAsync(question, cancellationToken);

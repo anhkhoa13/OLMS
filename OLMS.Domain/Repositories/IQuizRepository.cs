@@ -10,5 +10,5 @@ namespace OLMS.Domain.Repositories;
 
 public interface IQuizRepository : IRepository<Quiz>
 {
-
+    public Task<MultipleChoiceQuiz?> GetMultipleChoiceQuizByIdAsync(Guid id, CancellationToken cancellationToken);
 }
