@@ -40,7 +40,7 @@ public class AuthenticationController : Controller
     }
 
     [HttpPost]
-    public async IActionResult Login([FromForm]LoginUserCommand command)
+    public async Task<IActionResult> Login([FromForm]LoginUserCommand command)
     {
         Result<string> result = await _sender.Send(command);
 

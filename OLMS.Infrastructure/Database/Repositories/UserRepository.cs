@@ -9,6 +9,11 @@ public class UserRepository : Repository<UserBase>, IUserRepository
 {
     public UserRepository(ApplicationDbContext context) : base(context) {}
 
+    public override async Task<UserBase?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return await _context.Users.SingleOrDefaultAsync(u => u.Id == id, cancellationToken);
+    }
+
     public Task<UserBase?> GetByUsernameAsync(Username username, CancellationToken cancellationToken = default)
     {
         if (username == null)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using OLMS.Application.Services;
 using OLMS.Domain.Repositories;
 
 namespace OLMS.Application;
@@ -12,6 +13,7 @@ public static class DependencyInjection
         {
             configuration.RegisterServicesFromAssembly(assembly);
         });
+        services.AddSingleton<IJwtService, JwtService>();
         return services;
     }
 }

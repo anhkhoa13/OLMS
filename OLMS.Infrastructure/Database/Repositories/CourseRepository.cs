@@ -11,8 +11,15 @@ public class CourseRepository : Repository<Course>, ICourseRepository
 
     public async Task<Course?> GetByCodeAsync(string code)
     {
-        var course = await _context.Courses.SingleOrDefaultAsync(c => c.Code.Value == code);
+        var course = await _context.Courses.Include(c => c.Enrollments)
+                                            .SingleOrDefaultAsync(c => c.Code.Value == code);
         return course;
+    }
+
+    public override async Task<Course?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return await _context.Courses.Include(c => c.Enrollments)
+                                     .SingleOrDefaultAsync(c => c.Id == id, cancellationToken);
     }
 }
 
