@@ -7,10 +7,10 @@ namespace OLMS.Presentation.Controllers;
 
 public class AuthenticationController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly ILogger<AuthenticationController> _logger;
     private readonly ISender _sender;
 
-    public AuthenticationController(ILogger<HomeController> logger, ISender sender)
+    public AuthenticationController(ILogger<AuthenticationController> logger, ISender sender)
     {
         _logger = logger;
         _sender = sender;
@@ -25,14 +25,9 @@ public class AuthenticationController : Controller
     {
         return View();
     }
-    //[HttpPost]
-    //public IActionResult PasswordReset()
-    //{
-    //    return View();
-    //}
 
     [HttpPost]
-    public async Task<IActionResult> Register(CreateUserCommand command)
+    public async Task<IActionResult> Register([FromForm]CreateUserCommand command)
     {
         Result<Guid> result = await _sender.Send(command);
         
@@ -45,8 +40,18 @@ public class AuthenticationController : Controller
     }
 
     [HttpPost]
-    public IActionResult Login()
+    public async IActionResult Login([FromForm]LoginUserCommand command)
     {
+        Result<string> result = await _sender.Send(command);
+
+        if(!result.IsSuccess)
+        {
+            ModelState.AddModelError("", result.Error.ErrorMessage ?? "Error");
+            return View(command);
+        }
+
+
         return View();
     }
 }
+    

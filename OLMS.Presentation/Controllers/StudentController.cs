@@ -2,9 +2,9 @@
 
 namespace OLMS.Presentation.Controllers
 {
-    public class Teacher : Controller
+    public class StudentController : Controller
     {
-        public IActionResult Dashboard()
+        public IActionResult Index()
         {
             return View();
         }

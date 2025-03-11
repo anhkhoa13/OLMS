@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using OLMS.Domain.Repositories;
 using OLMS.Infrastructure.Database;
 using OLMS.Infrastructure.Database.Repositories;
-//using OLMS.Infrastructure.Repositories;
+
 
 namespace OLMS.Infrastructure;
 
@@ -20,6 +20,7 @@ public static class DependencyInjection
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ICourseRepository, CourseRepository>();
         //services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
+
         return services;
     }
 }
