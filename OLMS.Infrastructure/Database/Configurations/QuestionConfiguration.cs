@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using OLMS.Domain.Entities.Quiz;
+using OLMS.Domain.Entities.QuizEntity;
 using OLMS.Domain.Primitives;
 
 namespace OLMS.Infrastructure.Database.Configurations;
@@ -25,9 +25,6 @@ public sealed class QuestionConfiguration : IEntityTypeConfiguration<Question>
         builder.HasOne<Quiz>()
             .WithMany()
             .HasForeignKey(q => q.QuizId);
-
-
-        builder.UseTptMappingStrategy(); // Use Table-Per-Type (TPT) to handle inheritance
     }
 }
 

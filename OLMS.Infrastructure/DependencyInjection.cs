@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using OLMS.Domain.Entities.Quiz;
+using OLMS.Domain.Entities.QuizEntity;
 using OLMS.Domain.Repositories;
 using OLMS.Infrastructure.Database;
 using OLMS.Infrastructure.Database.Repositories;

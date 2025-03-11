@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using OLMS.Domain.Entities.Quiz;
+using OLMS.Domain.Entities.QuizEntity;
 using OLMS.Domain.Repositories;
 
 public class GetQuizDetailsQueryHandler : IRequestHandler<GetQuizDetailsQuery, Quiz>

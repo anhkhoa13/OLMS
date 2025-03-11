@@ -1,5 +1,5 @@
-﻿using MediatR;
-using OLMS.Domain.Entities.Quiz;
+﻿/*using MediatR;
+using OLMS.Domain.Entities.QuizEntity;
 using OLMS.Domain.Repositories;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OLMS.Application.Feature.Quiz.Command;
+namespace OLMS.Application.Feature.QuizUC.Command;
 public record SubmitQuizCommand(Guid AttemptId, List<StudentAnswerDto> Answers) : IRequest<bool>;
 public record StudentAnswerDto(Guid QuestionId, string Answer);
 public class SubmitQuizCommandHandler : IRequestHandler<SubmitQuizCommand, bool>
@@ -42,3 +42,4 @@ public class SubmitQuizCommandHandler : IRequestHandler<SubmitQuizCommand, bool>
         return true;
     }
 }
+*/

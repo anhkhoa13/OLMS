@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using OLMS.Application.Feature.Quiz.Command;
+using OLMS.Application.Feature.QuizUC.Command;
 
 namespace OLMS.Presentation.Controllers;
 
@@ -16,7 +16,7 @@ public class QuizController : ControllerBase
     }
 
     [HttpPost("create")]
-    public async Task<IActionResult> CreateQuiz([FromBody] CreateMulChoiceQuizCommand command)
+    public async Task<IActionResult> CreateQuiz([FromBody] CreateQuizCommand command)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
@@ -42,7 +42,7 @@ public class QuizController : ControllerBase
         return Ok("Question removed successfully");
     }
 
-    [HttpPost("attempts/start")]
+    /*[HttpPost("attempts/start")]
     public async Task<IActionResult> StartQuizAttempt([FromBody] StartQuizAttemptCommand command)
     {
         var attemptId = await _sender.Send(command);
@@ -53,5 +53,5 @@ public class QuizController : ControllerBase
     {
         var result = await _sender.Send(command);
         return result ? Ok("Quiz submitted successfully.") : BadRequest("Submission failed.");
-    }
+    }*/
 }

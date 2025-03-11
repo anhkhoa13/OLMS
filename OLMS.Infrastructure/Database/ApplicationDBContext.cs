@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
 using OLMS.Domain.Entities;
-using OLMS.Domain.Entities.Quiz;
+using OLMS.Domain.Entities.QuizEntity;
 
 namespace OLMS.Infrastructure.Database;
 
@@ -17,7 +17,6 @@ public class ApplicationDbContext : DbContext
     //public DbSet<Enrollment> Enrollments { get; set; }
 
     public DbSet<Quiz> Quizzes { get; set; }
-    public DbSet<MultipleChoiceQuiz> MultipleChoiceQuizzes { get; set; }
     public DbSet<Question> Questions { get; set; }
     public DbSet<MultipleChoiceQuestion> MultipleChoiceQuestions { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

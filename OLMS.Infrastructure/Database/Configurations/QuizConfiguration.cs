@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using OLMS.Domain.Entities.Quiz;
+using OLMS.Domain.Entities.QuizEntity;
 using OLMS.Domain.Primitives;
 
 namespace OLMS.Infrastructure.Database.Configurations;
@@ -28,6 +28,11 @@ public sealed class QuizConfiguration : IEntityTypeConfiguration<Quiz>
 
         builder.Property(q => q.IsTimeLimited)
             .IsRequired();
+
+        builder.HasMany(ques => ques.Questions)
+            .WithOne()
+            .HasForeignKey(q => q.QuizId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
 

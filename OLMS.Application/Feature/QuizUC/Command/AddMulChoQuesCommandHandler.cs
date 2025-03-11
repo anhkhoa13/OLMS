@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using OLMS.Domain.Entities.Quiz;
+using OLMS.Domain.Entities.QuizEntity;
 using OLMS.Domain.Repositories;
 
-namespace OLMS.Application.Feature.Quiz.Command;
+namespace OLMS.Application.Feature.QuizUC.Command;
 public record AddMulChoQuesCommand(Guid QuizId,
                                 string Content,
                                 List<string> Options,
@@ -21,12 +21,9 @@ public class AddMulChoQuesCommandHandler : IRequestHandler<AddMulChoQuesCommand,
     public async Task<Guid> Handle(AddMulChoQuesCommand request, CancellationToken cancellationToken)
     {
         var quiz = await _quizRepo.GetByIdAsync(request.QuizId);
-        if (quiz is not MultipleChoiceQuiz multipleChoiceQuiz)
-        {
-            throw new InvalidOperationException("Quiz type is not Multiple Choice Quiz");
-        }
+
         var question = new MultipleChoiceQuestion(Guid.NewGuid(), request.Content, request.Options, request.CorrectOptionIndex, request.QuizId);
-        multipleChoiceQuiz.AddQuestion(question);
+        quiz.AddQuestion(question);
 
         await _quesRepo.AddAsync(question, cancellationToken);
         _quizRepo.Update(quiz);

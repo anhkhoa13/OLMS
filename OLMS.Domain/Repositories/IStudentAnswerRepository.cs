@@ -1,5 +1,5 @@
 ﻿using OLMS.Domain.Entities;
-using OLMS.Domain.Entities.Quiz;
+using OLMS.Domain.Entities.QuizEntity;
 
 namespace OLMS.Domain.Repositories;
 

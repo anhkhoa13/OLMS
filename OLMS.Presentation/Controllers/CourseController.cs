@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OLMS.Application.Feature.CourseUC;
+using OLMS.Domain.Entities;
+using OLMS.Domain.Repositories;
 
 namespace OLMS.Presentation.Controllers;
 

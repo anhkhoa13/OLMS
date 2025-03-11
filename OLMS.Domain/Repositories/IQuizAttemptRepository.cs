@@ -1,4 +1,4 @@
-﻿using OLMS.Domain.Entities.Quiz;
+﻿using OLMS.Domain.Entities.QuizEntity;
 using OLMS.Domain.Repositories;
 
 public interface IQuizAttemptRepository : IRepository<QuizAttempt>

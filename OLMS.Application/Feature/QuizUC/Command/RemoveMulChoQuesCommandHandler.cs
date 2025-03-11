@@ -1,10 +1,10 @@
 ﻿using MediatR;
 using OLMS.Application.Feature.CourseUC;
 using OLMS.Domain.Entities;
-using OLMS.Domain.Entities.Quiz;
+using OLMS.Domain.Entities.QuizEntity;
 using OLMS.Domain.Repositories;
 
-namespace OLMS.Application.Feature.Quiz.Command;
+namespace OLMS.Application.Feature.QuizUC.Command;
 public record RemoveMulChQuesCommand(Guid QuizId, Guid QuestionId) : IRequest<bool>
 {
 }
@@ -17,16 +17,16 @@ public class RemoveMulChoQuesCommandHandler : IRequestHandler<RemoveMulChQuesCom
     }
     public async Task<bool> Handle(RemoveMulChQuesCommand request, CancellationToken cancellationToken)
     {
-        var quiz = await _quizRepo.GetMultipleChoiceQuizByIdAsync(request.QuizId, cancellationToken);
-        if (quiz is not MultipleChoiceQuiz multipleChoiceQuiz) return false;
+        var quiz = await _quizRepo.GetByIdAsync(request.QuizId, cancellationToken);
 
-        var question = multipleChoiceQuiz.Questions.FirstOrDefault(q => q.Id == request.QuestionId);
+        var question = quiz.Questions.FirstOrDefault(q => q.Id == request.QuestionId);
         if (question == null) return false;
 
-        multipleChoiceQuiz.RemoveQuestion(question);
-        _quizRepo.Update(multipleChoiceQuiz);
+        quiz.RemoveQuestion(question);
+        _quizRepo.Update(quiz);
         await _quizRepo.SaveChangesAsync(cancellationToken);
 
         return true;
     }
+
 }

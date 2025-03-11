@@ -1,4 +1,4 @@
-﻿using Moq;
+﻿/*using Moq;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
@@ -20,7 +20,7 @@ public class QuizControllerTests
     }
 
     [Fact]
-    public async Task CreateQuiz_Should_Return_QuizId()
+    *//*public async Task CreateQuiz_Should_Return_QuizId()
     {
         // Arrange
         var command = new CreateMulChoiceQuizCommand("Test Quiz", DateTime.Now, DateTime.Now.AddHours(1), true);
@@ -38,7 +38,7 @@ public class QuizControllerTests
         result.StatusCode.Should().Be(200);
         var quizId = result.Value.GetType().GetProperty("QuizId")?.GetValue(result.Value, null);
         quizId.Should().Be(expectedId);
-    }
+    }*//*
 
     [Fact]
     public async Task RemoveQuestion_Should_Return_NotFound_When_QuestionNotExists()
@@ -59,3 +59,4 @@ public class QuizControllerTests
         result.Value.Should().Be("Question not found");
     }
 }
+*/

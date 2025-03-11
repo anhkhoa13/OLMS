@@ -1,5 +1,5 @@
-﻿using MediatR;
-using OLMS.Domain.Entities.Quiz;
+﻿/*using MediatR;
+using OLMS.Domain.Entities.QuizEntity;
 using OLMS.Domain.Repositories;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OLMS.Application.Feature.Quiz.Command;
+namespace OLMS.Application.Feature.QuizUC.Command;
 public record StartQuizAttemptCommand(Guid StudentId, Guid QuizId) : IRequest<Guid>;
 public class StartQuizAttemptCommandHandler : IRequestHandler<StartQuizAttemptCommand, Guid>
 {
@@ -32,3 +32,4 @@ public class StartQuizAttemptCommandHandler : IRequestHandler<StartQuizAttemptCo
         return attempt.Id;
     }
 }
+*/
