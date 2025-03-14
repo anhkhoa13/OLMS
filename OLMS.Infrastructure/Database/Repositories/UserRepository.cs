@@ -14,12 +14,12 @@ public class UserRepository : Repository<UserBase>, IUserRepository
         return await _context.Users.SingleOrDefaultAsync(u => u.Id == id, cancellationToken);
     }
 
-    public Task<UserBase?> GetByUsernameAsync(Username username, CancellationToken cancellationToken = default)
+    public async Task<UserBase?> GetByUsernameAsync(Username username, CancellationToken cancellationToken = default)
     {
         if (username == null)
             throw new ArgumentNullException(nameof(username), "Username cannot be null");
 
-        return _context.Users.SingleOrDefaultAsync(u => u.Username.Value == username.Value, cancellationToken);
+        return await _context.Users.SingleOrDefaultAsync(u => u.Username.Value == username.Value, cancellationToken);
     }
 
     public async Task<bool> IsEmailUniqueAsync(Email email, CancellationToken cancellationToken = default)

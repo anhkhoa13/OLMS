@@ -19,29 +19,16 @@ public class Program
         builder.Services.AddApplication();
         builder.Services.AddInfrastructure(builder.Configuration);
 
-        builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtSettings"));
-        builder.Services.AddAuthentication(options => {
-            options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
-        .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
-        .AddJwtBearer(options =>
-        {
-            var jwtOptions = builder.Configuration.GetSection("JwtOptions").Get<JwtOptions>() ?? throw new ArgumentNullException("jwtOptions", "Missing Jwt configuration");
-            var key = Encoding.UTF8.GetBytes(jwtOptions.Secret);
+        builder.Services.AddHttpClient();
+        builder.Services.AddHttpContextAccessor();
 
-            options.TokenValidationParameters = new TokenValidationParameters
+        // Cấu hình Cookie Authentication
+        builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options =>
             {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = jwtOptions.Issuer,
-                ValidAudience = jwtOptions.Audience,
-                IssuerSigningKey = new SymmetricSecurityKey(key)
-            };
-        });
-
+                options.LoginPath = "/Authentication/Index";
+                options.AccessDeniedPath = "/Shared/AccessDenied";
+            });
         builder.Services.AddAuthorization();
 
         var app = builder.Build();
@@ -49,8 +36,6 @@ public class Program
         // Get default values from configuration
         var defaultController = builder.Configuration["DefaultPage:Controller"] ?? "Authentication";
         var defaultAction = builder.Configuration["DefaultPage:Action"] ?? "Login";
-
-
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
@@ -65,6 +50,7 @@ public class Program
 
         app.UseRouting();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapControllerRoute(

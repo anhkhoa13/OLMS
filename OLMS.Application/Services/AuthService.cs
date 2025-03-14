@@ -1,28 +1,36 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using OLMS.Domain.Entities;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
 namespace OLMS.Application.Services;
 
-public class JwtService : IJwtService
+public class AuthService : IAuthService
 {
     private readonly JwtOptions _jwtOptions;
-    public JwtService(IOptions<JwtOptions> jwtOptions)
+
+    public AuthService(IOptions<JwtOptions> jwtOptions)
     {
         _jwtOptions = jwtOptions.Value;
     }
 
-    public string GenerateToken(UserBase user)
+    public ClaimsPrincipal DecodeJwt(string token)
     {
-        var claims = new List<Claim>
-        {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new Claim(JwtRegisteredClaimNames.Name, user.FullName.Value),
-            new Claim(ClaimTypes.Role, user.Role.ToString())
-        };
+        var tokenHandler = new JwtSecurityTokenHandler();
+
+        if (!tokenHandler.CanReadToken(token))
+            throw new ArgumentException("Invalid JWT Token");
+
+        var jwtToken = tokenHandler.ReadJwtToken(token);
+
+        var identity = new ClaimsIdentity(jwtToken.Claims, "jwt");
+        return new ClaimsPrincipal(identity);
+    }
+
+    public string GenerateJwt(IReadOnlyCollection<Claim> claims)
+    {
         var key = Encoding.UTF8.GetBytes(_jwtOptions.Secret);
         var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature);
 
@@ -34,7 +42,7 @@ public class JwtService : IJwtService
             Subject = new ClaimsIdentity(claims),
             NotBefore = now,
             Expires = expires,
-            Issuer = _jwtOptions.Issuer,    
+            Issuer = _jwtOptions.Issuer,
             Audience = _jwtOptions.Audience,
             SigningCredentials = signingCredentials
         };
@@ -44,4 +52,5 @@ public class JwtService : IJwtService
 
         return tokenHandler.WriteToken(token);
     }
+
 }

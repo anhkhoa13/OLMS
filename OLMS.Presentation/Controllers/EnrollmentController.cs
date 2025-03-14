@@ -3,32 +3,29 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OLMS.Application.Feature.Enrollment;
 
-namespace OLMS.API.Controllers
+namespace OLMS.API.Controllers;
+
+public class EnrollmentController : ControllerBase
 {
-    [Route("api/enrollments")]
-    [ApiController]
-    public class EnrollmentController : ControllerBase
+    private readonly ISender _sender;
+
+    public EnrollmentController(ISender sender)
     {
-        private readonly ISender _sender;
+        _sender = sender;
+    }
 
-        public EnrollmentController(ISender sender)
+    [HttpPost]
+    //[Authorize(Roles = "Student")]
+    public async Task<IActionResult> Enroll([FromBody] EnrollCourseCommand command)
+    {
+        try
         {
-            _sender = sender;
+            await _sender.Send(command);
+            return Ok(new { EnrollmentId = command.CourseCode });
         }
-
-        [HttpPost]
-        //[Authorize(Roles = "Student")]
-        public async Task<IActionResult> Enroll([FromBody] EnrollCourseCommand command)
+        catch (Exception ex)
         {
-            try
-            {
-                await _sender.Send(command);
-                return Ok(new { EnrollmentId = command.CourseCode });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { Message = ex.Message });
-            }
+            return BadRequest(new { Message = ex.Message });
         }
     }
 }

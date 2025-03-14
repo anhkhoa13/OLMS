@@ -63,17 +63,16 @@
                                 <a href="@Url.Action("About", "Home")" class="nav-link">About</a>
                             </li>
                             <li class="nav-item">
-                                <a href="@Url.Action("Courses", "Home")" class="nav-link">Courses</a>
-                            </li>
-                            <li class="nav-item">
                                 <a href="@Url.Action("Contact", "Home")" class="nav-link">Contact</a>
                             </li>
                         </ul>
-                        <div class="others-option">
-                            <a href="@Url.Action("Courses", "Home")" class="default-btn">
-                                Login
-                            </a>
-                        </div>
+                        @if (ViewBag.HideNavbar == null || ViewBag.HideNavbar == false)
+                        {
+                            <div class="others-option">
+                                @await Html.PartialAsync("_LoginPartial")
+                            </div>
+                        }
+
                     </div>
                 </nav>
             </div>
@@ -82,7 +81,7 @@
     <!-- End Navbar Area -->
 
     <div class="container-fluid">
-        <main role="main" class="py-4">
+        <main role="main" class="py-4" style="padding-top: 80px;">
             @RenderBody()
         </main>
     </div>

@@ -9,17 +9,15 @@ using static OLMS.Domain.Result.UserError;
 
 namespace OLMS.Application.Feature.User;
 
-public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, Result<string>>
+public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, Result<UserBase>>
 {
     private readonly IUserRepository _userRepository;
-    private readonly IJwtService _jwtService;
 
-    public LoginUserCommandHandler(IUserRepository userRepository, IJwtService jwtService)
+    public LoginUserCommandHandler(IUserRepository userRepository)
     {
         _userRepository = userRepository;
-        _jwtService = jwtService;
     }
-    public async Task<Result<string>> Handle(LoginUserCommand request, CancellationToken cancellationToken)
+    public async Task<Result<UserBase>> Handle(LoginUserCommand request, CancellationToken cancellationToken)
     {
         var username = Username.Create(request.Username);
         var user = await _userRepository.GetByUsernameAsync(username, cancellationToken);
@@ -27,12 +25,11 @@ public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, Result<
         if (user is null)
             return CannotLogin;
 
-        if (!user.Password.Equals(request.Password))
+        var password = Password.Create(request.Password);
+        if (!user.Password.Equals(password))
             return CannotLogin;
 
-        var token = _jwtService.GenerateToken(user);
-
-        return token;
+        return user;
     }
 }
 

@@ -8,16 +8,16 @@ using static OLMS.Domain.Result.UserError;
 
 namespace OLMS.Application.Feature.User;
 
-public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Result<Guid>>
+public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, Result<Guid>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IUserRepository _userRepository;
-    public CreateUserCommandHandler(IUnitOfWork unitOfWork, IUserRepository userRepository)
+    public RegisterUserCommandHandler(IUnitOfWork unitOfWork, IUserRepository userRepository)
     {
         _unitOfWork = unitOfWork; 
         _userRepository = userRepository;
     }
-    public async Task<Result<Guid>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
         var username = Username.Create(request.Username);
 
@@ -40,7 +40,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Resul
                                        request.Age,
                                        request.Role);
 
-        await _userRepository.AddAsync(user);
+        await _userRepository.AddAsync(user, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return user.Id;

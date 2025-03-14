@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
 using OLMS.Application.Services;
-using OLMS.Domain.Repositories;
 
 namespace OLMS.Application;
 
@@ -13,7 +13,11 @@ public static class DependencyInjection
         {
             configuration.RegisterServicesFromAssembly(assembly);
         });
-        services.AddSingleton<IJwtService, JwtService>();
+
+        services.AddValidatorsFromAssembly(assembly);
+
+        services.AddSingleton<IAuthService, AuthService>();
+        services.AddScoped<IJwtService, JwtService>();
         return services;
     }
 }

@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace OLMS.Presentation.Controllers;
 
-public class StudentController : Controller
+[Authorize(Roles = "Instructor")]
+public class InstructorController : Controller
 {
-    [Authorize(Roles = "Student")]
-    public IActionResult Index()
+
+    public IActionResult Dashboard()
     {
         return View();
     }

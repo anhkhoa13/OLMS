@@ -4,7 +4,7 @@ using OLMS.Domain.Result;
 
 namespace OLMS.Application.Feature.User;
 
-public sealed record CreateUserCommand(string Username,
+public sealed record RegisterUserCommand(string Username,
                                 string Password,
                                 string FullName, 
                                 string Email, 
