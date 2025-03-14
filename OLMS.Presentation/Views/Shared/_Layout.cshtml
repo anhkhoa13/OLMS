@@ -70,9 +70,7 @@
                             </li>
                         </ul>
                         <div class="others-option">
-                            <a href="@Url.Action("Courses", "Home")" class="default-btn">
-                                Login
-                            </a>
+                            @await Html.PartialAsync("_LoginPartial")
                         </div>
                     </div>
                 </nav>
@@ -81,7 +79,7 @@
     </div>
     <!-- End Navbar Area -->
 
-    <div class="container-fluid">
+    <div class="container-fluid" style="margin-top: 100px">
         <main role="main" class="py-4">
             @RenderBody()
         </main>
