@@ -66,13 +66,9 @@
                                 <a href="@Url.Action("Contact", "Home")" class="nav-link">Contact</a>
                             </li>
                         </ul>
-                        @if (ViewBag.HideNavbar == null || ViewBag.HideNavbar == false)
-                        {
-                            <div class="others-option">
-                                @await Html.PartialAsync("_LoginPartial")
-                            </div>
-                        }
-
+                        <div class="others-option">
+                            @await Html.PartialAsync("_LoginPartial")
+                        </div>
                     </div>
                 </nav>
             </div>
@@ -80,8 +76,8 @@
     </div>
     <!-- End Navbar Area -->
 
-    <div class="container-fluid">
-        <main role="main" class="py-4" style="padding-top: 80px;">
+    <div class="container-fluid" style="margin-top: 100px">
+        <main role="main" class="py-4">
             @RenderBody()
         </main>
     </div>
