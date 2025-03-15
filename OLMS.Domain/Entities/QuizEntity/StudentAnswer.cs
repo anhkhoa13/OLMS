@@ -20,18 +20,4 @@ public class StudentAnswer : Entity
         QuizAttemptId = quizAttemptId;
         Answer = answer;
     }
-    public bool IsCorrect()
-    {
-        if (Question is MultipleChoiceQuestion mcq)
-        {
-            char correctOption = (char)('A' + mcq.CorrectOptionIndex); // Convert index to 'A', 'B', etc.
-            return Answer.Equals(correctOption.ToString(), StringComparison.OrdinalIgnoreCase);
-        }
-        /*else if (Question is TrueFalseQuestion tfq)
-        {
-            return Answer.Equals(tfq.CorrectAnswer.ToString(), StringComparison.OrdinalIgnoreCase);
-        }*/
-
-        return false; // Default case for unsupported question types
-    }
 }

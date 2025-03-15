@@ -12,7 +12,7 @@ public class Repository<T> : IRepository<T> where T : Entity
         _context = context;
     }
 
-    public virtual async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         return await _context.Set<T>().FindAsync(id, cancellationToken);
     }
