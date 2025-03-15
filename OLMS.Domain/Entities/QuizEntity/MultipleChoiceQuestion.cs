@@ -14,6 +14,5 @@ public class MultipleChoiceQuestion : Question
         Options = options;
         CorrectOptionIndex = correctOptionIndex;
     }
-
     public bool IsCorrect(int selectedOptionIndex) => selectedOptionIndex == CorrectOptionIndex;
 }

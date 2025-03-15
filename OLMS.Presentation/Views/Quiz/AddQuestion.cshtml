@@ -1,0 +1,101 @@
+﻿@{
+    ViewData["Title"] = "Add Question";
+}
+
+<h2>Add Question</h2>
+
+<form id="quizForm">
+    <h2>Add question</h2>
+    <button type="button" onclick="addQuestion()">+ Add Question</button>
+
+    <div id="questions-container"></div>
+    <button type="submit">Submit Quiz</button>
+</form>
+
+<<script>
+     let questions = [];
+
+     function addQuestion() {
+         const questionId = questions.length;
+         questions.push({ type: "MultipleChoice", content: "", options: [], correctOptionIndex: -1 });
+         renderQuestions();
+     }
+
+     function updateQuestionType(index, type) {
+         questions[index].type = type;
+         questions[index].options = type === "MultipleChoice" ? ["", ""] : [];
+         renderQuestions();
+     }
+
+     function updateQuestionContent(index, content) {
+         questions[index].content = content;
+     }
+
+     function addOption(index) {
+         questions[index].options.push("");
+         renderQuestions();
+     }
+
+     function updateOption(index, optionIndex, value) {
+         questions[index].options[optionIndex] = value;
+     }
+
+     function setCorrectAnswer(index, optionIndex) {
+         questions[index].correctOptionIndex = optionIndex;
+     }
+
+     function removeQuestion(index) {
+         questions.splice(index, 1);
+         renderQuestions();
+     }
+
+     function renderQuestions() {
+         const container = document.getElementById("questions-container");
+         container.innerHTML = "";
+
+         questions.forEach((q, index) => {
+             let optionsHtml = "";
+
+             if (q.type === "MultipleChoice") {
+                 optionsHtml = q.options.map((opt, optIndex) => `
+                     <div>
+                         <input type="text" placeholder="Option ${optIndex + 1}" value="${opt}" onchange="updateOption(${index}, ${optIndex}, this.value)" />
+                         <input type="radio" name="correct-${index}" ${q.correctOptionIndex === optIndex ? "checked" : ""} onclick="setCorrectAnswer(${index}, ${optIndex})" /> Correct
+                     </div>
+                 `).join("") + `<button onclick="addOption(${index})">+ Add Option</button>`;
+             }
+
+             container.innerHTML += `
+                 <div class="question-card">
+                     <input type="text" placeholder="Question Content" value="${q.content}" onchange="updateQuestionContent(${index}, this.value)" />
+                     <select onchange="updateQuestionType(${index}, this.value)">
+                         <option value="MultipleChoice" ${q.type === "MultipleChoice" ? "selected" : ""}>Multiple Choice</option>
+                         <option value="TrueFalse" ${q.type === "TrueFalse" ? "selected" : ""}>True/False</option>
+                         <option value="ShortAnswer" ${q.type === "ShortAnswer" ? "selected" : ""}>Short Answer</option>
+                     </select>
+                     ${optionsHtml}
+                     <button onclick="removeQuestion(${index})">Remove Question</button>
+                 </div>
+             `;
+         });
+     }
+
+     async function submitQuiz(event) {
+         event.preventDefault(); // Prevent default form submission behavior
+
+         const quizTitle = document.getElementById("quiz-title").value;
+         const quizDescription = document.getElementById("quiz-description").value;
+         const startTime = document.getElementById("quiz-startTime").value;
+         const endTime = document.getElementById("quiz-endTime").value;
+         const isTimeLimited = document.getElementById("quiz-isTimeLimited").checked;
+
+         if (!quizTitle || questions.length === 0) {
+             alert("Please add a quiz title and at least one question.");
+             return;
+         }
+
+         // fetch to database
+     }
+</script>
+
+
