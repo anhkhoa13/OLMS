@@ -15,7 +15,7 @@ public class EnrollmentController : ControllerBase
     }
 
     [HttpPost]
-    //[Authorize(Roles = "Student")]
+    //[Authorise(Roles = "Student")]
     public async Task<IActionResult> Enroll([FromBody] EnrollCourseCommand command)
     {
         try
