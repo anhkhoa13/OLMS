@@ -11,7 +11,7 @@ public class QuizController : Controller
     {
         _sender = sender;
     }
-    public IActionResult Create()
+    public IActionResult AddQuizTitle()
     {
         return View();
     }
