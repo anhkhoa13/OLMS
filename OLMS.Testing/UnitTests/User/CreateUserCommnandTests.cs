@@ -10,9 +10,9 @@
 
 //public class CreateUserCommnandTests
 //{
-//    private static readonly CreateUserCommand CMD = new("tTestId", "Testing123@", "Teacher 1", "teacher.testing@mail.com", 38, Role.Instructor);
+//    private static readonly RegisterUserCommand CMD = new("tTestId", "Testing123@", "Teacher 1", "teacher.testing@mail.com", 38, Role.Instructor);
 
-//    private readonly CreateUserCommandHandler _handler;
+//    private readonly RegisterUserCommandHandler _handler;
 //    private readonly IUnitOfWork _unitOfWorkMock;
 //    private readonly IUserRepository _userRepositoryMock;
 
@@ -20,7 +20,7 @@
 //    {
 //        _unitOfWorkMock = Substitute.For<IUnitOfWork>();
 //        _userRepositoryMock = Substitute.For<IUserRepository>();
-//        _handler = new CreateUserCommandHandler(_unitOfWorkMock, _userRepositoryMock);
+//        _handler = new RegisterUserCommandHandler(_unitOfWorkMock, _userRepositoryMock);
 //    }
 
 //    [Theory]

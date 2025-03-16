@@ -13,7 +13,6 @@ public sealed class CourseConfiguration : IEntityTypeConfiguration<Course>
 
         builder.HasKey(c => c.Id); // Khóa chính
 
-        //builder.Property(c => c.Id).HasColumnName("Id_course");
         builder.OwnsOne(c => c.Code, c =>
         {
             c.Property(c => c.Value)
@@ -42,9 +41,6 @@ public sealed class CourseConfiguration : IEntityTypeConfiguration<Course>
               .WithOne()
               .HasForeignKey(e => e.CourseId)
               .OnDelete(DeleteBehavior.Cascade);
-
-        //builder.HasIndex(c => c.Code.Value).IsUnique();
-
     }
 }
 

@@ -9,6 +9,19 @@ public class UserRepository : Repository<UserBase>, IUserRepository
 {
     public UserRepository(ApplicationDbContext context) : base(context) {}
 
+    public override async Task<UserBase?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return await _context.Users.SingleOrDefaultAsync(u => u.Id == id, cancellationToken);
+    }
+
+    public async Task<UserBase?> GetByUsernameAsync(Username username, CancellationToken cancellationToken = default)
+    {
+        if (username == null)
+            throw new ArgumentNullException(nameof(username), "Username cannot be null");
+
+        return await _context.Users.SingleOrDefaultAsync(u => u.Username.Value == username.Value, cancellationToken);
+    }
+
     public async Task<bool> IsEmailUniqueAsync(Email email, CancellationToken cancellationToken = default)
     {
         if(email == null)

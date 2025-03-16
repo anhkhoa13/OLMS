@@ -25,14 +25,6 @@ public class CourseController : ControllerBase
 
         var courseId = await _sender.Send(command);
 
-        return CreatedAtAction(nameof(GetCourseById), new { id = courseId }, new { Id = courseId });
-    }
-
-
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetCourseById(Guid id)
-    {
-        // This is just a placeholder
-        return Ok(new { Id = id, Message = "Course found" });
+        return RedirectToAction("Index");
     }
 }

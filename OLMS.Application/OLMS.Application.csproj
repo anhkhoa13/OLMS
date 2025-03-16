@@ -7,17 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Feature\Course\**" />
-    <Compile Remove="Feature\Student\**" />
-    <EmbeddedResource Remove="Feature\Course\**" />
-    <EmbeddedResource Remove="Feature\Student\**" />
-    <None Remove="Feature\Course\**" />
-    <None Remove="Feature\Student\**" />
+    <Compile Remove="Features\Course\**" />
+    <Compile Remove="Features\Student\**" />
+    <EmbeddedResource Remove="Features\Course\**" />
+    <EmbeddedResource Remove="Features\Student\**" />
+    <None Remove="Features\Course\**" />
+    <None Remove="Features\Student\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
     <PackageReference Include="MediatR" Version="12.4.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.2" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.6.1" />
   </ItemGroup>
 
   <ItemGroup>

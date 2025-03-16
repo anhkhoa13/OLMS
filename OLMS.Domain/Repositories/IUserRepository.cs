@@ -6,6 +6,7 @@ namespace OLMS.Domain.Repositories;
 public interface IUserRepository : IRepository<UserBase>
 {
     // Add user specific methods here
+    Task<UserBase?> GetByUsernameAsync(Username username, CancellationToken cancellationToken = default);
     Task<bool> IsUsernameUniqueAsync(Username userName, CancellationToken cancellationToken = default);
     Task<bool> IsEmailUniqueAsync(Email email, CancellationToken cancellationToken = default);
 }

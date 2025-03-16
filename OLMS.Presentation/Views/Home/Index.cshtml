@@ -1,111 +1,636 @@
 ﻿@{
-    ViewData["Title"] = "Trang Tổng Quan";
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Uses the main layout
 }
 
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="zxx">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@ViewData["Title"] - Online Learning</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <!-- Link of CSS Files -->
+    <link rel="stylesheet" href="~/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/assets/css/magnific-popup.min.css">
+    <link rel="stylesheet" href="~/assets/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="~/assets/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="~/assets/css/meanmenu.min.css">
+    <link rel="stylesheet" href="~/assets/css/scrollCue.css">
+    <link rel="stylesheet" href="~/assets/css/all.min.css">
+    <link rel="stylesheet" href="~/assets/css/style.css">
+    <link rel="stylesheet" href="~/assets/css/responsive.css">
 </head>
-<body>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+<body class="bg-fbfbfb">
+    <!-- Start Banner Area -->
+    <div class="banner-area position-relative z-1">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="/">E-Learning</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#">Về Chúng Tôi</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Khóa Học</a></li>
-                    <li class="nav-item"><a class="nav-link btn btn-outline-primary px-3 mx-2" href="/Account/Login">Đăng Nhập</a></li>
-                    <li class="nav-item"><a class="nav-link btn btn-primary px-3" href="/Account/Register">Đăng Ký</a></li>
-                </ul>
+            <div class="banner-text">
+                <h1 class="text-uppercase" data-cues="slideInUp" data-group="bannerContent">
+                    <span class="d-block">Your Gateway</span>
+                    <span class="d-block">To Multilingual</span>
+                    <span class="d-block">Proficiency</span>
+                </h1>
             </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <header class="bg-primary text-white text-center py-5">
-        <div class="container">
-            <h1>Học Mọi Lúc, Mọi Nơi</h1>
-            <p class="lead">Tham gia hàng ngàn khóa học chất lượng từ các giảng viên hàng đầu</p>
-            <a href="/Account/Register" class="btn btn-light btn-lg mt-3">Bắt Đầu Ngay</a>
-        </div>
-    </header>
-
-    <!-- Features Section -->
-    <section class="container py-5">
-        <div class="row text-center">
-            <div class="col-md-4">
-                <i class="fa-solid fa-laptop fa-3x text-primary"></i>
-                <h4 class="mt-3">Học Mọi Lúc</h4>
-                <p>Truy cập khóa học trên mọi thiết bị, bất kỳ lúc nào.</p>
+            <div class="banner-image text-center" data-cue="slideInUp">
+                <img src="~/assets/images/banners/banner1.jpg" alt="banner-image">
             </div>
-            <div class="col-md-4">
-                <i class="fa-solid fa-chalkboard-teacher fa-3x text-primary"></i>
-                <h4 class="mt-3">Giảng Viên Chất Lượng</h4>
-                <p>Đội ngũ giảng viên hàng đầu với nhiều năm kinh nghiệm.</p>
-            </div>
-            <div class="col-md-4">
-                <i class="fa-solid fa-chart-line fa-3x text-primary"></i>
-                <h4 class="mt-3">Theo Dõi Tiến Độ</h4>
-                <p>Quản lý tiến trình học tập của bạn dễ dàng.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Popular Courses -->
-    <section class="bg-light py-5">
-        <div class="container">
-            <h2 class="text-center">Các Khóa Học Phổ Biến</h2>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="card">
-                        <img src="https://source.unsplash.com/400x250/?coding" class="card-img-top" alt="Course">
-                        <div class="card-body">
-                            <h5 class="card-title">Lập Trình C# Cơ Bản</h5>
-                            <p class="card-text">Tìm hiểu về ngôn ngữ C# từ cơ bản đến nâng cao.</p>
-                            <a href="#" class="btn btn-primary">Xem Chi Tiết</a>
+            <div class="banner-content">
+                <div class="row align-items-center" data-cues="slideInUp" data-group="bannerText">
+                    <div class="col-lg-6 col-md-8">
+                        <p>
+                            Unlock the world by mastering languages. We offer an immersive, interactive, and personalized language learning experience.
+                        </p>
+                        <div class="btn-box d-flex align-items-center">
+                            <a href="@Url.Action("Contact", "Home")" class="default-btn">
+                                Get In Touch
+                            </a>
+                            <a href="https://www.youtube.com/watch?v=vn9B2hH4G_E" class="video-btn popup-youtube fw-medium d-flex align-items-center">
+                                <span class="d-block text-center rounded-circle">
+                                    <img src="~/assets/images/icons/play.svg" alt="play">
+                                </span>
+                                Watch Video
+                            </a>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <img src="https://source.unsplash.com/400x250/?business" class="card-img-top" alt="Course">
-                        <div class="card-body">
-                            <h5 class="card-title">Quản Lý Dự Án Agile</h5>
-                            <p class="card-text">Học cách quản lý dự án hiệu quả với phương pháp Agile.</p>
-                            <a href="#" class="btn btn-primary">Xem Chi Tiết</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <img src="https://source.unsplash.com/400x250/?design" class="card-img-top" alt="Course">
-                        <div class="card-body">
-                            <h5 class="card-title">Thiết Kế UI/UX</h5>
-                            <p class="card-text">Nắm vững các nguyên tắc thiết kế giao diện người dùng.</p>
-                            <a href="#" class="btn btn-primary">Xem Chi Tiết</a>
+                    <div class="col-lg-6 col-md-4">
+                        <div class="text-md-end">
+                            <a href="@Url.Action("Courses", "Home")" class="link-btn d-inline-block text-center rounded-circle fw-medium">
+                                <span class="d-block">Explore All Courses</span>
+                                <img src="~/assets/images/icons/diagonal-arrow-right-up.svg" alt="diagonal-arrow-right-up">
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+        <div class="shape1">
+            <img src="~/assets/images/shapes/shape1.svg" alt="shape1">
+        </div>
+        <div class="shape2">
+            <img src="~/assets/images/shapes/shape2.svg" alt="shape2">
+        </div>
+    </div>
+    <!-- End Banner Area -->
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white text-center py-3">
-        <p>&copy; 2024 E-Learning. All Rights Reserved.</p>
+    <!-- Start Features Area -->
+    <div class="features-area pt-120 pb-95 position-relative z-1 border-top border-bottom bg-f6ffeb">
+        <div class="container">
+            <div class="row justify-content-center" data-cues="slideInUp" data-group="featuresContent">
+                <div class="col-lg-3 col-sm-6">
+                    <div class="single-feature-box text-center mb-25 position-relative z-1">
+                        <h3 class="fw-semibold">Spanish</h3>
+                        <p class="mx-auto">Learn the Beauty of Spanish</p>
+                        <a href="@Url.Action("Courses", "Home")" class="link-btn position-relative z-1 d-inline-block rounded-circle text-center">
+                            <img src="~/assets/images/icons/diagonal-arrow-right-up.svg" alt="diagonal-arrow-right-up">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div class="single-feature-box text-center mb-25 position-relative z-1">
+                        <h3 class="fw-semibold">German</h3>
+                        <p class="mx-auto">Learn the Beauty of German</p>
+                        <a href="@Url.Action("Courses", "Home")" class="link-btn position-relative z-1 d-inline-block rounded-circle text-center">
+                            <img src="~/assets/images/icons/diagonal-arrow-right-up.svg" alt="diagonal-arrow-right-up">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div class="single-feature-box text-center mb-25 position-relative z-1">
+                        <h3 class="fw-semibold">Arabic</h3>
+                        <p class="mx-auto">Learn the Beauty of Arabic</p>
+                        <a href="@Url.Action("Courses", "Home")" class="link-btn position-relative z-1 d-inline-block rounded-circle text-center">
+                            <img src="~/assets/images/icons/diagonal-arrow-right-up.svg" alt="diagonal-arrow-right-up">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div class="single-feature-box text-center mb-25 position-relative z-1">
+                        <h3 class="fw-semibold">Mandarin</h3>
+                        <p class="mx-auto">Learn the Beauty of Mandarin</p>
+                        <a href="@Url.Action("Courses", "Home")" class="link-btn position-relative z-1 d-inline-block rounded-circle text-center">
+                            <img src="~/assets/images/icons/diagonal-arrow-right-up.svg" alt="diagonal-arrow-right-up">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="shape3">
+            <img src="~/assets/images/shapes/shape3.svg" alt="shape3">
+        </div>
+    </div>
+    <!-- End Features Area -->
+
+    <!-- Start About Us Area -->
+    <div class="about-us-area position-relative z-1 ptb-120">
+        <div class="container">
+            <div class="row align-items-center" data-cues="slideInUp" data-group="aboutUsContent">
+                <div class="col-lg-6 col-md-12">
+                    <div class="about-us-image text-center">
+                        <img src="~/assets/images/about-us/about1.jpg" alt="about-image">
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-12">
+                    <div class="about-us-content">
+                        <div class="video-box position-relative">
+                            <img src="~/assets/images/about-us/about2.jpg" alt="about-image">
+                            <div class="content">
+                                <div>
+                                    <span class="d-block fw-medium">Play Video</span>
+                                    <p>How We Teach Our Students</p>
+                                </div>
+                                <a href="https://www.youtube.com/watch?v=vn9B2hH4G_E" class="video-btn popup-youtube rounded-circle d-flex align-items-center justify-content-center">
+                                    <img src="~/assets/images/icons/play2.svg" alt="play">
+                                </a>
+                            </div>
+                        </div>
+                        <h2 class="fw-semibold text-uppercase">Delving into Our Linguistic Odyssey</h2>
+                        <p>
+                            We are dedicated to fostering a vibrant community of language learners committed to linguistic proficiency and cultural appreciation. Established in 2002.
+                        </p>
+                        <p>
+                            Our journey began with a vision to provide an immersive and comprehensive language education experience guided by expert instructors.
+                        </p>
+                        <a href="@Url.Action("Courses", "Home")" class="default-btn">Enroll Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-down-text text-uppercase d-flex align-items-center">
+            <div>
+                <img src="~/assets/images/icons/bx-mouse.svg" alt="bx-mouse">
+                Scroll Down
+            </div>
+        </div>
+    </div>
+    <!-- End About Us Area -->
+
+    <!-- Start Courses Area -->
+    <div class="courses-area border-bottom border-top bg-f3f3f3 pt-120 pb-95">
+        <div class="container">
+            <div class="section-title position-relative">
+                <h2 class="mb-0 fw-semibold text-uppercase">Our Popular Courses</h2>
+                <a href="@Url.Action("Courses", "Home")" class="default-btn">Explore All Courses</a>
+            </div>
+            <div class="row justify-content-center" data-cues="slideInUp" data-group="CoursesContent">
+                <div class="col-xl-4 col-md-6">
+                    <div class="single-course-box mb-25 position-relative">
+                        <h3 class="fw-semibold">
+                            <a href="@Url.Action("CourseDetails", "Home", new { id = 1 })">English Speaking</a>
+                        </h3>
+                        <p>Learn the Beauty of English</p>
+                        <div class="instructor d-flex align-items-center">
+                            <img src="~/assets/images/users/user1.jpg" class="rounded-circle" alt="user-image">
+                            <div>
+                                <h4 class="fw-medium">Steven James</h4>
+                                <span class="d-block">Instructor</span>
+                            </div>
+                        </div>
+                        <a href="@Url.Action("CourseDetails", "Home", new { id = 1 })" class="default-btn">Enroll Now</a>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-md-6">
+                    <div class="single-course-box mb-25 position-relative">
+                        <h3 class="fw-semibold">
+                            <a href="@Url.Action("CourseDetails", "Home", new { id = 2 })">Hindi Speaking</a>
+                        </h3>
+                        <p>Learn the Beauty of Hindi</p>
+                        <div class="instructor d-flex align-items-center">
+                            <img src="~/assets/images/users/user2.jpg" class="rounded-circle" alt="user-image">
+                            <div>
+                                <h4 class="fw-medium">Michael Eller</h4>
+                                <span class="d-block">Instructor</span>
+                            </div>
+                        </div>
+                        <a href="@Url.Action("CourseDetails", "Home", new { id = 2 })" class="default-btn">Enroll Now</a>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-md-6">
+                    <div class="single-course-box mb-25 position-relative">
+                        <h3 class="fw-semibold">
+                            <a href="@Url.Action("CourseDetails", "Home", new { id = 3 })">Urdu Speaking</a>
+                        </h3>
+                        <p>Learn the Beauty of Urdu</p>
+                        <div class="instructor d-flex align-items-center">
+                            <img src="~/assets/images/users/user3.jpg" class="rounded-circle" alt="user-image">
+                            <div>
+                                <h4 class="fw-medium">Charles Ferrell</h4>
+                                <span class="d-block">Instructor</span>
+                            </div>
+                        </div>
+                        <a href="@Url.Action("CourseDetails", "Home", new { id = 3 })" class="default-btn">Enroll Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Courses Area -->
+
+    <!-- Start Why Us Area -->
+    <div class="why-us-area">
+        <div class="container-fluid px-0">
+            <div class="row mx-0">
+                <div class="col-lg-6 col-md-12 px-0">
+                    <div class="why-us-image">
+                        <img src="~/assets/images/why-us/why-us1.jpg" alt="why-us-image">
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-12 px-0">
+                    <div class="why-us-content">
+                        <div class="content">
+                            <h2 class="fw-semibold text-uppercase" data-cue="slideInUp">
+                                Why Choose Us?
+                            </h2>
+                            <ul class="features-list ps-0 mb-0 list-unstyled" data-cues="slideInUp" data-group="whyUsContent">
+                                <li class="d-flex align-items-center">
+                                    <div class="icon d-flex align-items-center justify-content-center">
+                                        <img src="~/assets/images/icons/expert.svg" alt="expert">
+                                    </div>
+                                    <div>
+                                        <h3 class="fw-semibold">Expert Faculty</h3>
+                                        <p>
+                                            Learn from highly qualified and experienced instructors who are dedicated to your success.
+                                        </p>
+                                    </div>
+                                </li>
+                                <li class="d-flex align-items-center">
+                                    <div class="icon d-flex align-items-center justify-content-center">
+                                        <img src="~/assets/images/icons/small.svg" alt="small">
+                                    </div>
+                                    <div>
+                                        <h3 class="fw-semibold">Small Class Sizes</h3>
+                                        <p>
+                                            Enjoy personalized attention and better interaction in a low student-to-teacher ratio environment.
+                                        </p>
+                                    </div>
+                                </li>
+                                <li class="d-flex align-items-center">
+                                    <div class="icon d-flex align-items-center justify-content-center">
+                                        <img src="~/assets/images/icons/learning.svg" alt="learning">
+                                    </div>
+                                    <div>
+                                        <h3 class="fw-semibold">Immersive Learning</h3>
+                                        <p>
+                                            Experience hands-on, interactive lessons that ensure deep comprehension and language fluency.
+                                        </p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Why Us Area -->
+
+    <!-- Start Upcoming Courses Area -->
+    <div class="upcoming-courses-area border-top border-bottom bg-f3f3f3 ptb-120">
+        <div class="container" data-cues="slideInUp" data-group="upcomingCoursesContent">
+            <div class="section-title text-center">
+                <h2 class="fw-semibold mx-auto mb-0 text-uppercase">
+                    Upcoming Courses - Starting Soon
+                </h2>
+            </div>
+            <div class="upcoming-courses-slides owl-carousel owl-theme mx-auto">
+                <div class="single-upcoming-course-box position-relative">
+                    <div class="image position-relative">
+                        <img src="~/assets/images/shapes/bg-shape1.png" class="bg-image" alt="bg-image">
+                        <img src="~/assets/images/shapes/bg-shape2.png" class="bg-image" alt="bg-image">
+                    </div>
+                    <div class="content">
+                        <h3 class="fw-semibold">Portuguese Language</h3>
+                        <ul class="p-0 list-unstyled">
+                            <li class="fw-medium">Language level: <span class="fw-normal">Advanced</span></li>
+                            <li class="fw-medium">Starting Date: <span class="fw-normal">22 Nov, 2023</span></li>
+                        </ul>
+                        <div class="instructor d-flex align-items-center">
+                            <img src="~/assets/images/users/user5.jpg" class="rounded-circle" alt="user-image">
+                            <div>
+                                <h4 class="fw-medium">James Knarr</h4>
+                                <span class="d-block">Instructor</span>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="@Url.Action("CourseDetails", "Home", new { id = 4 })" class="default-btn">Enroll Now</a>
+                </div>
+
+                <div class="single-upcoming-course-box position-relative">
+                    <div class="image position-relative">
+                        <img src="~/assets/images/shapes/bg-shape1.png" class="bg-image" alt="bg-image">
+                        <img src="~/assets/images/shapes/bg-shape2.png" class="bg-image" alt="bg-image">
+                    </div>
+                    <div class="content">
+                        <h3 class="fw-semibold">Korean Language</h3>
+                        <ul class="p-0 list-unstyled">
+                            <li class="fw-medium">Language level: <span class="fw-normal">Advanced</span></li>
+                            <li class="fw-medium">Starting Date: <span class="fw-normal">22 Nov, 2023</span></li>
+                        </ul>
+                        <div class="instructor d-flex align-items-center">
+                            <img src="~/assets/images/users/user1.jpg" class="rounded-circle" alt="user-image">
+                            <div>
+                                <h4 class="fw-medium">Steven James</h4>
+                                <span class="d-block">Instructor</span>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="@Url.Action("CourseDetails", "Home", new { id = 5 })" class="default-btn">Enroll Now</a>
+                </div>
+
+                <div class="single-upcoming-course-box position-relative">
+                    <div class="image position-relative">
+                        <img src="~/assets/images/shapes/bg-shape1.png" class="bg-image" alt="bg-image">
+                        <img src="~/assets/images/shapes/bg-shape2.png" class="bg-image" alt="bg-image">
+                    </div>
+                    <div class="content">
+                        <h3 class="fw-semibold">Hindi Language</h3>
+                        <ul class="p-0 list-unstyled">
+                            <li class="fw-medium">Language level: <span class="fw-normal">Advanced</span></li>
+                            <li class="fw-medium">Starting Date: <span class="fw-normal">22 Nov, 2023</span></li>
+                        </ul>
+                        <div class="instructor d-flex align-items-center">
+                            <img src="~/assets/images/users/user3.jpg" class="rounded-circle" alt="user-image">
+                            <div>
+                                <h4 class="fw-medium">Charles Ferrell</h4>
+                                <span class="d-block">Instructor</span>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="@Url.Action("CourseDetails", "Home", new { id = 6 })" class="default-btn">Enroll Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Upcoming Courses Area -->
+
+    <!-- Start CTA Area -->
+    <div class="cta-area border-bottom border-top">
+        <div class="container-fluid px-0">
+            <div class="row mx-0">
+                <div class="col-lg-6 col-md-12 px-0">
+                    <div class="cta-content">
+                        <div class="content" data-cues="slideInUp" data-group="ctaContent">
+                            <h2 class="text-uppercase fw-semibold">
+                                Unlock Your Language Potential
+                            </h2>
+                            <p>
+                                Embark on an exhilarating journey to discover the joy of mastering multiple languages through our immersive programs.
+                            </p>
+                            <div class="btn-box">
+                                <a href="@Url.Action("Courses", "Home")" class="default-btn">Enroll Now</a>
+                                <a href="@Url.Action("Contact", "Home")" class="default-btn">Contact Us</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-12 px-0">
+                    <div class="cta-image">
+                        <img src="~/assets/images/cta.jpg" alt="cta-image">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End CTA Area -->
+
+    <!-- Start Team Area -->
+    <div class="team-area pt-120 pb-95">
+        <div class="container">
+            <div class="section-title text-center">
+                <h2 class="fw-semibold mx-auto mb-0 text-uppercase">
+                    Meet the Passionate Team Driving Excellence
+                </h2>
+            </div>
+            <div class="row justify-content-center" data-cues="slideInUp" data-group="teamContent">
+                <div class="col-lg-3 col-sm-6">
+                    <div class="single-team-member text-center mb-25 position-relative">
+                        <img src="~/assets/images/teams/team1.jpg" alt="team-image">
+                        <div class="content">
+                            <h3 class="fw-semibold">
+                                <a href="@Url.Action("TeamDetails", "Home", new { id = 1 })">
+                                    Aleid Batsaikhan
+                                </a>
+                            </h3>
+                            <span class="d-block">Instructor</span>
+                            <ul class="socials p-0 mb-0 list-unstyled">
+                                <li class="d-inline-block">
+                                    <a href="#" target="_blank" class="d-block rounded-circle"><i class="fa-brands fa-facebook-f"></i></a>
+                                </li>
+                                <li class="d-inline-block">
+                                    <a href="#" target="_blank" class="d-block rounded-circle"><i class="fa-brands fa-x-twitter"></i></a>
+                                </li>
+                                <li class="d-inline-block">
+                                    <a href="#" target="_blank" class="d-block rounded-circle"><i class="fa-brands fa-linkedin-in"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-sm-6">
+                    <div class="single-team-member text-center mb-25 position-relative">
+                        <img src="~/assets/images/teams/team2.jpg" alt="team-image">
+                        <div class="content">
+                            <h3 class="fw-semibold">
+                                <a href="@Url.Action("TeamDetails", "Home", new { id = 2 })">
+                                    Erica Castellanos
+                                </a>
+                            </h3>
+                            <span class="d-block">Instructor</span>
+                            <ul class="socials p-0 mb-0 list-unstyled">
+                                <li class="d-inline-block">
+                                    <a href="#" target="_blank" class="d-block rounded-circle"><i class="fa-brands fa-facebook-f"></i></a>
+                                </li>
+                                <li class="d-inline-block">
+                                    <a href="#" target="_blank" class="d-block rounded-circle"><i class="fa-brands fa-x-twitter"></i></a>
+                                </li>
+                                <li class="d-inline-block">
+                                    <a href="#" target="_blank" class="d-block rounded-circle"><i class="fa-brands fa-linkedin-in"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-sm-6">
+                    <div class="single-team-member text-center mb-25 position-relative">
+                        <img src="~/assets/images/teams/team3.jpg" alt="team-image">
+                        <div class="content">
+                            <h3 class="fw-semibold">
+                                <a href="@Url.Action("TeamDetails", "Home", new { id = 3 })">
+                                    Cillian Czeslaw
+                                </a>
+                            </h3>
+                            <span class="d-block">Instructor</span>
+                            <ul class="socials p-0 mb-0 list-unstyled">
+                                <li class="d-inline-block">
+                                    <a href="#" target="_blank" class="d-block rounded-circle"><i class="fa-brands fa-facebook-f"></i></a>
+                                </li>
+                                <li class="d-inline-block">
+                                    <a href="#" target="_blank" class="d-block rounded-circle"><i class="fa-brands fa-x-twitter"></i></a>
+                                </li>
+                                <li class="d-inline-block">
+                                    <a href="#" target="_blank" class="d-block rounded-circle"><i class="fa-brands fa-linkedin-in"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-sm-6">
+                    <div class="single-team-member text-center mb-25 position-relative">
+                        <img src="~/assets/images/teams/team4.jpg" alt="team-image">
+                        <div class="content">
+                            <h3 class="fw-semibold">
+                                <a href="@Url.Action("TeamDetails", "Home", new { id = 4 })">
+                                    Daithi Ermenegildo
+                                </a>
+                            </h3>
+                            <span class="d-block">Instructor</span>
+                            <ul class="socials p-0 mb-0 list-unstyled">
+                                <li class="d-inline-block">
+                                    <a href="#" target="_blank" class="d-block rounded-circle"><i class="fa-brands fa-facebook-f"></i></a>
+                                </li>
+                                <li class="d-inline-block">
+                                    <a href="#" target="_blank" class="d-block rounded-circle"><i class="fa-brands fa-x-twitter"></i></a>
+                                </li>
+                                <li class="d-inline-block">
+                                    <a href="#" target="_blank" class="d-block rounded-circle"><i class="fa-brands fa-linkedin-in"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Team Area -->
+
+    <!-- Start Footer -->
+    <footer class="footer-area bg-f6ffeb pt-120 border-top">
+        <div class="container">
+            <div class="subscribe-box row" data-cues="slideInUp" data-group="subscribeContent">
+                <div class="col-lg-6 col-md-12">
+                    <div class="subscribe-content">
+                        <h3 class="fw-semibold">Subscribe to Newsletter</h3>
+                        <p>Stay updated with our latest news and offers</p>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-12">
+                    <div class="subscribe-form">
+                        <form>
+                            <input type="text" class="form-control" placeholder="Enter email address">
+                            <button type="button">Subscribe</button>
+                        </form>
+                        <p>By subscribing, you agree to our Privacy Policy</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" data-cues="fadeIn" data-group="footerContent">
+                <div class="col-md-3 col-sm-6">
+                    <div class="single-footer-widget mb-25">
+                        <a href="@Url.Action("Index", "Home")" class="logo mb-0 d-inline-block">
+                            <img src="~/assets/images/logo.svg" alt="logo">
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-6">
+                    <div class="single-footer-widget mb-25">
+                        <h3 class="fw-medium">About Us</h3>
+                        <ul class="custom-links p-0 mb-0 list-unstyled">
+                            <li><a href="@Url.Action("Contact", "Home")">Contact</a></li>
+                            <li><a href="@Url.Action("Contact", "Home")">Support</a></li>
+                            <li><a href="@Url.Action("Blog", "Home")">Resources</a></li>
+                            <li><a href="@Url.Action("PrivacyPolicy", "Home")">Help Center</a></li>
+                            <li><a href="@Url.Action("Blog", "Home")">Blog</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-6">
+                    <div class="single-footer-widget mb-25">
+                        <h3 class="fw-medium">Courses</h3>
+                        <ul class="custom-links p-0 mb-0 list-unstyled">
+                            <li><a href="@Url.Action("CourseDetails", "Home")">Language Learning</a></li>
+                            <li><a href="#">Testimonials</a></li>
+                            <li><a href="#">Events</a></li>
+                            <li><a href="#">Partners</a></li>
+                            <li><a href="#">Careers</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-6">
+                    <div class="single-footer-widget mb-25">
+                        <h3 class="fw-medium">Terms</h3>
+                        <ul class="custom-links p-0 mb-0 list-unstyled">
+                            <li><a href="@Url.Action("PrivacyPolicy", "Home")">Privacy</a></li>
+                            <li><a href="@Url.Action("PrivacyPolicy", "Home")">Cookies</a></li>
+                            <li><a href="@Url.Action("TermsConditions", "Home")">Sitemap</a></li>
+                            <li><a href="@Url.Action("TermsConditions", "Home")">Accessibility</a></li>
+                            <li><a href="@Url.Action("TermsConditions", "Home")">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="copyright-area border-top">
+                <div class="row align-items-center">
+                    <div class="col-lg-3 col-sm-6">
+                        <p class="mb-0">© 2024 Lanklub. All rights reserved.</p>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <ul class="custom-links mb-0 list-unstyled">
+                            <li class="d-inline-block">
+                                <a href="@Url.Action("PrivacyPolicy", "Home")">Privacy Policy</a>
+                            </li>
+                            <li class="d-inline-block">
+                                <a href="@Url.Action("TermsConditions", "Home")">Terms of Service</a>
+                            </li>
+                            <li class="d-inline-block">
+                                <a href="@Url.Action("PrivacyPolicy", "Home")">Cookies Settings</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="socials">
+                            <a href="#" class="d-inline-block position-relative rounded-circle text-center">
+                                <i class="fa-brands fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="d-inline-block position-relative rounded-circle text-center">
+                                <i class="fa-brands fa-x-twitter"></i>
+                            </a>
+                            <a href="#" class="d-inline-block position-relative rounded-circle text-center">
+                                <i class="fa-brands fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="d-inline-block position-relative rounded-circle text-center">
+                                <i class="fa-brands fa-google"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </footer>
+    <!-- End Footer -->
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Go Top Button -->
+    <div class="go-top bg-white text-center rounded-circle position-fixed">
+        <i class="fa-solid fa-chevron-up"></i>
+    </div>
+    <!-- End Go Top -->
+    <!-- Link of JS Files -->
+    <script src="~/assets/js/jquery.min.js"></script>
+    <script src="~/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/js/magnific-popup.min.js"></script>
+    <script src="~/assets/js/meanmenu.min.js"></script>
+    <script src="~/assets/js/owl.carousel.min.js"></script>
+    <script src="~/assets/js/scrollCue.min.js"></script>
+    <script src="~/assets/js/custom.js"></script>
 </body>
+
 </html>

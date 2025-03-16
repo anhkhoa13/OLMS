@@ -23,6 +23,8 @@ public static class UserError
     public static readonly Error NonUniqueEmail = new("Non Unique Email", "Email already exists");
 
     public static readonly Error NegativeAge = new("Negative Age", "Age must greater than 0");
+
+    public static readonly Error CannotLogin = new("Cannot Login", "Invalid username or password");
 }
 
 public static class CourseError

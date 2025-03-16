@@ -1,5 +1,10 @@
-﻿using OLMS.Application;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using OLMS.Application;
+using OLMS.Application.Services;
 using OLMS.Infrastructure;
+using System.Text;
 
 namespace OLMS.Presentation;
 
@@ -9,16 +14,22 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        ////builder.Services.AddMediatR(configuration =>
-        ////{
-        ////    configuration.RegisterServicesFromAssembly(typeof(Program).Assembly);
-        ////});
-        //builder.Services.AddApplication();
-
-        // Add services to the container.
+        // Add services to the container
         builder.Services.AddControllersWithViews();
         builder.Services.AddApplication();
         builder.Services.AddInfrastructure(builder.Configuration);
+
+        builder.Services.AddHttpClient();
+        builder.Services.AddHttpContextAccessor();
+
+        // Cấu hình Cookie Authentication
+        builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options =>
+            {
+                options.LoginPath = "/Authentication/Index";
+                options.AccessDeniedPath = "/Shared/AccessDenied";
+            });
+        builder.Services.AddAuthorization();
 
         var app = builder.Build();
 
@@ -39,6 +50,7 @@ public class Program
 
         app.UseRouting();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapControllerRoute(
