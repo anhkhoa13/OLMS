@@ -2,7 +2,7 @@
 using OLMS.Domain.Entities.QuizEntity;
 using OLMS.Domain.Repositories;
 
-namespace OLMS.Application.Feature.QuizUC.Command;
+namespace OLMS.Application.Features.QuizUC.Command;
 public record AddMulChoQuesCommand(Guid QuizId,
                                 string Content,
                                 List<string> Options,

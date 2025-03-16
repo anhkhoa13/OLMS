@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using OLMS.Application.Feature.QuizUC.Command.DTO;
+using OLMS.Application.Features.QuizUC.DTO;
 using OLMS.Domain.Entities.QuizEntity;
 using OLMS.Domain.Repositories;
 using System;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OLMS.Application.Feature.QuizUC.Command;
+namespace OLMS.Application.Features.QuizUC.Command;
 public record SubmitQuizCommand(Guid AttemptId, List<StudentAnswerDto> Answers) : IRequest<bool>;
 public class SubmitQuizCommandHandler : IRequestHandler<SubmitQuizCommand, bool>
 {
@@ -24,7 +24,7 @@ public class SubmitQuizCommandHandler : IRequestHandler<SubmitQuizCommand, bool>
     {
         _quizAttemptRepo = quizAttemptRepo;
         _studentAnswerRepo = studentAnswerRepo;
-        _quizRepo = quizRepo;   
+        _quizRepo = quizRepo;
         _unitOfWork = unitOfWork;
     }
     public async Task<bool> Handle(SubmitQuizCommand request, CancellationToken cancellationToken)

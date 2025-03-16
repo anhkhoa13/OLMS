@@ -2,7 +2,7 @@
 using OLMS.Domain.Entities.QuizEntity;
 using OLMS.Domain.Repositories;
 
-namespace OLMS.Application.Feature.QuizUC.Command;
+namespace OLMS.Application.Features.QuizUC.Command;
 public record CreateQuizCommand(
     string Title,
     string Description,
@@ -25,7 +25,7 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Guid>
 
     public async Task<Guid> Handle(CreateQuizCommand request, CancellationToken cancellationToken)
     {
-        Quiz quiz = new Quiz(Guid.NewGuid(), request.Title, request.Description, request.StartTime, request.EndTime, request.IsTimeLimited) 
+        Quiz quiz = new Quiz(Guid.NewGuid(), request.Title, request.Description, request.StartTime, request.EndTime, request.IsTimeLimited)
             ?? throw new ArgumentNullException();
         /*foreach (var questionCommand in request.Questions)
         {

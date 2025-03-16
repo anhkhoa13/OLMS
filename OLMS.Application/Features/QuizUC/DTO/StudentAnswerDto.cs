@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OLMS.Application.Feature.QuizUC.Command.DTO;
+namespace OLMS.Application.Features.QuizUC.DTO;
 
 public class StudentAnswerDto
 {

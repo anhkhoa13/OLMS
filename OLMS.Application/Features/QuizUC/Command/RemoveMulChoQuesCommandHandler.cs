@@ -4,7 +4,7 @@ using OLMS.Domain.Entities;
 using OLMS.Domain.Entities.QuizEntity;
 using OLMS.Domain.Repositories;
 
-namespace OLMS.Application.Feature.QuizUC.Command;
+namespace OLMS.Application.Features.QuizUC.Command;
 public record RemoveMulChQuesCommand(Guid QuizId, Guid QuestionId) : IRequest<bool>
 {
 }

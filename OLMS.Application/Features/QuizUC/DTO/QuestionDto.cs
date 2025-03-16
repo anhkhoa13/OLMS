@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OLMS.Application.Feature.QuizUC.Command.DTO;
+namespace OLMS.Application.Features.QuizUC.DTO;
 public class QuestionDto
 {
     public Guid QuestionId { get; set; }
-    public string Content { get; set; }
-    public QuestionType Type { get; set; }
-    public List<string> Options { get; set; }
+    public required string Content { get; set; }
+    public required string Type { get; set; }
+    public List<string> Options { get; set; } = new();
 }

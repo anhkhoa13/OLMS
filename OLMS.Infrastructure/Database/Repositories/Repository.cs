@@ -4,15 +4,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace OLMS.Infrastructure.Database.Repositories;
 
-public abstract class Repository<T> : IRepository<T> where T : Entity
+public class Repository<T> : IRepository<T> where T : Entity
 {
     protected readonly ApplicationDbContext _context;
     public Repository(ApplicationDbContext context)
     {
         _context = context;
     }
-
-    public abstract Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+    public virtual async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return await _context.Set<T>().FindAsync(id, cancellationToken);
+    }
     public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken)
     {
         return await _context.Set<T>().ToListAsync(cancellationToken);
