@@ -40,7 +40,9 @@ public class UserController : Controller
             FullName = result.Value.FullName.Value,
             Email = result.Value.Email.Value,
             result.Value.Age,
-            result.Value.Role
+            result.Value.Role,
+
+            Message = "User info retrieved successfully"
         });
     }
 }

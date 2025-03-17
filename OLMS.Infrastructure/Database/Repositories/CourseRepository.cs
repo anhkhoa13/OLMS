@@ -9,11 +9,16 @@ public class CourseRepository : Repository<Course>, ICourseRepository
 {
     public CourseRepository(ApplicationDbContext context) : base(context) { }
 
-    public async Task<Course?> GetByCodeAsync(string code)
+    public async Task<IReadOnlyCollection<Course>> FindCoursesByInstructorIdAsync(Guid instructorId, CancellationToken cancellationToken = default)
     {
-        var course = await _context.Courses.Include(c => c.Enrollments)
+        return await _context.Courses.Where(c => c.InstructorId == instructorId)
+                                     .ToListAsync();
+    }
+
+    public async Task<Course?> GetByCodeAsync(string code, CancellationToken cancellationToken = default)
+    {
+        return await _context.Courses.Include(c => c.Enrollments)
                                             .SingleOrDefaultAsync(c => c.Code.Value == code);
-        return course;
     }
 
     public override async Task<Course?> GetByIdAsync(Guid id, CancellationToken cancellationToken)

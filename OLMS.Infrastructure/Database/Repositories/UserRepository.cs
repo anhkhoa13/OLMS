@@ -29,6 +29,12 @@ public class UserRepository : Repository<UserBase>, IUserRepository
 
         return !await _context.Users.AnyAsync(u => u.Email.Value == email.Value, cancellationToken);
     }
+
+    public async Task<bool> IsInstructor(Guid guid, CancellationToken cancellationToken = default)
+    {
+        return await _context.Instructors.AnyAsync(i => i.Id == guid);
+    }
+
     public async Task<bool> IsUsernameUniqueAsync(Username userName, CancellationToken cancellationToken = default)
     {
         if (userName == null)

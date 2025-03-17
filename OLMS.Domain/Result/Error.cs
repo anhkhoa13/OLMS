@@ -34,6 +34,8 @@ public static class CourseError
     public static readonly Error EmptyTitle = new("Empty Title", "Title cannot be empty");
     public static readonly Error EmptyInstructor = new("Empty Instructor", "Instructor cannot be empty");
 
+    public static readonly Error InstructorNotFound = new("Instructor Not Found", "Instructor not found");
+
     public static readonly Error InvalidTitle = new("Invalid Title", "Title must be 3-100 characters long");
     public static readonly Error InvalidDescription = new("Invalid Description", "Description must be less than 100 characters");
 

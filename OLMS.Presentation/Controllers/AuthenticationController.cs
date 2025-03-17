@@ -44,7 +44,7 @@ public class AuthenticationController : BaseController
             command.Age,
             command.Role
         };
-        var apiUrl = $"{_configuration["ApiSettings:BaseUrl"]}/api/auth/register";
+        var apiUrl = "/api/auth/register";
         var content = new StringContent(JsonConvert.SerializeObject(registerData), Encoding.UTF8, "application/json");
 
         var response = await _httpClient.PostAsync(apiUrl, content);

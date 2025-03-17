@@ -1,5 +1,4 @@
 ﻿@using OLMS.Domain.Entities
-@model List<Course>
 
 <h2 class="page-title">Your Courses</h2>
 
@@ -11,39 +10,30 @@
 
     <div id="createCourse" class="tab-content active">
         <div class="course-form-container">
-            <form method="post" asp-action="CreateCourse" class="course-form">
+            <form method="post" asp-controller="Instructor" asp-action="CreateCourse" class="course-form">
                 <div class="form-group">
                     <label for="courseName">Course Name</label>
-                    <input type="text" id="courseName" name="courseName" placeholder="Enter Course Name" class="form-control" required />
+                    <input type="text" id="Title" name="Title" placeholder="Enter Course Name" class="form-control" required />
                 </div>
 
                 <div class="form-group">
                     <label for="description">Description</label>
-                    <textarea id="description" name="description" placeholder="Enter Description" class="form-control"></textarea>
+                    <textarea id="Description" name="Description" placeholder="Enter Description" class="form-control"></textarea>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Create Course</button>
             </form>
         </div>
+        @if (!string.IsNullOrEmpty(ViewBag.CourseCode as string))
+        {
+            <div class="alert alert-success">
+                Course created successfully! Course Code: <strong>@ViewBag.CourseCode</strong>
+            </div>
+        }
     </div>
 
     <div id="listCourses" class="tab-content">
-        @if (Model != null && Model.Any())
-        {
-            <ul class="course-list">
-                @foreach (var course in Model)
-                {
-                    <li class="course-item">
-                        <span class="course-name">@course.Title</span>
-                        <span class="course-code">@course.Code.Value</span>
-                    </li>
-                }
-            </ul>
-        }
-        else
-        {
-            <p>No courses available.</p>
-        }
+        @await Html.PartialAsync("_ListCourses")
     </div>
 </div>
 

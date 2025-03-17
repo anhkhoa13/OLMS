@@ -1,8 +1,5 @@
 ﻿namespace OLMS.Presentation.Models;
 
-public class ApiErrorResponse
+public record class ApiErrorResponse(int Code, string Message, string Errors)
 {
-    public int Code { get; set; }
-    public string? Message { get; set; }
-    public string? Errors{ get; set; }
 }
