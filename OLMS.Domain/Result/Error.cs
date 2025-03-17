@@ -25,6 +25,8 @@ public static class UserError
     public static readonly Error NegativeAge = new("Negative Age", "Age must greater than 0");
 
     public static readonly Error CannotLogin = new("Cannot Login", "Invalid username or password");
+
+    public static readonly Error UserNotFound = new("User Not Found", "User not found");
 }
 
 public static class CourseError

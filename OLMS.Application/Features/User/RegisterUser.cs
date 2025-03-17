@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using OLMS.Domain.Entities;
 using OLMS.Domain.Repositories;
 using OLMS.Domain.Result;
@@ -7,6 +8,26 @@ using OLMS.Domain.ValueObjects;
 using static OLMS.Domain.Result.UserError;
 
 namespace OLMS.Application.Feature.User;
+
+public sealed class CreateUserValidation : AbstractValidator<RegisterUserCommand>
+{
+    public CreateUserValidation()
+    {
+        RuleFor(u => u.Username).NotEmpty().WithMessage("Username cannot be empty");
+        RuleFor(u => u.Password).NotEmpty().WithMessage("Password cannot be empty");
+        RuleFor(u => u.FullName).NotEmpty().WithMessage("Full name cannot be empty");
+        RuleFor(u => u.Email).NotEmpty().WithMessage("Email cannot be empty");
+    }
+}
+
+public sealed record RegisterUserCommand(string Username,
+                                string Password,
+                                string FullName,
+                                string Email,
+                                int Age,
+                                Role Role) : IRequest<Result<Guid>>
+{
+}
 
 public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, Result<Guid>>
 {

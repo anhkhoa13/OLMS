@@ -5,6 +5,8 @@ using OLMS.Domain.Repositories;
 
 namespace OLMS.Application.Feature.Enrollment;
 
+public sealed record EnrollCourseCommand(Guid StudentId, string CourseCode) : IRequest;
+
 public class EnrollCourseCommandHandler : IRequestHandler<EnrollCourseCommand>
 {
     private readonly IUnitOfWork _unitOfWork;

@@ -4,8 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace OLMS.Presentation.Controllers;
 
 [Authorize(Roles = "Instructor")]
-public class InstructorController : Controller
+[Route("ins")]
+public class InstructorController : BaseController
 {
+    public InstructorController(IConfiguration configuration, IHttpClientFactory httpClientFactory) : base(configuration, httpClientFactory)
+    {
+    }
 
     public IActionResult Dashboard()
     {

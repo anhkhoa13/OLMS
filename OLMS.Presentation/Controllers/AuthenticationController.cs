@@ -10,19 +10,13 @@ using OLMS.Presentation.Models;
 using OLMS.Application.Services;
 using OLMS.Domain.Entities;
 
-
 namespace OLMS.Presentation.Controllers;
 
-public class AuthenticationController : Controller
+public class AuthenticationController : BaseController
 {
-    private readonly HttpClient _httpClient;
-    private readonly IConfiguration _configuration;
     private readonly IAuthService _authService;
-
-    public AuthenticationController(HttpClient httpClient, IConfiguration configuration, IAuthService authService)
+    public AuthenticationController(IConfiguration configuration, IHttpClientFactory httpClientFactory, IAuthService authService) : base(configuration, httpClientFactory)
     {
-        _httpClient = httpClient;
-        _configuration = configuration;
         _authService = authService;
     }
 
@@ -50,7 +44,7 @@ public class AuthenticationController : Controller
             command.Age,
             command.Role
         };
-        var apiUrl = _configuration["ApiSettings:BaseUrl"] + "/api/auth/register";
+        var apiUrl = $"{_configuration["ApiSettings:BaseUrl"]}/api/auth/register";
         var content = new StringContent(JsonConvert.SerializeObject(registerData), Encoding.UTF8, "application/json");
 
         var response = await _httpClient.PostAsync(apiUrl, content);
@@ -75,7 +69,7 @@ public class AuthenticationController : Controller
             command.Username,
             command.Password
         };
-        var apiUrl = _configuration["ApiSettings:BaseUrl"] + "/api/auth/login";
+        var apiUrl = "/api/auth/login";
         var content = new StringContent(JsonConvert.SerializeObject(loginData), Encoding.UTF8, "application/json");
         
         var response = await _httpClient.PostAsync(apiUrl, content);
@@ -93,12 +87,14 @@ public class AuthenticationController : Controller
 
         var token = loginResponse.Token!;
         var principal = _authService.DecodeJwt(token);
-
+           
+        var userId = principal.FindFirst("nameid")!.Value;
         var fullNameClaim = principal.FindFirst("unique_name")!.Value;
         var roleClaim = principal.FindFirst("role")!.Value;
 
         await SignInWithCookieAsync(new List<Claim>
         {
+            new Claim(ClaimTypes.NameIdentifier, userId),
             new Claim(ClaimTypes.Name, fullNameClaim),
             new Claim("Jwt", loginResponse.Token!),
             new Claim(ClaimTypes.Role, roleClaim!)
@@ -112,7 +108,7 @@ public class AuthenticationController : Controller
         return role switch
         {
             Role.Admin => RedirectToAction("Index", "Admin"),
-            Role.Student => RedirectToAction("Index", "Student"),
+            Role.Student => RedirectToAction("Dashboard", "Student"),
             Role.Instructor => RedirectToAction("Dashboard", "Instructor"),
             _ => RedirectToAction("Index", "Home")
         };

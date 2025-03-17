@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using OLMS.Application;
 using OLMS.Application.Services;
 using OLMS.Infrastructure;
+using OLMS.Presentation.Services;
 using System.Text;
 
 namespace OLMS.Presentation;
@@ -19,8 +20,15 @@ public class Program
         builder.Services.AddApplication();
         builder.Services.AddInfrastructure(builder.Configuration);
 
-        builder.Services.AddHttpClient();
         builder.Services.AddHttpContextAccessor();
+        builder.Services.AddScoped<JwtHttpClientHandler>();
+        builder.Services.AddHttpClient("ApiClient", options =>
+        {
+            var apiUrl = builder.Configuration["ApiSettings:BaseUrl"];
+            if (string.IsNullOrWhiteSpace(apiUrl)) throw new ArgumentNullException("ApiSettings:BaseUrl", "Missing BaseUrl configuration");
+
+            options.BaseAddress = new Uri(apiUrl);
+        }).AddHttpMessageHandler<JwtHttpClientHandler>();
 
         // Cấu hình Cookie Authentication
         builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+
 
 namespace OLMS.Application.Services;
 
@@ -34,14 +34,10 @@ public class AuthService : IAuthService
         var key = Encoding.UTF8.GetBytes(_jwtOptions.Secret);
         var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature);
 
-        var now = DateTime.UtcNow;
-        var expires = DateTime.UtcNow.AddMinutes(_jwtOptions.ExpirationAsMinutes);
-
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            NotBefore = now,
-            Expires = expires,
+            Expires = DateTime.UtcNow.AddMinutes(_jwtOptions.ExpirationMinutes),
             Issuer = _jwtOptions.Issuer,
             Audience = _jwtOptions.Audience,
             SigningCredentials = signingCredentials

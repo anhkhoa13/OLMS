@@ -4,13 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace OLMS.API.Controllers;
 
-[Authorize(Roles = "Student")]
-public class StudentController : Controller
+[Authorize(Roles = "Instructor")]
+public class InstructorController : Controller
 {
     private readonly ISender _sender;
-    public StudentController(ISender sender)
+    public InstructorController(ISender sender)
     {
         _sender = sender;
     }
 }
-    

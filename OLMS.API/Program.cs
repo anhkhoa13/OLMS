@@ -26,6 +26,20 @@ public class Program
         builder.Services.AddApplication();
         builder.Services.AddInfrastructure(builder.Configuration);
 
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("OLMSOrigin", policy =>
+            {
+                string OLMSOrigin = builder.Configuration.GetSection("CorsSettings:OLMSOrigin").ToString() ??
+                    throw new ArgumentNullException("CorsSettings:AllowedOrigins", "Missing AllowedOrigins configuration");
+
+                policy.WithOrigins(OLMSOrigin)
+                    .AllowAnyMethod()
+                    .WithExposedHeaders("Authorization")
+                    .AllowAnyHeader();
+            });
+        });
+
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -60,6 +74,15 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+
+        app.Use(async (context, next) =>
+        {
+            var token = context.Request.Headers["Authorization"];
+            Console.WriteLine($"Incoming Token: {token}");
+            await next();
+        });
+
+        app.UseCors("OLMSOrigin");
 
         app.UseAuthentication();
         app.UseAuthorization();

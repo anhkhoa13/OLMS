@@ -4,6 +4,10 @@ using OLMS.Domain.Repositories;
 
 namespace OLMS.Application.Feature.CourseUC;
 
+public sealed record CreateCourseCommand(string Title,
+                                  string Description,
+                                  Guid InstructorId) : IRequest<Guid>;
+
 public class CreateCourseCommandHandler : IRequestHandler<CreateCourseCommand, Guid>
 {
     private readonly IUnitOfWork _unitOfWork;
