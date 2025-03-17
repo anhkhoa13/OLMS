@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OLMS.Application.Features.QuizUC.Command;
+using OLMS.Domain.ValueObjects;
 
 namespace OLMS.API.Controllers;
 
@@ -40,10 +41,13 @@ public class QuizController : Controller
 
         return Ok("Question removed successfully");
     }
-    [HttpGet("{quizId}")]
-    public async Task<IActionResult> GetQuizDetails(Guid quizId)
+    [HttpGet("code/{code}")]
+    public async Task<IActionResult> GetQuizDetails(string code)
     {
-        var quizDetails = await _sender.Send(new GetQuizDetailsQuery { QuizId = quizId });
+        if (string.IsNullOrWhiteSpace(code))
+            return BadRequest("Code is required");
+
+        var quizDetails = await _sender.Send(new GetQuizDetailsQuery { Code = code });
         if (quizDetails == null) return NotFound("Quiz not found");
 
         return Ok(quizDetails);

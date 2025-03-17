@@ -2,9 +2,10 @@
 using OLMS.Application.Features.QuizUC.DTO;
 using OLMS.Domain.Entities.QuizEntity;
 using OLMS.Domain.Repositories;
+using OLMS.Domain.ValueObjects;
 public record GetQuizDetailsQuery : IRequest<QuizDto>
 {
-    public Guid QuizId { get; set; }
+    public string Code { get; set; }
 }
 
 public class GetQuizDetailsQueryHandler : IRequestHandler<GetQuizDetailsQuery, QuizDto>
@@ -18,7 +19,7 @@ public class GetQuizDetailsQueryHandler : IRequestHandler<GetQuizDetailsQuery, Q
 
     public async Task<QuizDto> Handle(GetQuizDetailsQuery request, CancellationToken cancellationToken)
     {
-        var quiz = await _quizRepo.GetByIdAsync(request.QuizId);
+        var quiz = await _quizRepo.GetByCodeAsync(request.Code);
         if (quiz == null) throw new Exception("Quiz not found");
 
         return new QuizDto
