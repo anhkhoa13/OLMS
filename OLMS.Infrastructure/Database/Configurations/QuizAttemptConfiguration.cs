@@ -9,11 +9,7 @@ public sealed class QuizAttemptConfiguration : IEntityTypeConfiguration<QuizAtte
 {
     public void Configure(EntityTypeBuilder<QuizAttempt> builder)
     {
-        builder.HasKey(q => q.QuizAttempId);
-
-        builder.Property(q => q.QuizAttempId)
-               .IsRequired()
-               .ValueGeneratedNever();
+        builder.ToTable("QuizAttempt");
 
         builder.Property(q => q.StudentId)
                .IsRequired();

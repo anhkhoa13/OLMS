@@ -14,5 +14,17 @@ public class MultipleChoiceQuestion : Question
         Options = options;
         CorrectOptionIndex = correctOptionIndex;
     }
-    public bool IsCorrect(int selectedOptionIndex) => selectedOptionIndex == CorrectOptionIndex;
+    public override bool IsCorrect(string answer)
+    {
+        int result = -1;
+        try
+        {
+            result = Int32.Parse(answer);
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine($"Unable to parse '{answer}'");
+        }
+        return result == CorrectOptionIndex;
+    }
 }

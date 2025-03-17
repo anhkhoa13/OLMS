@@ -44,13 +44,14 @@ public class SubmitQuizCommandHandler : IRequestHandler<SubmitQuizCommand, bool>
 
             var studentAnswer = new StudentAnswer(
                 Guid.NewGuid(), request.AttemptId, answerDto.QuestionId, answerDto.Answer);
-
-            if (studentAnswer.IsCorrect()) correctAnswers++;
+            // problem here - on how to check correctness of different type of question
+            if (question.IsCorrect(answerDto.Answer)) correctAnswers++;
 
             await _studentAnswerRepo.AddAsync(studentAnswer, cancellationToken);
         }
 
         attempt.Score = (double)correctAnswers / quiz.Questions.Count * 100;
+        attempt.SubmittedAt = DateTime.Now;
         attempt.Status = QuizAttemptStatus.Submitted;
 
         _quizAttemptRepo.Update(attempt);

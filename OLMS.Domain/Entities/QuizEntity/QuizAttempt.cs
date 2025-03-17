@@ -8,7 +8,6 @@ public enum QuizAttemptStatus
 }
 public class QuizAttempt : Entity, IAggregateRoot
 {
-    public Guid QuizAttempId { get; set; }
     public Guid StudentId { get; private set; }
     public Guid QuizId { get; private set; }
     public List<StudentAnswer> Answers { get; private set; } = new();

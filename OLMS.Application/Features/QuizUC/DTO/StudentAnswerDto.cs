@@ -9,7 +9,7 @@ namespace OLMS.Application.Features.QuizUC.DTO;
 public class StudentAnswerDto
 {
     public Guid QuestionId { get; set; }
-    public string Answer { get; set; } // Stores "A", "B", "C", "D" for MCQ or "True"/"False" for TrueFalse
+    public string Answer { get; set; } 
 
     public StudentAnswerDto(Guid questionId, string answer)
     {

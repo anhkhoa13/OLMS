@@ -18,4 +18,5 @@ public abstract class Question : Entity
         Content = content;
         QuizId = quizId;
     }
+    public abstract bool IsCorrect(string answer);
 }
