@@ -1,0 +1,101 @@
+CREATE DATABASE OnlineLearningDB;
+GO
+
+USE OnlineLearningDB;
+GO
+
+-- User Table
+CREATE TABLE [User] (
+    Id UNIQUEIDENTIFIER PRIMARY KEY,
+    Username NVARCHAR(50) UNIQUE NOT NULL,
+    [Password] NVARCHAR(32) NOT NULL,
+    FullName NVARCHAR(100) NOT NULL,
+	Email NVARCHAR(100) UNIQUE NOT NULL,
+    Age INT CHECK (Age > 0),
+    Role NVARCHAR(20) CHECK (Role IN ('Student', 'Instructor', 'Admin')) NOT NULL
+);
+
+-- Student Table (inherits from User)
+CREATE TABLE Student (
+    Id UNIQUEIDENTIFIER PRIMARY KEY,
+    EnrollmentDate DATETIME DEFAULT GETDATE(),
+    Major NVARCHAR(100),
+    FOREIGN KEY (Id) REFERENCES [User](Id) ON DELETE CASCADE
+);
+
+-- Instructor Table (inherits from User)
+CREATE TABLE Instructor (
+    Id UNIQUEIDENTIFIER PRIMARY KEY,
+    HireDate DATETIME DEFAULT GETDATE(),
+    Department NVARCHAR(100),
+    FOREIGN KEY (Id) REFERENCES [User](Id) ON DELETE CASCADE
+);
+
+-- Course Table
+CREATE TABLE Course (
+    Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    Code NVARCHAR(6) UNIQUE NOT NULL,
+    Title NVARCHAR(100) NOT NULL,
+    Description NVARCHAR(255),
+    InstructorID UNIQUEIDENTIFIER,
+    FOREIGN KEY (InstructorID) REFERENCES Instructor(Id) ON DELETE SET NULL
+);
+
+-- Enrollment Table (Many-to-Many Relationship between Student and Course)
+CREATE TABLE Enrollment (
+    StudentID UNIQUEIDENTIFIER,
+    CourseID UNIQUEIDENTIFIER,
+    EnrollmentDate DATETIME DEFAULT GETDATE(),
+    PRIMARY KEY (StudentID, CourseID),
+    FOREIGN KEY (StudentID) REFERENCES Student(Id) ON DELETE CASCADE,
+    FOREIGN KEY (CourseID) REFERENCES Course(Id) ON DELETE CASCADE
+);
+
+
+
+CREATE TABLE Quiz (
+    Id UNIQUEIDENTIFIER PRIMARY KEY,
+	Code NVARCHAR(6) UNIQUE NOT NULL,
+    Title NVARCHAR(255) NOT NULL,
+    Description NVARCHAR(2000) NULL,
+    StartTime DATETIME NOT NULL,
+    EndTime DATETIME NOT NULL,
+    IsTimeLimited BIT NOT NULL
+);
+
+CREATE TABLE Question (
+    Id UNIQUEIDENTIFIER PRIMARY KEY,
+    Content NVARCHAR(1000) NOT NULL,
+    QuestionType NVARCHAR(50) NOT NULL, -- Stores enum as string
+	QuizId UNIQUEIDENTIFIER
+
+    FOREIGN KEY (QuizId) REFERENCES Quiz(Id) ON DELETE CASCADE
+);
+
+CREATE TABLE MultipleChoiceQuestion (
+    Id UNIQUEIDENTIFIER PRIMARY KEY,
+    Options NVARCHAR(MAX) NOT NULL, -- Stored as a semicolon-separated string
+    CorrectOptionIndex INT NOT NULL,
+    FOREIGN KEY (Id) REFERENCES Question(Id) ON DELETE CASCADE
+);
+
+CREATE TABLE QuizAttempt (
+    Id UNIQUEIDENTIFIER PRIMARY KEY,
+    StudentId UNIQUEIDENTIFIER NOT NULL,
+    QuizId UNIQUEIDENTIFIER NOT NULL,
+    SubmittedAt DATETIME NULL,
+    StartTime DATETIME NOT NULL,
+    Status INT NOT NULL, 
+    Score FLOAT NOT NULL DEFAULT 0,
+	FOREIGN KEY (StudentId) REFERENCES Student(Id) ON DELETE CASCADE,
+    FOREIGN KEY (QuizId) REFERENCES Quiz(Id) ON DELETE CASCADE
+);
+
+CREATE TABLE StudentAnswer (
+    Id UNIQUEIDENTIFIER PRIMARY KEY,
+    QuizAttemptId UNIQUEIDENTIFIER NOT NULL,
+    QuestionId UNIQUEIDENTIFIER NOT NULL,
+    Answer NVARCHAR(50) NOT NULL,
+    FOREIGN KEY (QuizAttemptId) REFERENCES QuizAttempt(Id) ON DELETE CASCADE,
+    FOREIGN KEY (QuestionId) REFERENCES Question(Id) ON DELETE NO ACTION -- Prevent cascade conflict
+);

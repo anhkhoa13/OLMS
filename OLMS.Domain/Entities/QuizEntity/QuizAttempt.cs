@@ -12,7 +12,7 @@ public class QuizAttempt : Entity, IAggregateRoot
     public Guid StudentId { get; private set; }
     public Guid QuizId { get; private set; }
     public List<StudentAnswer> Answers { get; private set; } = new();
-    public DateTime SubmittedAt { get; set; }
+    public DateTime? SubmittedAt { get; set; }
     public DateTime StartTime { get; set; }
     public QuizAttemptStatus Status { get; set; }
     public double Score { get; set; }

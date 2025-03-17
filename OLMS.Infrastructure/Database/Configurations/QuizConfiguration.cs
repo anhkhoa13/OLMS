@@ -12,7 +12,15 @@ public sealed class QuizConfiguration : IEntityTypeConfiguration<Quiz>
         builder.ToTable("Quiz");
 
         builder.HasKey(q => q.Id);
+        builder.OwnsOne(c => c.Code, c =>
+        {
+            c.Property(c => c.Value)
+             .HasColumnName("Code")
+             .IsRequired()
+             .HasMaxLength(6);
 
+            c.HasIndex(c => c.Value).IsUnique();
+        });
         builder.Property(q => q.Title)
             .IsRequired()
             .HasMaxLength(255);

@@ -44,6 +44,19 @@ public class Program
                     IssuerSigningKey = new SymmetricSecurityKey(key)
                 };
             });
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(policy =>
+            {
+                var allowedOrigins = builder.Configuration.GetSection("CorsSettings:AllowedOrigins").Get<string[]>();
+                if (allowedOrigins is null) throw new ArgumentNullException("CorsSettings:AllowedOrigins", "Missing AllowedOrigins configuration");
+
+                policy.WithOrigins(allowedOrigins)
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
+        });
         builder.Services.AddAuthorization();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -60,6 +73,7 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+        app.UseCors();
 
         app.UseAuthentication();
         app.UseAuthorization();

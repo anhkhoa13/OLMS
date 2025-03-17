@@ -60,4 +60,12 @@ public class QuizController : Controller
         var result = await _sender.Send(command);
         return result ? Ok("Quiz submitted successfully.") : BadRequest("Submission failed.");
     }
+
+
+    [HttpPost("attempts/result")]
+    public async Task<IActionResult> ReturnResult()
+    {
+        return Ok();
+    }
+
 }

@@ -21,7 +21,6 @@ public class Program
 
         builder.Services.AddHttpClient();
         builder.Services.AddHttpContextAccessor();
-
         // Cấu hình Cookie Authentication
         builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
@@ -49,7 +48,6 @@ public class Program
         app.UseStaticFiles();
 
         app.UseRouting();
-
         app.UseAuthentication();
         app.UseAuthorization();
 
