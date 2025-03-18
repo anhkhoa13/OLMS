@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using OLMS.Application;
 using OLMS.Application.Services;
@@ -55,6 +56,8 @@ public class Program
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
+
+
 
         app.UseRouting();
 
