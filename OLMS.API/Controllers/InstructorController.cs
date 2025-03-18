@@ -54,7 +54,7 @@ public class InstructorController : Controller
         {
             Code = c.Code.Value,
             c.Title,
-            c.Description
+            c.Description,
         });
         return Ok(new { courses , Message = "Courses retrieve successful"});
     }

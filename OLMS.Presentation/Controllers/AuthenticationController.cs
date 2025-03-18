@@ -100,18 +100,20 @@ public class AuthenticationController : BaseController
             new Claim(ClaimTypes.Role, roleClaim!)
         });
 
-        if (!Enum.TryParse(roleClaim, out Role role))
-        {
-            return RedirectToAction("Index", "Home");
-        }
+        return RedirectToAction("Dashboard", "User");
 
-        return role switch
-        {
-            Role.Admin => RedirectToAction("Index", "Admin"),
-            Role.Student => RedirectToAction("Dashboard", "Student"),
-            Role.Instructor => RedirectToAction("Dashboard", "Instructor"),
-            _ => RedirectToAction("Index", "Home")
-        };
+        //if (!Enum.TryParse(roleClaim, out Role role))
+        //{
+        //    return RedirectToAction("Index", "Home");
+        //}
+
+        //return role switch
+        //{
+        //    Role.Admin => RedirectToAction("Index", "Admin"),
+        //    Role.Student => RedirectToAction("Dashboard", "Student"),
+        //    Role.Instructor => RedirectToAction("Dashboard", "Instructor"),
+        //    _ => RedirectToAction("Index", "Home")
+        //};
     }
 
     [HttpPost]

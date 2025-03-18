@@ -63,12 +63,7 @@ public class InstructorController : BaseController
             ModelState.AddModelError("", error.Message ?? "Error");
             return View("Dashboard");
         }
-        var jsonResponse = JsonConvert.DeserializeObject<object>(responseContent);
-        return Json(jsonResponse);
-    }
-
-    public IActionResult Dashboard()
-    {
-        return View();
+        
+        return Ok(responseContent);
     }
 }

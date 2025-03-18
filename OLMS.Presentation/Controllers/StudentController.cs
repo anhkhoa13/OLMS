@@ -10,9 +10,4 @@ public class StudentController : BaseController
     public StudentController(IConfiguration configuration, IHttpClientFactory httpClientFactory) : base(configuration, httpClientFactory)
     {
     }
-
-    public IActionResult Dashboard()
-    {
-        return View();
-    }
 }

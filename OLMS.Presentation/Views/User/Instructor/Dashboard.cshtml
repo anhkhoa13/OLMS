@@ -7,7 +7,6 @@
         <button id="createCourseTab" class="tab-button active" onclick="showTab('createCourse')">Create Course</button>
         <button id="listCoursesTab" class="tab-button" onclick="showTab('listCourses')">List of Courses</button>
     </div>
-
     <div id="createCourse" class="tab-content active">
         <div class="course-form-container">
             <form method="post" asp-controller="Instructor" asp-action="CreateCourse" class="course-form">
@@ -24,6 +23,7 @@
                 <button type="submit" class="btn btn-primary">Create Course</button>
             </form>
         </div>
+
         @if (!string.IsNullOrEmpty(ViewBag.CourseCode as string))
         {
             <div class="alert alert-success">
@@ -33,7 +33,7 @@
     </div>
 
     <div id="listCourses" class="tab-content">
-        @await Html.PartialAsync("_ListCourses")
+        @await Html.PartialAsync("Instructor/_ListCourses")
     </div>
 </div>
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using OLMS.Domain.Entities;
 using OLMS.Presentation.Models;
 using System.Net;
 using System.Security.Claims;
@@ -48,5 +49,23 @@ public class UserController : BaseController
         var user = JsonConvert.DeserializeObject<UserInfoResponse>(responseContent)!;
 
         return View("Info", user);
+    }
+
+    [HttpGet("dashboard")]
+    public IActionResult Dashboard()
+    {
+        var roleClaim = User.FindFirst(ClaimTypes.Role)?.Value;
+        if (!Enum.TryParse(roleClaim, out Role role))
+        {
+            return RedirectToAction("Index", "Home");
+        }
+
+        return role switch
+        {
+            Role.Admin => View("Admin/Dashboard"),
+            Role.Student => View("Student/Dashboard"),
+            Role.Instructor => View("Instructor/Dashboard"),
+            _ => RedirectToAction("Index", "Home")
+        };
     }
 }

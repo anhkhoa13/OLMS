@@ -42,7 +42,6 @@
                 <th>Code</th>
                 <th>Title</th>
                 <th>Description</th>
-                <th>Instructor</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -53,24 +52,27 @@
 
     <script>
         function loadCourses() {
-            fetch('/api/courses')
+            fetch('/ins/courses')
                 .then(response => response.json())
                 .then(data => {
-                    console.log("Fetched courses:", data);
+                    // console.log("Fetched courses: ", data);
                     let courseList = document.getElementById("course-list");
+
+                    // console.log("Data type:", typeof data);
+
+                    // console.log("\n Courses:", data.courses);
                     
-                    if (data.length === 0) {
+                    if (data.courses.length === 0) {
                         courseList.innerHTML = "<tr><td colspan='5'>No courses available</td></tr>";
                         return;
                     }
 
                     let rows = "";
-                    data.forEach(course => {
+                    data.courses.forEach(course => {
                         rows += `<tr>
                             <td>${course.code || "N/A"}</td>
                             <td>${course.title || "Untitled"}</td>
                             <td>${course.description || "No description"}</td>
-                            <td>${course.instructor || "Unknown"}</td>
                             <td>
                                 <button class="btn btn-edit">Edit</button>
                                 <button class="btn btn-view" onclick="viewDetail('${course.id}')">View Detail</button>
