@@ -14,11 +14,13 @@ public class StartQuizAttemptCommandHandler : IRequestHandler<StartQuizAttemptCo
 {
     private readonly IQuizRepository _quizRepo;
     private readonly IQuizAttemptRepository _attemptRepo;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public StartQuizAttemptCommandHandler(IQuizRepository quizRepo, IQuizAttemptRepository attemptRepo)
+    public StartQuizAttemptCommandHandler(IQuizRepository quizRepo, IQuizAttemptRepository attemptRepo, IUnitOfWork unitOfWork)
     {
         _quizRepo = quizRepo;
         _attemptRepo = attemptRepo;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Guid> Handle(StartQuizAttemptCommand request, CancellationToken cancellationToken)
@@ -30,7 +32,7 @@ public class StartQuizAttemptCommandHandler : IRequestHandler<StartQuizAttemptCo
         // check student eligible
         var attempt = new QuizAttempt(Guid.NewGuid(), request.StudentId, request.QuizId, DateTime.UtcNow, QuizAttemptStatus.InProgress);
         await _attemptRepo.AddAsync(attempt, cancellationToken);
-        await _attemptRepo.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync();
 
         // 4. Return response
         return attempt.Id;

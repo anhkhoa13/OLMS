@@ -12,6 +12,7 @@ public abstract class Question : Entity
     public string Content { get; set; }
     public abstract QuestionType Type { get; protected set; }
     public Guid QuizId { get; set; }
+    public bool IsDeleted { get; set; } // Soft delete flag
 
     protected Question(Guid id, string content, Guid quizId) : base(id)
     {

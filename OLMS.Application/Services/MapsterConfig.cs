@@ -9,6 +9,7 @@ public class MapsterConfig
     {
         TypeAdapterConfig<Question, QuestionDto>
             .NewConfig()
+            .Map(dest => dest.QuestionId, src => src.Id)
             .Map(dest => dest.Type, src => src.GetType().Name)
             .AfterMapping((src, dest) =>
             {

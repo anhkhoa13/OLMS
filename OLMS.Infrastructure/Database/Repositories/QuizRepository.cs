@@ -19,7 +19,7 @@ public class QuizRepository : Repository<Quiz>, IQuizRepository
     public async Task<Quiz?> GetByCodeAsync(string code)
     {
         return await _context.Quizzes
-            .Include(q => q.Questions)
+            .Include(q => q.Questions.Where(q => !q.IsDeleted))
             .SingleOrDefaultAsync(q => q.Code.Value == code);
     }
 }

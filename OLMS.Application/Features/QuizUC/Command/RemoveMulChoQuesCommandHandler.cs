@@ -11,9 +11,11 @@ public record RemoveMulChQuesCommand(Guid QuizId, Guid QuestionId) : IRequest<bo
 public class RemoveMulChoQuesCommandHandler : IRequestHandler<RemoveMulChQuesCommand, bool>
 {
     private readonly IQuizRepository _quizRepo;
-    public RemoveMulChoQuesCommandHandler(IQuizRepository quizRepo)
+    private readonly IUnitOfWork _unitOfWork;
+    public RemoveMulChoQuesCommandHandler(IQuizRepository quizRepo, IUnitOfWork unitOfWork)
     {
         _quizRepo = quizRepo;
+        _unitOfWork = unitOfWork;
     }
     public async Task<bool> Handle(RemoveMulChQuesCommand request, CancellationToken cancellationToken)
     {
@@ -21,10 +23,10 @@ public class RemoveMulChoQuesCommandHandler : IRequestHandler<RemoveMulChQuesCom
 
         var question = quiz.Questions.FirstOrDefault(q => q.Id == request.QuestionId);
         if (question == null) return false;
-
-        quiz.RemoveQuestion(question);
+        question.IsDeleted = true;  // Instead of removing, mark as deleted
+        //quiz.RemoveQuestion(question); // No hard delete
         _quizRepo.Update(quiz);
-        await _quizRepo.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync();
 
         return true;
     }
