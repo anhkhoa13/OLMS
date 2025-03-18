@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OLMS.Domain.Entities;
-using OLMS.Domain.Entities.QuizEntity;
+using OLMS.Domain.Entities.QuestionEntity;
 
 namespace OLMS.Domain.Repositories;
 

@@ -22,6 +22,7 @@ public class Program
             .AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                options.JsonSerializerOptions.IncludeFields = true;
             });
         builder.Services.AddApplication();
         builder.Services.AddInfrastructure(builder.Configuration);

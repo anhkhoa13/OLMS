@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OLMS.Application.Features.QuizUC.Command;
 using OLMS.Domain.ValueObjects;
+using System.Diagnostics;
 
 namespace OLMS.API.Controllers;
 
@@ -24,8 +25,8 @@ public class QuizController : Controller
         var result = await _sender.Send(command); 
         return Ok(new { QuizId = result });
     }
-    [HttpPost("add-question")]
-    public async Task<IActionResult> AddQuestion([FromBody] AddMulChoQuesCommand command)
+    [HttpPost("add-questions")]
+    public async Task<IActionResult> AddQuestions([FromBody] AddQuestionsCommand command)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
         
@@ -36,6 +37,8 @@ public class QuizController : Controller
     [HttpDelete("remove-question")]
     public async Task<IActionResult> RemoveQuestion([FromBody] RemoveMulChQuesCommand command)
     {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
         var result = await _sender.Send(command);
         if (!result) return NotFound("Question not found");
 
@@ -55,12 +58,16 @@ public class QuizController : Controller
     [HttpPost("attempts/start")]
     public async Task<IActionResult> StartQuizAttempt([FromBody] StartQuizAttemptCommand command)
     {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
         var attemptId = await _sender.Send(command);
         return Ok(new { AttemptId = attemptId });
     }
     [HttpPost("attempts/submit")]
     public async Task<IActionResult> SubmitQuiz([FromBody] SubmitQuizCommand command)
     {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
         var result = await _sender.Send(command);
         return result ? Ok("Quiz submitted successfully.") : BadRequest("Submission failed.");
     }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using OLMS.Domain.Entities.QuizEntity;
+using OLMS.Domain.Entities.QuestionEntity;
 using OLMS.Domain.Primitives;
 
 namespace OLMS.Infrastructure.Database.Configurations;

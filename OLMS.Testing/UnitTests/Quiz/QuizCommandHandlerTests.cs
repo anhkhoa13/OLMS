@@ -68,7 +68,7 @@ public class QuizCommandHandlerTests
     {
         // Arrange
         var quizId = Guid.NewGuid();
-        var command = new AddMulChoQuesCommand(quizId, "Question Content", new List<string> { "A", "B" }, 1);
+        var command = new AddQuestionsCommand(quizId, "Question Content", new List<string> { "A", "B" }, 1);
         var quiz = new MultipleChoiceQuiz(quizId, "Quiz Title", DateTime.Now, DateTime.Now.AddHours(1), true);
 
         _mockQuizRepo.Setup(repo => repo.GetByIdAsync(quizId, It.IsAny<CancellationToken>())).ReturnsAsync(quiz);

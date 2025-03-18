@@ -1,6 +1,7 @@
-﻿using MediatR;
+﻿using Mapster;
+using MediatR;
 using OLMS.Application.Features.QuizUC.DTO;
-using OLMS.Domain.Entities.QuizEntity;
+using OLMS.Domain.Entities.QuestionEntity;
 using OLMS.Domain.Repositories;
 using OLMS.Domain.ValueObjects;
 public record GetQuizDetailsQuery : IRequest<QuizDto>
@@ -30,13 +31,7 @@ public class GetQuizDetailsQueryHandler : IRequestHandler<GetQuizDetailsQuery, Q
             StartTime = quiz.StartTime,
             EndTime = quiz.EndTime,
             IsTimeLimited = quiz.IsTimeLimited,
-            Questions = quiz.Questions.Select(q => new QuestionDto
-            {
-                QuestionId = q.Id,
-                Content = q.Content,
-                Type = q.Type.ToString(), // Dynamically get type
-                Options = q is MultipleChoiceQuestion mcq ? mcq.Options : new List<string>()
-            }).ToList()
+            Questions = quiz.Questions.Select(q => q.Adapt<QuestionDto>()).ToList()
         };
     }
 }

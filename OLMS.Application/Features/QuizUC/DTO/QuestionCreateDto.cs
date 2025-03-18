@@ -1,7 +1,6 @@
 ﻿namespace OLMS.Application.Features.QuizUC.DTO;
-public record QuestionDto
+public record QuestionCreateDto
 {
-    public Guid? QuestionId { get; set; } // Nullable for new questions
     public required string Content { get; set; }
     public required string Type { get; set; } // "MultipleChoice" or "ShortAnswer"
 

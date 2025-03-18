@@ -1,4 +1,5 @@
-﻿using OLMS.Domain.Primitives;
+﻿using OLMS.Domain.Entities.QuestionEntity;
+using OLMS.Domain.Primitives;
 using OLMS.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;

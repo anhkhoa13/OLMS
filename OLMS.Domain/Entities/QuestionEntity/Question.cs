@@ -1,6 +1,6 @@
 ﻿using OLMS.Domain.Primitives;
 
-namespace OLMS.Domain.Entities.QuizEntity;
+namespace OLMS.Domain.Entities.QuestionEntity;
 public enum QuestionType
 {
     MultipleChoice,

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
 using OLMS.Domain.Entities;
+using OLMS.Domain.Entities.QuestionEntity;
 using OLMS.Domain.Entities.QuizEntity;
 
 namespace OLMS.Infrastructure.Database;
