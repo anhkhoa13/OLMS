@@ -22,7 +22,7 @@ public class GetQuizzesQueryQueryHandler : IRequestHandler<GetQuizzesQuery, List
 
     public async Task<List<QuizDto>> Handle(GetQuizzesQuery request, CancellationToken cancellationToken)
     {
-        var quizzes = await _quizRepo.GetAllAsync(cancellationToken);
+        var quizzes = await _quizRepo.GetAllQuizsAsyncIncludeQuestions(cancellationToken);
         if (quizzes == null || !quizzes.Any()) throw new Exception("Quiz not found");
 
         return quizzes.Adapt<List<QuizDto>>();

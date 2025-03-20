@@ -32,7 +32,9 @@ public class MapsterConfig
                     dest.CorrectAnswer = null;
                 }
             });
-        TypeAdapterConfig<Quiz, QuizDto>.NewConfig();
+        TypeAdapterConfig<Quiz, QuizDto>
+            .NewConfig()
+            .Map(dest => dest.QuizId, src => src.Id);
     }
 }
 

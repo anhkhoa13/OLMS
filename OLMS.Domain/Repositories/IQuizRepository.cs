@@ -12,4 +12,5 @@ namespace OLMS.Domain.Repositories;
 public interface IQuizRepository : IRepository<Quiz>
 {
     public Task<Quiz?> GetByCodeAsync(string code);
+    public Task<IEnumerable<Quiz>> GetAllQuizsAsyncIncludeQuestions(CancellationToken cancellationToken);
 }

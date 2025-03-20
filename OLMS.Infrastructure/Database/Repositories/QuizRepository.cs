@@ -22,4 +22,10 @@ public class QuizRepository : Repository<Quiz>, IQuizRepository
             .Include(q => q.Questions.Where(q => !q.IsDeleted))
             .SingleOrDefaultAsync(q => q.Code.Value == code);
     }
+    public virtual async Task<IEnumerable<Quiz>> GetAllQuizsAsyncIncludeQuestions(CancellationToken cancellationToken)
+    {
+        return await _context.Quizzes
+            .Include(q => q.Questions.Where(q => !q.IsDeleted))
+            .ToListAsync(cancellationToken);
+    }
 }
