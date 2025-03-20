@@ -1,6 +1,7 @@
 ﻿using OLMS.Application.Features.QuizUC.DTO;
 using OLMS.Domain.Entities.QuestionEntity;
 using Mapster;
+using OLMS.Domain.Entities.QuizEntity;
 
 namespace OLMS.Application.Services;
 public class MapsterConfig
@@ -31,6 +32,7 @@ public class MapsterConfig
                     dest.CorrectAnswer = null;
                 }
             });
+        TypeAdapterConfig<Quiz, QuizDto>.NewConfig();
     }
 }
 

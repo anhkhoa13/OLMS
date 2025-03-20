@@ -72,7 +72,17 @@ public class QuizController : Controller
         return result ? Ok("Quiz submitted successfully.") : BadRequest("Submission failed.");
     }
 
+    // Get all of quizzes (only for testing)
+    [HttpGet("list")]
+    public async Task<IActionResult> GetQuizzes()
+    {
+        var quizDetails = await _sender.Send(new GetQuizzesQuery());
+        if (quizDetails == null) return NotFound("Quiz not found");
 
+        return Ok(quizDetails);
+    }
+
+    // Todo
     [HttpPost("attempts/result")]
     public async Task<IActionResult> ReturnResult()
     {

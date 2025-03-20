@@ -26,6 +26,7 @@ public class GetQuizDetailsQueryHandler : IRequestHandler<GetQuizDetailsQuery, Q
         return new QuizDto
         {
             QuizId = quiz.Id,
+            Code = quiz.Code,
             Title = quiz.Title,
             Description = quiz.Description,
             StartTime = quiz.StartTime,
