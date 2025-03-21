@@ -15,7 +15,7 @@ public class QuizController : Controller
     {
         return View();
     }
-    public IActionResult AddQuestion()
+    public async Task<IActionResult> AddQuestion()
     {
         return View();
     }

@@ -1,515 +1,210 @@
-﻿@{
-    ViewData["Title"] = "Add Question";
-}
+﻿@model OLMS.Application.Features.QuizUC.DTO.QuestionDto
 
-<div class="quiz-manager-container">
-    <h2>Add Questions</h2>
+<div class="container">
+    <h2>Add Question</h2>
 
-    <div class="quiz-selector">
-        <label for="quiz-dropdown">Select Quiz:</label>
-        <select id="quiz-dropdown" class="form-control">
+    <div class="form-group mb-4">
+        <label for="quizSelect" class="form-label">Select Quiz:</label>
+        <select id="quizSelect" class="form-control">
             <option value="">-- Select a Quiz --</option>
-            <!-- Quiz options will be populated via JavaScript -->
         </select>
     </div>
 
-    <div id="quiz-details" class="quiz-details" style="display: none;">
-        <h3 id="selected-quiz-title"></h3>
-        <p id="selected-quiz-description" class="quiz-description"></p>
-    </div>
+    <div id="questionForm" style="display: none;">
+        <form id="addQuestionForm">
+            <input type="hidden" id="selectedQuizId" name="QuizId" />
 
-    <div id="question-form-container" style="display: none;">
-        <form id="questionForm" class="question-form">
-            <input type="hidden" id="quizId" name="quizId">
-
-            <div class="form-group">
-                <label for="questionText">Question Text</label>
-                <textarea id="questionText" class="form-control" placeholder="Enter your question" required></textarea>
+            <div class="form-group mb-3">
+                <label for="Content">Question Content</label>
+                <textarea class="form-control" id="Content" name="Content" required></textarea>
             </div>
 
-            <div class="form-group">
-                <label for="questionType">Question Type</label>
-                <select id="questionType" class="form-control" onchange="handleQuestionTypeChange()">
-                    <option value="MultipleChoice" selected>Multiple Choice</option>
-                    <option value="TrueFalse">True/False</option>
+            <div class="form-group mb-3">
+                <label for="Type">Question Type</label>
+                <select class="form-control" id="Type" name="Type" required>
+                    <option value="MultipleChoice">Multiple Choice</option>
                     <option value="ShortAnswer">Short Answer</option>
                 </select>
             </div>
 
-            <div id="options-container" class="options-section">
-                <div class="section-header">
-                    <h3>Options</h3>
-                    <button type="button" class="btn btn-sm btn-primary" onclick="addOption()">
-                        <i class="fa fa-plus"></i> Add Option
-                    </button>
+            <div id="multipleChoiceOptions" class="mb-3">
+                <h5>Options</h5>
+                <div id="optionsContainer">
+                    <div class="form-group mb-2">
+                        <input type="text" class="form-control option-input" placeholder="Option 1">
+                    </div>
                 </div>
+                <button type="button" id="addOptionBtn" class="btn btn-sm btn-secondary mt-2">Add Option</button>
 
-                <div id="options-list" class="options-list">
-                    <div class="option-row">
-                        <input type="text" class="form-control" placeholder="Option 1" required>
-                        <div class="option-actions">
-                            <label class="radio-container">
-                                <input type="radio" name="correctOption" value="0" checked>
-                                <span class="radio-label">Correct</span>
-                            </label>
-                            <button type="button" class="btn btn-sm btn-danger" onclick="removeOption(this)" disabled>
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="option-row">
-                        <input type="text" class="form-control" placeholder="Option 2" required>
-                        <div class="option-actions">
-                            <label class="radio-container">
-                                <input type="radio" name="correctOption" value="1">
-                                <span class="radio-label">Correct</span>
-                            </label>
-                            <button type="button" class="btn btn-sm btn-danger" onclick="removeOption(this)" disabled>
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
+                <div class="form-group mt-3">
+                    <label for="CorrectOptionIndex">Correct Option Number</label>
+                    <input type="number" class="form-control" id="CorrectOptionIndex" name="CorrectOptionIndex" min="1">
                 </div>
             </div>
 
-            <div class="form-actions">
-                <button type="submit" class="btn btn-success">Save Question</button>
-                <button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
-                <a href="/Quiz/Create" class="btn btn-primary">Create New Quiz</a>
+            <div id="shortAnswerOption" class="mb-3" style="display: none;">
+                <div class="form-group">
+                    <label for="CorrectAnswer">Correct Answer</label>
+                    <input type="text" class="form-control" id="CorrectAnswer" name="CorrectAnswer">
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">Save Question</button>
+                <button type="button" id="resetBtn" class="btn btn-secondary">Reset</button>
             </div>
         </form>
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        loadQuizzes();
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const quizSelect = document.getElementById('quizSelect');
+            const questionForm = document.getElementById('questionForm');
+            const selectedQuizId = document.getElementById('selectedQuizId');
+            const typeSelect = document.getElementById('Type');
+            const multipleChoiceOptions = document.getElementById('multipleChoiceOptions');
+            const shortAnswerOption = document.getElementById('shortAnswerOption');
+            const addOptionBtn = document.getElementById('addOptionBtn');
+            const optionsContainer = document.getElementById('optionsContainer');
+            const resetBtn = document.getElementById('resetBtn');
+            const addQuestionForm = document.getElementById('addQuestionForm');
 
-        // Set up event listeners
-        document.getElementById('quiz-dropdown').addEventListener('change', handleQuizSelection);
-        document.getElementById('questionForm').addEventListener('submit', submitQuestion);
-    });
+            // Fetch quizzes from the API
+            fetch('https://localhost:7212/api/quiz/list')
+                .then(response => {
+                    console.log(response)
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch quizzes');
+                    }
+                    return response.json();
+                })
+                .then(quizzes => {
+                    // Populate the dropdown with quizzes
+                    quizzes.forEach(quiz => {
+                        const option = document.createElement('option');
+                        option.value = quiz.quizId;
+                        option.textContent = quiz.title;
+                        quizSelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching quizzes:', error);
+                    alert('Failed to load quizzes. Please try again later.');
+                });
 
-    // Load available quizzes
-    async function loadQuizzes() {
-        try {
-            const response = await fetch('https://localhost:7212/api/quiz/list');
-            if (!response.ok) {
-                throw new Error('Failed to load quizzes');
-            }
-
-            const quizzes = await response.json();
-            const dropdown = document.getElementById('quiz-dropdown');
-
-            quizzes.forEach(quiz => {
-                const option = document.createElement('option');
-                option.value = quiz.id;
-                option.textContent = quiz.title;
-                option.dataset.description = quiz.description || '';
-                dropdown.appendChild(option);
+            // Show/hide question form based on quiz selection
+            quizSelect.addEventListener('change', function() {
+                if (this.value) {
+                    selectedQuizId.value = this.value;
+                    questionForm.style.display = 'block';
+                } else {
+                    questionForm.style.display = 'none';
+                }
             });
 
-            // Check if quizId is in URL parameters
-            const urlParams = new URLSearchParams(window.location.search);
-            const quizId = urlParams.get('quizId');
-            if (quizId) {
-                dropdown.value = quizId;
-                handleQuizSelection();
-            }
-        } catch (error) {
-            console.error('Error loading quizzes:', error);
-            alert('Failed to load quizzes. Please try again later.');
-        }
-    }
-
-    // Handle quiz selection
-    function handleQuizSelection() {
-        const dropdown = document.getElementById('quiz-dropdown');
-        const quizId = dropdown.value;
-        const formContainer = document.getElementById('question-form-container');
-        const quizDetails = document.getElementById('quiz-details');
-
-        if (quizId) {
-            document.getElementById('quizId').value = quizId;
-            formContainer.style.display = 'block';
-            quizDetails.style.display = 'block';
-
-            // Display quiz details
-            const selectedOption = dropdown.options[dropdown.selectedIndex];
-            document.getElementById('selected-quiz-title').textContent = selectedOption.textContent;
-            document.getElementById('selected-quiz-description').textContent = selectedOption.dataset.description || 'No description available';
-        } else {
-            formContainer.style.display = 'none';
-            quizDetails.style.display = 'none';
-        }
-    }
-
-    let optionCount = 2;
-
-    function handleQuestionTypeChange() {
-        const questionType = document.getElementById('questionType').value;
-        const optionsContainer = document.getElementById('options-container');
-
-        if (questionType === 'MultipleChoice') {
-            optionsContainer.style.display = 'block';
-            resetOptions();
-        } else if (questionType === 'TrueFalse') {
-            optionsContainer.style.display = 'block';
-            setTrueFalseOptions();
-        } else {
-            optionsContainer.style.display = 'none';
-        }
-    }
-
-    function resetOptions() {
-        const optionsList = document.getElementById('options-list');
-        optionsList.innerHTML = '';
-        optionCount = 0;
-
-        // Add two default options
-        addOption();
-        addOption();
-    }
-
-    function setTrueFalseOptions() {
-        const optionsList = document.getElementById('options-list');
-        optionsList.innerHTML = '';
-
-        optionsList.innerHTML = `
-            <div class="option-row">
-                <input type="text" class="form-control" value="True" readonly>
-                <div class="option-actions">
-                    <label class="radio-container">
-                        <input type="radio" name="correctOption" value="0" checked>
-                        <span class="radio-label">Correct</span>
-                    </label>
-                </div>
-            </div>
-            <div class="option-row">
-                <input type="text" class="form-control" value="False" readonly>
-                <div class="option-actions">
-                    <label class="radio-container">
-                        <input type="radio" name="correctOption" value="1">
-                        <span class="radio-label">Correct</span>
-                    </label>
-                </div>
-            </div>
-        `;
-
-        optionCount = 2;
-    }
-
-    function addOption() {
-        if (optionCount >= 6) {
-            alert('Maximum 6 options allowed');
-            return;
-        }
-
-        const optionsList = document.getElementById('options-list');
-        const newOptionIndex = optionCount;
-
-        const optionRow = document.createElement('div');
-        optionRow.className = 'option-row';
-        optionRow.innerHTML = `
-            <input type="text" class="form-control" placeholder="Option ${newOptionIndex + 1}" required>
-            <div class="option-actions">
-                <label class="radio-container">
-                    <input type="radio" name="correctOption" value="${newOptionIndex}">
-                    <span class="radio-label">Correct</span>
-                </label>
-                <button type="button" class="btn btn-sm btn-danger" onclick="removeOption(this)">
-                    <i class="fa fa-trash"></i>
-                </button>
-            </div>
-        `;
-
-        optionsList.appendChild(optionRow);
-        optionCount++;
-
-        updateRemoveButtons();
-    }
-
-    function removeOption(button) {
-        if (optionCount <= 2) {
-            alert('A question must have at least 2 options');
-            return;
-        }
-
-        const optionRow = button.closest('.option-row');
-        optionRow.remove();
-        optionCount--;
-
-        // Reindex the remaining options
-        const optionRows = document.querySelectorAll('.option-row');
-        optionRows.forEach((row, index) => {
-            const input = row.querySelector('input[type="text"]');
-            input.placeholder = `Option ${index + 1}`;
-
-            const radio = row.querySelector('input[type="radio"]');
-            radio.value = index;
-        });
-
-        updateRemoveButtons();
-    }
-
-    function updateRemoveButtons() {
-        const removeButtons = document.querySelectorAll('.option-row .btn-danger');
-
-        if (optionCount <= 2) {
-            removeButtons.forEach(button => {
-                button.disabled = true;
+            // Toggle question type options
+            typeSelect.addEventListener('change', function() {
+                if (this.value === 'MultipleChoice') {
+                    multipleChoiceOptions.style.display = 'block';
+                    shortAnswerOption.style.display = 'none';
+                } else {
+                    multipleChoiceOptions.style.display = 'none';
+                    shortAnswerOption.style.display = 'block';
+                }
             });
-        } else {
-            removeButtons.forEach(button => {
-                button.disabled = false;
+
+            // Add new option field
+            let optionCount = 1;
+            addOptionBtn.addEventListener('click', function() {
+                optionCount++;
+                const newOption = document.createElement('div');
+                newOption.className = 'form-group mb-2';
+                newOption.innerHTML = `<input type="text" class="form-control option-input" placeholder="Option ${optionCount}">`;
+                optionsContainer.appendChild(newOption);
             });
-        }
-    }
 
-    function resetForm() {
-        document.getElementById('questionText').value = '';
-        document.getElementById('questionType').value = 'MultipleChoice';
-        resetOptions();
-    }
+            // Reset form
+            resetBtn.addEventListener('click', function() {
+                addQuestionForm.reset();
+                optionsContainer.innerHTML = '<div class="form-group mb-2"><input type="text" class="form-control option-input" placeholder="Option 1"></div>';
+                optionCount = 1;
+            });
 
-    async function submitQuestion(event) {
-        event.preventDefault();
+            // Handle form submission
+            addQuestionForm.addEventListener('submit', function(e) {
+                e.preventDefault();
 
-        const quizId = document.getElementById('quizId').value;
-        const questionText = document.getElementById('questionText').value;
-        const questionType = document.getElementById('questionType').value;
+                const content = document.getElementById('Content').value.trim();
+                const type = typeSelect.value;
+                const quizId = selectedQuizId.value;
 
-        if (!quizId) {
-            alert('Please select a quiz');
-            return;
-        }
+                if (!content) {
+                    alert('Please enter question content');
+                    return;
+                }
 
-        if (!questionText.trim()) {
-            alert('Please enter question text');
-            return;
-        }
+                const questionData = {
+                    Content: content,
+                    Type: type,
+                    QuizId: quizId
+                };
 
-        let command = {
-            quizId: quizId,
-            questionText: questionText
-        };
+                if (type === 'MultipleChoice') {
+                    const optionInputs = document.querySelectorAll('.option-input');
+                    const options = Array.from(optionInputs).map(input => input.value.trim());
 
-        if (questionType === 'MultipleChoice' || questionType === 'TrueFalse') {
-            const options = [];
-            const optionInputs = document.querySelectorAll('.option-row input[type="text"]');
-            const correctOptionRadio = document.querySelector('input[name="correctOption"]:checked');
+                    if (options.some(opt => !opt)) {
+                        alert('Please fill in all options');
+                        return;
+                    }
 
-            if (!correctOptionRadio) {
-                alert('Please select a correct answer');
-                return;
-            }
+                    const correctOptionIndex = parseInt(document.getElementById('CorrectOptionIndex').value) - 1;
+                    if (isNaN(correctOptionIndex) || correctOptionIndex < 0 || correctOptionIndex >= options.length) {
+                        alert('Please enter a valid correct option number');
+                        return;
+                    }
 
-            const correctOptionIndex = parseInt(correctOptionRadio.value);
+                    questionData.Options = options;
+                    questionData.CorrectOptionIndex = correctOptionIndex;
+                } else {
+                    const correctAnswer = document.getElementById('CorrectAnswer').value.trim();
+                    if (!correctAnswer) {
+                        alert('Please enter the correct answer');
+                        return;
+                    }
+                    questionData.CorrectAnswer = correctAnswer;
+                }
 
-            optionInputs.forEach((input, index) => {
-                options.push({
-                    text: input.value,
-                    isCorrect: index === correctOptionIndex
+                // Send the data to the server
+                fetch('/api/quiz/add-questions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        QuizId: quizId,
+                        Questions: [questionData]
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    alert('Question saved successfully!');
+                    addQuestionForm.reset();
+                    optionsContainer.innerHTML = '<div class="form-group mb-2"><input type="text" class="form-control option-input" placeholder="Option 1"></div>';
+                    optionCount = 1;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to save question');
                 });
             });
-
-            command = {
-                ...command,
-                options: options,
-                correctOptionIndex: correctOptionIndex
-            };
-        }
-
-        try {
-            const response = await fetch('/api/quiz/add-question', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(command)
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to add question');
-            }
-
-            const result = await response.json();
-            alert('Question added successfully!');
-
-            // Clear form for next question
-            resetForm();
-
-        } catch (error) {
-            alert('Error: ' + error.message);
-        }
-    }
-</script>
-
-<style>
-    .quiz-manager-container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-
-    .quiz-selector {
-        margin-bottom: 20px;
-        background-color: #f8f9fa;
-        padding: 15px;
-        border-radius: 8px;
-    }
-
-    .quiz-details {
-        background-color: #e9f7fe;
-        padding: 15px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-    }
-
-    .quiz-description {
-        color: #666;
-        font-style: italic;
-    }
-
-    .question-form {
-        background-color: #f8f9fa;
-        padding: 20px;
-        border-radius: 8px;
-    }
-
-    .form-group {
-        margin-bottom: 20px;
-    }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-
-    .form-control {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ced4da;
-        border-radius: 4px;
-        font-size: 16px;
-    }
-
-    textarea.form-control {
-        min-height: 100px;
-        resize: vertical;
-    }
-
-    .section-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 15px;
-    }
-
-    .options-section {
-        margin-top: 20px;
-        margin-bottom: 20px;
-        padding: 15px;
-        background-color: #fff;
-        border-radius: 6px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-
-    .options-list {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .option-row {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-        .option-row .form-control {
-            flex: 1;
-        }
-
-    .option-actions {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        min-width: 140px;
-    }
-
-    .radio-container {
-        display: flex;
-        align-items: center;
-        margin: 0;
-        cursor: pointer;
-    }
-
-    .radio-label {
-        margin-left: 5px;
-    }
-
-    .btn {
-        padding: 8px 15px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 14px;
-        transition: background-color 0.2s;
-    }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-    .btn-sm {
-        padding: 5px 10px;
-        font-size: 12px;
-    }
-
-    .btn-primary {
-        background-color: #007bff;
-        color: white;
-    }
-
-        .btn-primary:hover:not(:disabled) {
-            background-color: #0069d9;
-        }
-
-    .btn-danger {
-        background-color: #dc3545;
-        color: white;
-    }
-
-        .btn-danger:hover:not(:disabled) {
-            background-color: #c82333;
-        }
-
-    .btn-success {
-        background-color: #28a745;
-        color: white;
-    }
-
-        .btn-success:hover {
-            background-color: #218838;
-        }
-
-    .btn-secondary {
-        background-color: #6c757d;
-        color: white;
-    }
-
-        .btn-secondary:hover {
-            background-color: #5a6268;
-        }
-
-    .form-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-        margin-top: 30px;
-    }
-</style>
+        });
+    </script>
+}
