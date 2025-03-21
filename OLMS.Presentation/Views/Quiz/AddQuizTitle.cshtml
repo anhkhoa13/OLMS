@@ -37,9 +37,13 @@
 
         <div class="form-actions">
             <button type="submit" class="btn btn-success">Create Quiz</button>
-            <button type="reset" class="btn btn-secondary">Reset</button>
+            <button id="CrQuestBtn" class="btn btn-secondary">Create Question</button>
         </div>
     </form>
+    <button type="button" onclick="location.href='@Url.Action("AddQuestion", "Quiz")'">
+        Add Question
+    </button>
+
 </div>
 
 <script>
@@ -70,7 +74,7 @@
         };
 
         try {
-            const response = await fetch('/api/quiz/create', {
+            const response = await fetch('https://localhost:7212/api/quiz/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -84,9 +88,6 @@
 
             const result = await response.json();
             alert('Quiz created successfully!');
-
-            // Redirect to add questions page
-            window.location.href = `/Quiz/AddQuestion?quizId=${result.quizId}`;
 
         } catch (error) {
             alert('Error: ' + error.message);

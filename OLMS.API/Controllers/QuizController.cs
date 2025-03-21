@@ -72,7 +72,6 @@ public class QuizController : Controller
         return result ? Ok("Quiz submitted successfully.") : BadRequest("Submission failed.");
     }
 
-    // Get all of quizzes (only for testing)
     [HttpGet("list")]
     public async Task<IActionResult> GetQuizzes()
     {
@@ -88,5 +87,7 @@ public class QuizController : Controller
     {
         return Ok();
     }
+
+
 
 }
