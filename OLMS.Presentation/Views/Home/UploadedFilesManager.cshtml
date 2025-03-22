@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", function () {
     loadUploadedFiles();
 });
 
-// Fetch danh sách file từ backend
 function loadUploadedFiles() {
     fetch('/File/GetFiles')
         .then(response => response.json())
