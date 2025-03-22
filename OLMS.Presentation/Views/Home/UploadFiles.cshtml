@@ -58,7 +58,6 @@ function setupDragDrop() {
     });
 }
 
-// Thêm file vào danh sách chọn
 function addFiles(files) {
     for (let file of files) {
         selectedFiles.push(file);
@@ -66,18 +65,15 @@ function addFiles(files) {
     updatePreview();
 }
 
-// Hiển thị danh sách file được chọn trước khi upload
 function previewFiles(files) {
     addFiles(files);
 }
 
-// Xóa file khỏi danh sách chọn
 function removeFile(index) {
     selectedFiles.splice(index, 1);
     updatePreview();
 }
 
-// Cập nhật UI danh sách file chọn trước khi upload
 function updatePreview() {
     const previewList = document.getElementById("previewList");
     const fileListContainer = document.getElementById("fileListContainer");
@@ -105,7 +101,6 @@ function updatePreview() {
     }
 }
 
-// Upload Files (sau khi bấm Confirm)
 function uploadFiles() {
     const formData = new FormData();
     for (let file of selectedFiles) {
@@ -122,7 +117,6 @@ function uploadFiles() {
         });
 }
 
-// Fetch danh sách file từ backend
 function loadFiles() {
     fetch('/File/GetFiles')
         .then(response => response.json())
