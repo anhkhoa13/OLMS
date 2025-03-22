@@ -1,0 +1,78 @@
+@{
+    ViewData["Title"] = "Uploaded Files Manager";
+}
+
+<div class="container mt-5">
+    <!-- Title -->
+    <h2 class="text-center mb-4">📁 Uploaded Files</h2>
+
+    <!-- File List -->
+    <div id="uploadedFilesContainer" class="border p-4 rounded bg-light">
+        <p class="text-muted text-center" id="noUploadedFilesText">No files uploaded yet.</p>
+        <div id="uploadedFileList"></div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    loadUploadedFiles();
+});
+
+// Fetch danh sách file từ backend
+function loadUploadedFiles() {
+    fetch('/File/GetFiles')
+        .then(response => response.json())
+        .then(files => {
+            const uploadedFilesContainer = document.getElementById("uploadedFilesContainer");
+            const uploadedFileList = document.getElementById("uploadedFileList");
+            uploadedFileList.innerHTML = "";
+
+            if (files.length === 0) {
+                document.getElementById("noUploadedFilesText").classList.remove("d-none");
+            } else {
+                document.getElementById("noUploadedFilesText").classList.add("d-none");
+                files.forEach((file, index) => {
+                    uploadedFileList.innerHTML += `
+                        <div class="d-flex justify-content-between align-items-center bg-white p-3 mb-2 rounded shadow-sm">
+                            <span class="fw-medium">${file}</span>
+                            <div>
+                                <button class="btn btn-sm btn-outline-success me-2" onclick="renameUploadedFile(${index}, '${file}')">
+                                    <i class="bi bi-pencil"></i> Rename
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteUploadedFile('${file}')">
+                                    <i class="bi bi-trash"></i> Delete
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+        });
+}
+
+// Rename uploaded file
+function renameUploadedFile(index, oldName) {
+    const newName = prompt("Enter new name:", oldName);
+    if (newName && newName !== oldName) {
+        fetch('/File/Rename', {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ oldName, newName })
+        }).then(() => loadUploadedFiles());
+    }
+}
+
+// Delete uploaded file
+function deleteUploadedFile(fileName) {
+    if (confirm("Are you sure you want to delete this file?")) {
+        fetch('/File/Delete', {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ fileName })
+        }).then(() => loadUploadedFiles());
+    }
+}
+</script>
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
