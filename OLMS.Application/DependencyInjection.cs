@@ -18,6 +18,10 @@ public static class DependencyInjection
 
         services.AddSingleton<IAuthService, AuthService>();
         services.AddScoped<IJwtService, JwtService>();
+
+        //Register Discussion Service
+        services.AddSingleton<IDiscussionService, DiscussionService>();
+
         return services;
     }
 }
