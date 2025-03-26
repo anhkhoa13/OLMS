@@ -67,8 +67,8 @@ CREATE TABLE Question (
     Id UNIQUEIDENTIFIER PRIMARY KEY,
     Content NVARCHAR(1000) NOT NULL,
     QuestionType NVARCHAR(50) NOT NULL, -- Stores enum as string
-	QuizId UNIQUEIDENTIFIER
-
+	QuizId UNIQUEIDENTIFIER,
+	IsDeleted BIT DEFAULT 0,
 
     FOREIGN KEY (QuizId) REFERENCES Quiz(Id) ON DELETE CASCADE
 );
@@ -103,7 +103,6 @@ CREATE TABLE StudentAnswer (
     QuizAttemptId UNIQUEIDENTIFIER NOT NULL,
     QuestionId UNIQUEIDENTIFIER NOT NULL,
     Answer NVARCHAR(50) NOT NULL,
-	IsDeleted BIT DEFAULT 0,
     FOREIGN KEY (QuizAttemptId) REFERENCES QuizAttempt(Id) ON DELETE CASCADE,
     FOREIGN KEY (QuestionId) REFERENCES Question(Id) ON DELETE NO ACTION -- Prevent cascade conflict
 );

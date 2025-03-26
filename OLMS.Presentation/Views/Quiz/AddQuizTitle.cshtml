@@ -2,53 +2,64 @@
     ViewData["Title"] = "Create Quiz";
 }
 
-<div class="quiz-creator-container">
-    <h2>Create New Quiz</h2>
-
-    <form id="quizForm" class="quiz-form">
-        <div class="form-section">
-            <div class="form-group">
-                <label for="quiz-title">Quiz Title</label>
-                <input type="text" id="quiz-title" class="form-control" placeholder="Enter quiz title" required>
-            </div>
-
-            <div class="form-group">
-                <label for="quiz-description">Description</label>
-                <textarea id="quiz-description" class="form-control" placeholder="Enter quiz description"></textarea>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="quiz-startTime">Start Time</label>
-                    <input type="datetime-local" id="quiz-startTime" class="form-control" required>
+<div class="quiz-creator-area ptb-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2">
+                <div class="section-title text-center">
+                    <h2>Create New Quiz</h2>
+                    <p>Start by giving your quiz a title and some basic details.</p>
                 </div>
 
-                <div class="form-group">
-                    <label for="quiz-endTime">End Time</label>
-                    <input type="datetime-local" id="quiz-endTime" class="form-control" required>
-                </div>
+                <div class="quiz-form">
+                    <form id="quizForm">
+                        <div class="form-group">
+                            <label for="quiz-title">Quiz Title</label>
+                            <input type="text" id="quiz-title" class="form-control" placeholder="Enter quiz title" required>
+                        </div>
 
-                <div class="form-group checkbox-group">
-                    <input type="checkbox" id="quiz-isTimeLimited">
-                    <label for="quiz-isTimeLimited">Time Limited</label>
+                        <div class="form-group">
+                            <label for="quiz-description">Description</label>
+                            <textarea id="quiz-description" class="form-control" placeholder="Enter quiz description" rows="4"></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="quiz-startTime">Start Time</label>
+                                    <input type="datetime-local" id="quiz-startTime" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="quiz-endTime">End Time</label>
+                                    <input type="datetime-local" id="quiz-endTime" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="quiz-isTimeLimited">
+                                <label class="custom-control-label" for="quiz-isTimeLimited">Time Limited</label>
+                            </div>
+                        </div>
+
+                        <div class="form-actions text-center">
+                            <button type="submit" class="btn default-btn">Create Quiz</button>
+                            <button type="button" id="CrQuestBtn" class="btn default-btn">Create Question</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-
-        <div class="form-actions">
-            <button type="submit" class="btn btn-success">Create Quiz</button>
-            <button id="CrQuestBtn" class="btn btn-secondary">Create Question</button>
-        </div>
-    </form>
-    <button type="button" onclick="location.href='@Url.Action("AddQuestion", "Quiz")'">
-        Add Question
-    </button>
-
+    </div>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('quizForm').addEventListener('submit', submitQuiz);
+        document.getElementById('CrQuestBtn').addEventListener('click', redirectToAddQuestion);
     });
 
     async function submitQuiz(event) {
@@ -88,106 +99,18 @@
 
             const result = await response.json();
             alert('Quiz created successfully!');
+            resetForm();
 
         } catch (error) {
             alert('Error: ' + error.message);
         }
     }
+
+    function resetForm() {
+        document.getElementById('quizForm').reset();
+    }
+
+    function redirectToAddQuestion() {
+        window.location.href = `/Quiz/AddQuestion`;
+    }
 </script>
-
-<style>
-    .quiz-creator-container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-
-    .quiz-form {
-        background-color: #f8f9fa;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .form-section {
-        margin-bottom: 20px;
-    }
-
-    .form-group {
-        margin-bottom: 15px;
-    }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-
-    .form-control {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ced4da;
-        border-radius: 4px;
-        font-size: 16px;
-    }
-
-    textarea.form-control {
-        min-height: 80px;
-        resize: vertical;
-    }
-
-    .form-row {
-        display: flex;
-        gap: 15px;
-        flex-wrap: wrap;
-    }
-
-        .form-row .form-group {
-            flex: 1;
-            min-width: 200px;
-        }
-
-    .checkbox-group {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
-
-        .checkbox-group input {
-            margin-right: 5px;
-        }
-
-    .btn {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 16px;
-        transition: background-color 0.2s;
-    }
-
-    .btn-success {
-        background-color: #28a745;
-        color: white;
-    }
-
-        .btn-success:hover {
-            background-color: #218838;
-        }
-
-    .btn-secondary {
-        background-color: #6c757d;
-        color: white;
-    }
-
-        .btn-secondary:hover {
-            background-color: #5a6268;
-        }
-
-    .form-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-        margin-top: 20px;
-    }
-</style>
