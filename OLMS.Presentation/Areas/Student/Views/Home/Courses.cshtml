@@ -3,18 +3,10 @@
     <button class="btn btn-add" onclick="toggleCourseForm()">+ Join Course</button>
 </div>
 
-@if (!string.IsNullOrEmpty(ViewBag.CourseCode as string))
+@if (!string.IsNullOrEmpty(ViewBag.Message as string))
 {
     <div class="alert alert-success">
         <strong>@ViewBag.Message</strong>
-    </div>
-}
-
-@if (!string.IsNullOrEmpty(ViewBag.Error as string))
-{
-    <div class="alert alert-danger">
-        Failed to create course!
-        Error: <strong>@ViewBag.Error</strong>
     </div>
 }
 

@@ -10,12 +10,12 @@
 
 @if (errors.Any())
 {
-    <div class="modal fade show d-block" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true" style="background-color: rgba(0, 0, 0, 0.5);">
+    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="errorModalLabel">Error</h5>
-                    <button type="button" class="btn-close" id="closeModal" aria-label="Close"></button>
+                    <h5 class="modal-title" id="errorModalLabel">Lỗi nhập liệu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <ul class="mb-0 ps-3">
@@ -31,12 +31,22 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            let modal = new bootstrap.Modal(document.getElementById("errorModal"), {});
-            modal.show();
+            let errorModalElement = document.getElementById("errorModal");
+            let errorModal = new bootstrap.Modal(errorModalElement, { backdrop: "static", keyboard: false });
 
-            document.getElementById("closeModal").addEventListener("click", function () {
-                modal.hide();
+            // Xóa các modal backdrop cũ nếu có
+            document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+
+            // Hiển thị modal
+            errorModal.show();
+
+            // Xử lý sự kiện khi modal đóng
+            errorModalElement.addEventListener("hidden.bs.modal", function () {
+                errorModalElement.removeAttribute("aria-hidden");
+                errorModalElement.style.display = "none";
             });
         });
     </script>
+}
+
 }
