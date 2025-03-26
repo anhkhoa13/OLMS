@@ -65,19 +65,6 @@ public class Program
                 };
             });
 
-        builder.Services.AddCors(options =>
-        {
-            options.AddDefaultPolicy(policy =>
-            {
-                var allowedOrigins = builder.Configuration.GetSection("CorsSettings:AllowedOrigins").Get<string[]>();
-                if (allowedOrigins is null) throw new ArgumentNullException("CorsSettings:AllowedOrigins", "Missing AllowedOrigins configuration");
-
-                policy.WithOrigins(allowedOrigins)
-                    .AllowAnyMethod()
-                    .AllowAnyHeader();
-            });
-        });
-        builder.Services.AddAuthorization();
         builder.Services.AddExceptionHandler<GlobalExecptionHandler>();
         builder.Services.AddProblemDetails();
 
