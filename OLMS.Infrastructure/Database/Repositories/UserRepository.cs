@@ -35,6 +35,11 @@ public class UserRepository : Repository<UserBase>, IUserRepository
         return await _context.Instructors.AnyAsync(i => i.Id == guid);
     }
 
+    public async Task<bool> IsUserExist(Guid userId, CancellationToken cancellation = default)
+    {
+        return await _context.Users.AnyAsync(u => u.Id == userId);
+    }
+
     public async Task<bool> IsUsernameUniqueAsync(Username userName, CancellationToken cancellationToken = default)
     {
         if (userName == null)

@@ -1,6 +1,7 @@
 ﻿using OLMS.Domain.Primitives;
 using OLMS.Domain.ValueObjects;
 
+
 namespace OLMS.Domain.Entities;
 
 public class Course : Entity, IAggregateRoot
@@ -12,8 +13,14 @@ public class Course : Entity, IAggregateRoot
 
     // Navigation properties
     public Instructor Instructor { get; private set; } = default!;
+
     private readonly List<Enrollment> _enrollments = new();
     public IReadOnlyCollection<Enrollment> Enrollments => _enrollments.AsReadOnly();
+
+    private readonly List<MaterialCourse> _materialCourse = new();
+    public IReadOnlyCollection<MaterialCourse> MaterialCourse => _materialCourse.AsReadOnly();
+
+
     private Course() : base() { }
 
     private Course(Guid id, Code code, string title, string description, Instructor instructor) : base(id)
@@ -42,5 +49,12 @@ public class Course : Entity, IAggregateRoot
 
         var code = Code.Generate(id);
         return new Course(id, code, title, description, instructor);
+    }
+
+
+    public void UploadMaterial(Material material)
+    {
+        material.MaterialType = MaterialType.CourseContent;
+        _materialCourse.Add(new MaterialCourse(Id, material.Id));
     }
 }

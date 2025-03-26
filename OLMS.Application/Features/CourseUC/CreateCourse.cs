@@ -14,7 +14,6 @@ public sealed class CreateCourseValidation : AbstractValidator<CreateCourseComma
 {
     public CreateCourseValidation()
     {
-        Console.WriteLine("CreateCourseValidation is being executed...");
         RuleFor(c => c.Title).NotEmpty().WithMessage("Course name is required")
                             .Length(3, 100).WithMessage("Course name must be between 3 and 100 characters.");
 

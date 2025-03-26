@@ -22,9 +22,5 @@ public sealed class StudentConfiguration : IEntityTypeConfiguration<Student>
                .HasForeignKey<Student>(s => s.Id)
                .OnDelete(DeleteBehavior.Cascade);
 
-        //builder.HasMany(s => s.Enrollments)
-        //       .WithOne()
-        //       .HasForeignKey(e => e.StudentId)
-        //       .OnDelete(DeleteBehavior.Cascade);
     }
 }

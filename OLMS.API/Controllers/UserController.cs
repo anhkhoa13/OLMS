@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OLMS.Application.Features.CourseUC;
 using OLMS.Application.Features.User;
 using OLMS.Domain.Entities;
 using OLMS.Domain.Result;
@@ -45,5 +46,23 @@ public class UserController : Controller
 
             Message = "User info retrieved successfully"
         });
+    }
+
+    [HttpPost("upload")]
+    public async Task<IActionResult> UploadMaterial([FromForm] UploadMaterialCommand command)
+    {
+        var result = await _sender.Send(command);
+        if (!result.IsSuccess)
+        {
+            return BadRequest(new ErrorResponse
+            {
+                StatusCode = StatusCodes.Status400BadRequest,
+                Message = result.Error.ErrorMessage ?? "Error occured",
+                ErrorCode = result.Error.Code
+            });
+        }
+
+        return Ok(new { Messsage = "Upload success"});
+
     }
 }

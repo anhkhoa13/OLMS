@@ -1,22 +1,19 @@
-﻿using OLMS.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using OLMS.Domain.Entities;
 using OLMS.Domain.Repositories;
 using System;
-using System.Threading.Tasks;
 
 namespace OLMS.Infrastructure.Database.Repositories
 {
-    public class MaterialRepository : IMaterialRepository
+    public class MaterialRepository : Repository<Material>, IMaterialRepository
     {
-        public Task AddAsync(Material material)
+        public MaterialRepository(ApplicationDbContext context) : base(context)
         {
-            // Implementation here
-            throw new NotImplementedException();
         }
 
-        public Task<Material> GetByIdAsync(Guid id)
+        public async override Task<Material?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            // Implementation here
-            throw new NotImplementedException();
+            return await _context.Materials.SingleOrDefaultAsync(c => c.Id == id);
         }
     }
 }

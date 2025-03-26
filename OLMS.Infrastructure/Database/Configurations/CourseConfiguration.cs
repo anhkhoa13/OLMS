@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OLMS.Domain.Entities;
-using OLMS.Domain.Primitives;
 
 namespace OLMS.Infrastructure.Database.Configurations;
 

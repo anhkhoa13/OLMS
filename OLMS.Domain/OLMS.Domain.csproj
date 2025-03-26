@@ -7,7 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DomainEvents\" />
+    <Compile Remove="DomainEvents\**" />
+    <EmbeddedResource Remove="DomainEvents\**" />
+    <None Remove="DomainEvents\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.14" />
   </ItemGroup>
 
 </Project>

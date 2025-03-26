@@ -1,4 +1,6 @@
-﻿using OLMS.Domain.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using OLMS.Domain.Repositories;
 
 namespace OLMS.Infrastructure.Database;
 
@@ -18,5 +20,10 @@ public class UnitOfWork : IUnitOfWork
     public void Dispose()
     {
         _context.Dispose();
+    }
+
+    public async Task<IDbContextTransaction> BeginTransactionAsync()
+    {
+        return await _context.Database.BeginTransactionAsync();
     }
 }
