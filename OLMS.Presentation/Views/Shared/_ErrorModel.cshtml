@@ -1,0 +1,42 @@
+﻿@{
+    var errors = new List<string>();
+    if (!ViewData.ModelState.IsValid)
+    {
+        errors = ViewData.ModelState.Values.SelectMany(v => v.Errors)
+                                           .Select(e => e.ErrorMessage)
+                                           .ToList();
+    }
+}
+
+@if (errors.Any())
+{
+    <div class="modal fade show d-block" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true" style="background-color: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="errorModalLabel">Error</h5>
+                    <button type="button" class="btn-close" id="closeModal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="mb-0 ps-3">
+                        @foreach (var error in errors)
+                        {
+                            <li>@error</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let modal = new bootstrap.Modal(document.getElementById("errorModal"), {});
+            modal.show();
+
+            document.getElementById("closeModal").addEventListener("click", function () {
+                modal.hide();
+            });
+        });
+    </script>
+}

@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OLMS.Application.Feature.Enrollment;
+using OLMS.Application.Features.StudentUC;
 
 namespace OLMS.API.Controllers;
 

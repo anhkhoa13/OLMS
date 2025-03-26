@@ -32,12 +32,17 @@ public class UserRepository : Repository<UserBase>, IUserRepository
 
     public async Task<bool> IsInstructor(Guid guid, CancellationToken cancellationToken = default)
     {
-        return await _context.Instructors.AnyAsync(i => i.Id == guid);
+        return await _context.Instructors.AnyAsync(i => i.Id == guid, cancellationToken: cancellationToken);
+    }
+
+    public async Task<bool> IsStudent(Guid guid, CancellationToken cancellationToken = default)
+    {
+        return await _context.Students.AnyAsync(s => s.Id == guid, cancellationToken);
     }
 
     public async Task<bool> IsUserExist(Guid userId, CancellationToken cancellation = default)
     {
-        return await _context.Users.AnyAsync(u => u.Id == userId);
+        return await _context.Users.AnyAsync(u => u.Id == userId, cancellationToken: cancellation);
     }
 
     public async Task<bool> IsUsernameUniqueAsync(Username userName, CancellationToken cancellationToken = default)

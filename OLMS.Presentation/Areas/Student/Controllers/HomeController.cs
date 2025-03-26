@@ -44,14 +44,26 @@ public class HomeController : BaseController
 
         if (!response.IsSuccessStatusCode)
         {
-            var error = JsonConvert.DeserializeObject<ApiErrorResponse>(responseContent)!;
-            if (error != null)
-            {
-                ViewBag.Message = error.Message;
-            }
+            ErrorResponseHandler(responseContent);
         }
         
         ViewBag.Message = $"Successfully enroll to course with code {code}";
         return View("Courses");
+    }
+
+    public async Task<IActionResult> GetCourses()
+    {
+        var studentId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+        var apiUrl = $"api/student/courses?studentId={studentId}";
+
+        var response = await _httpClient.GetAsync(apiUrl);
+        var responseContent = await response.Content.ReadAsStringAsync();
+        if (!response.IsSuccessStatusCode)
+        {
+            ErrorResponseHandler(responseContent);
+            return View("Courses");
+        }
+
+        return Ok(responseContent);
     }
 }

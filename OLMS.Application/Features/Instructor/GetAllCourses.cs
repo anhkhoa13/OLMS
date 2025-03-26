@@ -12,12 +12,10 @@ public sealed record GetAllCoursesCommand(Guid instructorId) : IRequest<Result<I
 
 public class GetAllCoursesCommandHandler : IRequestHandler<GetAllCoursesCommand, Result<IReadOnlyCollection<Course>>>
 {
-    private readonly IUnitOfWork _unitOfWork;
     private readonly ICourseRepository _courseRepository;
     private readonly IUserRepository _userRepository;
-    public GetAllCoursesCommandHandler(IUnitOfWork unitOfWork, ICourseRepository courseRepository, IUserRepository userRepository)
+    public GetAllCoursesCommandHandler(ICourseRepository courseRepository, IUserRepository userRepository)
     {
-        _unitOfWork = unitOfWork;
         _courseRepository = courseRepository;
         _userRepository = userRepository;
     }

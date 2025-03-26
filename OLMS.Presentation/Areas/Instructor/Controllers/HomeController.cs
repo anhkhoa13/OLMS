@@ -37,41 +37,7 @@ public class HomeController : BaseController
 
         if (!response.IsSuccessStatusCode)
         {
-            var error = JsonConvert.DeserializeObject<ErrorResponse>(responseContent);
-
-            if (error?.Errors is JObject errorsObject)
-            {
-                // Nếu `Errors` là một dictionary, thêm vào ModelState
-                var errorDict = errorsObject.ToObject<Dictionary<string, string[]>>();
-                if (errorDict != null)
-                {
-                    foreach (var key in errorDict.Keys)
-                    {
-                        foreach (var message in errorDict[key])
-                        {
-                            ModelState.AddModelError(key, message);
-                        }
-                    }
-                }
-            }
-            else if (error?.Errors is JArray errorArray)
-            {
-                // Nếu `Errors` là một danh sách lỗi
-                foreach (var message in errorArray)
-                {
-                    ModelState.AddModelError("", message.ToString());
-                }
-            }
-            else if (error?.Errors is string errorMessage)
-            {
-                // Nếu `Errors` là một chuỗi lỗi đơn
-                ModelState.AddModelError("", errorMessage);
-            }
-            else
-            {
-                // Nếu không có `Errors`, chỉ hiển thị `Message`
-                ModelState.AddModelError("", error?.Message ?? "An unknown error occurred.");
-            }
+            ErrorResponseHandler(responseContent);
         }
 
         var courseResponse = JsonConvert.DeserializeObject<CourseCreateResponse>(responseContent)!;
@@ -89,9 +55,8 @@ public class HomeController : BaseController
         var responseContent = await response.Content.ReadAsStringAsync();
         if (!response.IsSuccessStatusCode)
         {
-            var error = JsonConvert.DeserializeObject<ApiErrorResponse>(responseContent)!;
-            ModelState.AddModelError("", error.Message ?? "Error");
-            return View("Dashboard");
+            ErrorResponseHandler(responseContent);
+            return View("Courses");
         }
 
         return Ok(responseContent);

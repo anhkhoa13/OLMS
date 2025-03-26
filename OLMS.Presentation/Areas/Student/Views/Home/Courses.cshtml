@@ -3,6 +3,21 @@
     <button class="btn btn-add" onclick="toggleCourseForm()">+ Join Course</button>
 </div>
 
+@if (!string.IsNullOrEmpty(ViewBag.CourseCode as string))
+{
+    <div class="alert alert-success">
+        <strong>@ViewBag.Message</strong>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(ViewBag.Error as string))
+{
+    <div class="alert alert-danger">
+        Failed to create course!
+        Error: <strong>@ViewBag.Error</strong>
+    </div>
+}
+
 <div class="course-form-container" id="courseFormContainer" style="display: none;">
     <form method="post" asp-area="Student" asp-controller="Home" asp-action="EnrollCourse" class="course-form">
         <div class="form-group">
@@ -21,6 +36,7 @@
             <th>Title</th>
             <th>Description</th>
             <th>Code</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody id="course-list">

@@ -12,13 +12,19 @@ public class CourseRepository : Repository<Course>, ICourseRepository
     public async Task<IReadOnlyCollection<Course>> FindCoursesByInstructorIdAsync(Guid instructorId, CancellationToken cancellationToken = default)
     {
         return await _context.Courses.Where(c => c.InstructorId == instructorId)
-                                     .ToListAsync();
+                                     .ToListAsync(cancellationToken: cancellationToken);
+    }
+
+    public async Task<IReadOnlyCollection<Course>> GetAllCourseEnroll(Guid studentId, CancellationToken cancellationToken = default)
+    {
+        return await _context.Courses.Where(c => c.Enrollments.Any(e => e.StudentId == studentId))
+                                     .ToListAsync(cancellationToken: cancellationToken);
     }
 
     public async Task<Course?> GetByCodeAsync(string code, CancellationToken cancellationToken = default)
     {
         return await _context.Courses.Include(c => c.Enrollments)
-                                            .SingleOrDefaultAsync(c => c.Code.Value == code);
+                                    .SingleOrDefaultAsync(c => c.Code.Value == code, cancellationToken: cancellationToken);
     }
 
     public override async Task<Course?> GetByIdAsync(Guid id, CancellationToken cancellationToken)

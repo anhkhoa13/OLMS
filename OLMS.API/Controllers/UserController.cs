@@ -63,6 +63,5 @@ public class UserController : Controller
         }
 
         return Ok(new { Messsage = "Upload success"});
-
     }
 }
