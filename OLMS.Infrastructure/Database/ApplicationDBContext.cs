@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
 using OLMS.Domain.Entities;
+using OLMS.Domain.Entities.QuestionEntity;
+using OLMS.Domain.Entities.QuizEntity;
 
 namespace OLMS.Infrastructure.Database;
 
@@ -13,6 +15,13 @@ public class ApplicationDbContext : DbContext
     public DbSet<Student> Students { get; set; }
     public DbSet<Instructor> Instructors { get; set; }
     public DbSet<Course> Courses { get; set; }
+    public DbSet<QuizAttempt> QuizAttempts { get; set; }
+    public DbSet<StudentAnswer> StudentAnswers { get; set; }
+    //public DbSet<Enrollment> Enrollments { get; set; }
+
+    public DbSet<Quiz> Quizzes { get; set; }
+    public DbSet<Question> Questions { get; set; }
+    public DbSet<MultipleChoiceQuestion> MultipleChoiceQuestions { get; set; }
     public DbSet<Material> Materials { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

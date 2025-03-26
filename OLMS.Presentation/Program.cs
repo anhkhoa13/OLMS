@@ -58,7 +58,6 @@ public class Program
         app.UseStaticFiles();
 
         app.UseRouting();
-
         app.UseAuthentication();
         app.UseAuthorization();
 

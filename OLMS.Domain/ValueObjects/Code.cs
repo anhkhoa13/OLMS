@@ -6,7 +6,7 @@ namespace OLMS.Domain.ValueObjects;
 public class Code : ValueObject
 {
     public string Value { get; }
-    private Code(string value)
+    public Code(string value)
     {
         Value = value;
     }

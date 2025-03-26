@@ -1,0 +1,116 @@
+﻿@{
+    ViewData["Title"] = "Create Quiz";
+}
+
+<div class="quiz-creator-area ptb-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2">
+                <div class="section-title text-center">
+                    <h2>Create New Quiz</h2>
+                    <p>Start by giving your quiz a title and some basic details.</p>
+                </div>
+
+                <div class="quiz-form">
+                    <form id="quizForm">
+                        <div class="form-group">
+                            <label for="quiz-title">Quiz Title</label>
+                            <input type="text" id="quiz-title" class="form-control" placeholder="Enter quiz title" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="quiz-description">Description</label>
+                            <textarea id="quiz-description" class="form-control" placeholder="Enter quiz description" rows="4"></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="quiz-startTime">Start Time</label>
+                                    <input type="datetime-local" id="quiz-startTime" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="quiz-endTime">End Time</label>
+                                    <input type="datetime-local" id="quiz-endTime" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="quiz-isTimeLimited">
+                                <label class="custom-control-label" for="quiz-isTimeLimited">Time Limited</label>
+                            </div>
+                        </div>
+
+                        <div class="form-actions text-center">
+                            <button type="submit" class="btn default-btn">Create Quiz</button>
+                            <button type="button" id="CrQuestBtn" class="btn default-btn">Create Question</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('quizForm').addEventListener('submit', submitQuiz);
+        document.getElementById('CrQuestBtn').addEventListener('click', redirectToAddQuestion);
+    });
+
+    async function submitQuiz(event) {
+        event.preventDefault();
+
+        const quizTitle = document.getElementById('quiz-title').value;
+        const quizDescription = document.getElementById('quiz-description').value;
+        const startTime = document.getElementById('quiz-startTime').value;
+        const endTime = document.getElementById('quiz-endTime').value;
+        const isTimeLimited = document.getElementById('quiz-isTimeLimited').checked;
+
+        if (!quizTitle.trim()) {
+            alert('Please enter a quiz title');
+            return;
+        }
+
+        const command = {
+            title: quizTitle,
+            description: quizDescription,
+            startTime: new Date(startTime).toISOString(),
+            endTime: new Date(endTime).toISOString(),
+            isTimeLimited: isTimeLimited
+        };
+
+        try {
+            const response = await fetch('https://localhost:7212/api/quiz/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(command)
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to create quiz');
+            }
+
+            const result = await response.json();
+            alert('Quiz created successfully!');
+            resetForm();
+
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    }
+
+    function resetForm() {
+        document.getElementById('quizForm').reset();
+    }
+
+    function redirectToAddQuestion() {
+        window.location.href = `/Quiz/AddQuestion`;
+    }
+</script>

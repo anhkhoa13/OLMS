@@ -6,6 +6,8 @@ using OLMS.Domain.Repositories;
 
 namespace OLMS.Presentation.Controllers;
 
+[ApiController]
+[Route("api/course")]
 public class CourseController : ControllerBase
 {
     private readonly ISender _sender;
@@ -15,7 +17,7 @@ public class CourseController : ControllerBase
         _sender = sender;
     }
 
-    [HttpPost]
+    [HttpPost("create")]
     public async Task<IActionResult> CreateCourse([FromBody] CreateCourseCommand command)
     {
         if (!ModelState.IsValid)
