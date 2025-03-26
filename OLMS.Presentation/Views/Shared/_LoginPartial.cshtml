@@ -1,35 +1,51 @@
-﻿@if (User?.Identity?.IsAuthenticated == true)
+﻿@if (!(User?.Identity?.IsAuthenticated ?? false))
 {
-    <div class="user-info">
-        <span>Welcome, @User.Identity.Name</span>
-        <form asp-controller="Authentication" asp-action="Logout" method="post" style="display:inline;">
-            <button type="submit" class="default-btn">Logout</button>
-        </form>
-    </div>
-}
-else
-{
-    <a href="@Url.Action("Index", "Authentication")" class="default-btn">
-        Login
-    </a>
+ 	<a class="login-btn" asp-controller="Authentication" asp-action="Index" method="get">Login</a>
+}else{ 
+	<span class="user-info">Welcome, @User.Identity.Name</span>
+	<form asp-area="" asp-controller="Authentication" asp-action="Logout" method="post">
+		<button class="logout-btn" type="submit">Logout</button>
+	</form>
 }
 
 <style>
-    .user-info {
-        font-size: 14px; /* Giảm kích thước chữ */
-        padding: 5px 10px; /* Giảm khoảng cách bên trong */
-        display: flex;
-        align-items: center;
-        gap: 8px; /* Khoảng cách giữa tên và nút logout */
-    }
+	.login-btn, .logout-btn {
+		width: 130px;
+		height: 50px;
+		border: 1px solid black;
+		border-radius: 20px;
 
-    .user-info span {
-        white-space: nowrap; /* Tránh xuống dòng */
-    }
+		display: flex;
+		align-items: center;
+		justify-content: center;
 
-    .user-info button {
-        font-size: 12px; /* Giảm kích thước nút */
-        padding: 5px 10px;
-    }
+		color: black;
+		font-size: 20px;
+		font-weight: 450;
+		transition: 0.3s;
+	}
+
+	.login-btn {
+		background: #FFF3CC;
+	} 
+
+	.logout-btn {
+		background: #FFD0C7;
+	}
+
+	.login-btn:hover {
+		background: #FFE599;
+		transform: scale(1.05);
+	}
+
+	.logout-btn:hover {
+		background: #FFB2A1;
+		transform: scale(1.05);
+	}
+
+	.user-info{
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
 </style>
-

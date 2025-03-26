@@ -1,0 +1,22 @@
+﻿@{
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="side-bar">
+	@await Html.PartialAsync("_SideBar")
+</div>
+<div class="partial-body">
+	@RenderBody()
+</div>
+
+<style>
+	.side-bar {
+		width: 280px;
+		padding-top: 20px;
+	}
+
+	.partial-body {
+		flex-grow: 1;
+		background-color: #DBFEFF;
+		padding: 20px;
+	}
+</style>

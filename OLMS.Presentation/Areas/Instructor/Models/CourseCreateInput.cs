@@ -1,4 +1,4 @@
-﻿namespace OLMS.Presentation.Models;
+﻿namespace OLMS.Presentation.Areas.Instructor.Models;
 
 public sealed record CourseCreateInput(string Title, string Description)
 {

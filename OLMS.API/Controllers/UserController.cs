@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using OLMS.Application.Features.User;
 using OLMS.Domain.Entities;
 using OLMS.Domain.Result;
+using OLMS.Shared.DTO;
 
 namespace OLMS.API.Controllers;
 
@@ -26,11 +27,11 @@ public class UserController : Controller
 
         if (!result.IsSuccess || result.Value is null)
         {
-            return BadRequest(new
+            return BadRequest(new ErrorResponse
             {
-                Code = 400,
-                Message = result.Error.ErrorMessage,
-                Errors = result.Error.Code
+                StatusCode = StatusCodes.Status400BadRequest,
+                Message = result.Error.ErrorMessage ?? "Error occured",
+                ErrorCode = result.Error.Code
             });
         }
         return Ok(new

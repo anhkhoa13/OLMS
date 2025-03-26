@@ -51,21 +51,4 @@ public class UserController : BaseController
         return View("Info", user);
     }
 
-    [HttpGet("dashboard")]
-    public IActionResult Dashboard()
-    {
-        var roleClaim = User.FindFirst(ClaimTypes.Role)?.Value;
-        if (!Enum.TryParse(roleClaim, out Role role))
-        {
-            return RedirectToAction("Index", "Home");
-        }
-
-        return role switch
-        {
-            Role.Admin => View("Admin/Dashboard"),
-            Role.Student => View("Student/Dashboard"),
-            Role.Instructor => View("Instructor/Dashboard"),
-            _ => RedirectToAction("Index", "Home")
-        };
-    }
 }

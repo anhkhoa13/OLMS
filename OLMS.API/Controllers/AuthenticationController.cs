@@ -4,6 +4,7 @@ using OLMS.Application.Feature.User;
 using OLMS.Application.Services;
 using OLMS.Domain.Entities;
 using OLMS.Domain.Result;
+using OLMS.Shared.DTO;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -28,11 +29,11 @@ public class AuthenticationController : Controller
         Result<Guid> result = await _sender.Send(command);
         if (!result.IsSuccess)
         {
-            return BadRequest(new
+            return BadRequest(new ErrorResponse
             {
-                Code = 400,
-                Message = result.Error.ErrorMessage,
-                Errors = result.Error.Code
+                StatusCode = StatusCodes.Status400BadRequest,
+                Message = result.Error.ErrorMessage ?? "Error occured",
+                ErrorCode = result.Error.Code
             });
         }
         return Ok(new { Guid = result.Value, Message = "User registered successfully" });
@@ -45,11 +46,11 @@ public class AuthenticationController : Controller
 
         if (!result.IsSuccess || result.Value is null)
         {
-            return BadRequest(new
+            return BadRequest(new ErrorResponse
             {
-                Code = 400,
-                Message = result.Error.ErrorMessage,
-                Errors = result.Error.Code
+                StatusCode = StatusCodes.Status400BadRequest,
+                Message = result.Error.ErrorMessage ?? "Error occured",
+                ErrorCode = result.Error.Code
             });
         }
 

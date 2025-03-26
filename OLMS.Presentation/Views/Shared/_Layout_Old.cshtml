@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html lang="zxx">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>@ViewData["Title"] - Capy</title>
+
+    <!-- Link of CSS Files -->
+    <link rel="stylesheet" href="~/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/assets/css/magnific-popup.min.css">
+    <link rel="stylesheet" href="~/assets/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="~/assets/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="~/assets/css/meanmenu.min.css">
+    <link rel="stylesheet" href="~/assets/css/scrollCue.css">
+    <link rel="stylesheet" href="~/assets/css/all.min.css">
+    <link rel="stylesheet" href="~/assets/css/style.css">
+    <link rel="stylesheet" href="~/assets/css/responsive.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="~/assets/images/favicon.svg">
+
+    <style>
+        .navbar-area {
+            transition: background-color 0.3s;
+        }
+        .navbar-area.scrolled {
+            background-color: white !important;
+        }
+    </style>
+
+    @RenderSection("Styles", required: false)
+</head>
+
+<body class="bg-fbfbfb">
+
+    <!-- Start Navbar Area -->
+    <div class="navbar-area position-fixed top-0 start-0 end-0">
+        <div class="lanklub-responsive-nav">
+            <div class="container">
+                <div class="lanklub-responsive-menu">
+                    <div class="logo">
+                        <a href="@Url.Action("Index", "Home")">
+                            <img src="~/assets/images/logo.svg" alt="logo">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="lanklub-nav">
+            <div class="container">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+                        <img src="~/assets/images/logo.svg" alt="logo">
+                    </a>
+                    <div class="collapse navbar-collapse mean-menu">
+                        <ul class="navbar-nav mx-auto">
+                            <li class="nav-item">
+                                <a href="@Url.Action("Index", "Home")" class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="@Url.Action("About", "Home")" class="nav-link">About</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="@Url.Action("Contact", "Home")" class="nav-link">Contact</a>
+                            </li>
+                        </ul>
+                        <div class="others-option">
+                            @await Html.PartialAsync("_LoginPartial")
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- End Navbar Area -->
+
+    <div class="container-fluid" style="margin-top: 100px">
+        <main role="main" class="py-4">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- Link of JS Files -->
+    <script src="~/assets/js/jquery.min.js"></script>
+    <script src="~/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/js/magnific-popup.min.js"></script>
+    <script src="~/assets/js/meanmenu.min.js"></script>
+    <script src="~/assets/js/owl.carousel.min.js"></script>
+    <script src="~/assets/js/scrollCue.min.js"></script>
+    <script src="~/assets/js/custom.js"></script>
+    <script>
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 50) {
+                $('.navbar-area').addClass('scrolled');
+            } else {
+                $('.navbar-area').removeClass('scrolled');
+            }
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

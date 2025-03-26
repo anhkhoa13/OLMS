@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
+using OLMS.Application.Feature.User;
 using OLMS.Domain.Entities;
 using OLMS.Domain.Repositories;
 using OLMS.Domain.Result;
@@ -8,6 +10,17 @@ using static OLMS.Domain.Result.CourseError;
 
 namespace OLMS.Application.Feature.CourseUC;
 
+public sealed class CreateCourseValidation : AbstractValidator<CreateCourseCommand>
+{
+    public CreateCourseValidation()
+    {
+        Console.WriteLine("CreateCourseValidation is being executed...");
+        RuleFor(c => c.Title).NotEmpty().WithMessage("Course name is required")
+                            .Length(3, 100).WithMessage("Course name must be between 3 and 100 characters.");
+
+        RuleFor(c => c.Description).MaximumLength(100);
+    }
+}
 public sealed record CreateCourseCommand(string Title,
                                   string Description,
                                   Guid InstructorId) : IRequest<Result<Code>>;

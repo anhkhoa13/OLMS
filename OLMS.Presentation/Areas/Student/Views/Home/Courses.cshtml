@@ -1,0 +1,178 @@
+﻿<div class="course-header">
+    <input type="text" id="searchInput" placeholder="Search courses..." onkeyup="filterCourses()">
+    <button class="btn btn-add" onclick="toggleCourseForm()">+ Join Course</button>
+</div>
+
+<div class="course-form-container" id="courseFormContainer" style="display: none;">
+    <form method="post" asp-area="Student" asp-controller="Home" asp-action="EnrollCourse" class="course-form">
+        <div class="form-group">
+            <label for="courseCode">Course Code</label>
+            <input type="text" id="Code" name="code" placeholder="Enter Course Code" class="form-control" required />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Join Course</button>
+        <button type="button" class="btn btn-secondary" onclick="toggleCourseForm()">Cancel</button>
+    </form>
+</div>
+
+<table style="background-color: white">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Code</th>
+        </tr>
+    </thead>
+    <tbody id="course-list">
+        <tr><td colspan="5">Loading courses...</td></tr>
+    </tbody>
+</table>
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .btn {
+        padding: 5px 10px;
+        cursor: pointer;
+        color: black;
+		border: solid 1px black;
+		border-radius: 10px;
+    }
+
+    .btn-add {
+        background-color: #D1FFDC;
+        border-radius: 20px;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .btn-add:hover {
+        background-color: #b8f5c9;
+        transform: scale(1.05);
+        cursor: pointer;
+    }
+
+
+    .btn-view {
+        background-color: #B3E0FF;
+    }
+
+
+    .course-header{
+		display: flex;
+		justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+	.course-header input {
+        width:  50%;
+        padding: 5px;
+        padding-left: 20px;
+
+		margin-right: 50px;
+		border: solid 1px black;
+        border-radius: 20px;
+    }
+   
+    .btn-primary {
+        background-color: #D1FFDC;
+        color: black;
+    }
+
+    .btn-primary:hover {
+        background-color: #45a049;
+        transform: scale(1.05);
+    }
+
+    .btn-secondary {
+        background-color: #FFCCCC;
+        color: black;
+    }
+
+    .btn-secondary:hover {
+        background-color: #E63946;
+        transform: scale(1.05);
+    }
+
+    /* Chỉnh lại form */
+    .course-form-container {
+        max-width: 500px;
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .course-form .form-group {
+        margin-bottom: 15px;
+    }
+</style>
+
+<script>
+    let coursesData = [];
+
+    function loadCourses() {
+        fetch('/student/home/getcourses')
+            .then(response => response.json())
+            .then(data => {
+                coursesData = data.courses;
+                renderCourses(coursesData);
+            })
+            .catch(error => {
+                console.error("Error fetching courses:", error);
+                document.getElementById("course-list").innerHTML = "<tr><td colspan='5'>Error loading courses</td></tr>";
+            });
+    }
+
+    function renderCourses(courses) {
+        let courseList = document.getElementById("course-list");
+
+        if (courses.length === 0) {
+            courseList.innerHTML = "<tr><td colspan='5'>No courses available</td></tr>";
+            return;
+        }
+
+        let rows = "";
+        courses.forEach(course => {
+            rows += `<tr>
+                <td>${course.title || "Untitled"}</td>
+                <td>${course.description || "No description"}</td>
+                <td>${course.code || "N/A"}</td>
+                <td>
+                    <button class="btn btn-view" onclick="viewDetail('${course.id}')">View Detail</button>
+                </td>
+            </tr>`;
+        });
+        courseList.innerHTML = rows;
+    }
+
+    function filterCourses() {
+        let searchText = document.getElementById("searchInput").value.toLowerCase();
+        let filteredCourses = coursesData.filter(course =>
+            course.code.toLowerCase().includes(searchText) ||
+            course.title.toLowerCase().includes(searchText)
+        );
+        renderCourses(filteredCourses);
+    }
+
+    function viewDetail(courseId) {
+        window.location.href = `/course/${courseId}`;
+    }
+
+    function toggleCourseForm() {
+        var formContainer = document.getElementById("courseFormContainer");
+        formContainer.style.display = formContainer.style.display === "none" ? "block" : "none";
+    }
+
+    loadCourses();
+</script>

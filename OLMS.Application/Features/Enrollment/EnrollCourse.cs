@@ -1,13 +1,18 @@
 ﻿using MediatR;
 using OLMS.Domain.Entities;
 using OLMS.Domain.Repositories;
+using OLMS.Domain.Result;
+
+using static OLMS.Domain.Result.Result;
+using static OLMS.Domain.Result.UserError;
+using static OLMS.Domain.Result.CourseError;
 
 
 namespace OLMS.Application.Feature.Enrollment;
 
-public sealed record EnrollCourseCommand(Guid StudentId, string CourseCode) : IRequest;
+public sealed record EnrollCourseCommand(Guid StudentId, string CourseCode) : IRequest<Result>;
 
-public class EnrollCourseCommandHandler : IRequestHandler<EnrollCourseCommand>
+public class EnrollCourseCommandHandler : IRequestHandler<EnrollCourseCommand, Result>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IUserRepository _userRepository;
@@ -23,30 +28,26 @@ public class EnrollCourseCommandHandler : IRequestHandler<EnrollCourseCommand>
         _courseRepository = courseRepository;
     }
 
-    public async Task Handle(EnrollCourseCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(EnrollCourseCommand request, CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetByIdAsync(request.StudentId);
 
         if (user is null)
-        {
-            throw new InvalidOperationException("User not found");
-        }
+            return UserNotFound;
 
         if (user is not Student student)
-        {
-            throw new InvalidOperationException("Not a student");
-        }
+            return InvalidRole;
 
         var course = await _courseRepository.GetByCodeAsync(request.CourseCode);
 
         if (course == null)
-        {
-            throw new KeyNotFoundException("Invalid course code.");
-        }
+            return CourseNotFound;
 
         course.EnrollStudent(student);
 
         _courseRepository.Update(course);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return Success();
     }
 }

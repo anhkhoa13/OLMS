@@ -1,6 +1,7 @@
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using OLMS.API.Middleware;
 using OLMS.Application;
 using OLMS.Application.Services;
 using OLMS.Infrastructure;
@@ -23,6 +24,7 @@ public class Program
             {
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
+
         builder.Services.AddApplication();
         builder.Services.AddInfrastructure(builder.Configuration);
 
@@ -62,12 +64,17 @@ public class Program
                 };
             });
         builder.Services.AddAuthorization();
+        builder.Services.AddExceptionHandler<GlobalExecptionHandler>();
+        builder.Services.AddProblemDetails();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
         var app = builder.Build();
+
+        app.UseExceptionHandler();
+        app.UseStatusCodePages();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())

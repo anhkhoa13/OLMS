@@ -1,0 +1,76 @@
+﻿<ul class="sidebar-menu">
+	<li>
+		<button class="direction-btn">
+			<img class="icon" src="/images/icons/dashboard.svg" alt="dashboard">
+			<a asp-area="Instructor" asp-controller="Home" asp-action="Dashboard">Dashboard</a>
+		</button>
+	</li>
+	<li>
+		<button class="direction-btn">
+			<img class="icon" src="/images/icons/course.svg" alt="course">
+			<a asp-area="Instructor" asp-controller="Home" asp-action="Courses">My Courses</a>
+		</button>
+	</li>
+	<li>
+		<button class="direction-btn">
+			<img class="icon" src="/images/icons/calendar.svg" alt="calendar">
+			<a asp-area="Instructor" asp-controller="Home" asp-action="Calendar">Calendar</a>
+		</button>
+	</li>
+	<li>
+		<button class="direction-btn">
+			<img class="icon" src="/images/icons/profile.svg" alt="profile">
+			<a asp-area="Instructor" asp-controller="Home" asp-action="Profile">Profile</a>
+		</button>
+	</li>
+
+</ul>
+
+<style>
+	.sidebar-menu {
+		width: 280px;
+		list-style: none;
+
+		display: flex;
+		flex-direction: column;
+
+		justify-items: center;
+		gap: 10px;
+	}
+
+	button {
+		background: none;
+		border: none;
+	}
+
+	.direction-btn {
+		min-width: 100%;
+		font-size: 25px;
+
+		padding: 15px;
+
+		display: flex;
+		align-items: center;
+		justify-content: left;
+
+		transition: background 0.3s ease-in-out;
+
+		border-bottom-right-radius: 20px;
+	}
+
+	.direction-btn:hover {
+		background-color: #FFDBDC;
+	}
+
+	.direction-btn:hover a{
+		color: inherit;
+	}
+
+	.icon {
+		width: 32px;
+		height: 32px;
+		flex-shrink: 0;
+
+		margin-right: 20px;
+	}
+</style>

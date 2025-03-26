@@ -39,4 +39,6 @@ public static class CourseError
     public static readonly Error InvalidTitle = new("Invalid Title", "Title must be 3-100 characters long");
     public static readonly Error InvalidDescription = new("Invalid Description", "Description must be less than 100 characters");
 
+    public static readonly Error CourseNotFound = new("Course Not Found", "Course not found");
+
 }

@@ -1,0 +1,35 @@
+﻿<!--Logo-->
+<div class="div-logo">
+	@await Html.PartialAsync("_Logo")
+</div>
+
+
+<!--Navigation-->
+<nav class="nav-bar">
+	@await Html.PartialAsync("_Navbar")
+</nav>
+
+
+<div class="div-login">
+	@await Html.PartialAsync("_LoginPartial")
+</div>
+
+
+<style>
+	.div-logo, .div-login, .nav-bar {
+		display: flex;
+		align-items: center;
+		justify-items: center;
+	}
+
+	.div-login {
+		margin-left: auto;
+		gap: 15px;
+	}
+
+	.nav-bar{
+		margin-left: 90px;
+		font-size: 30px;
+		font-weight: 300;
+	}
+</style>

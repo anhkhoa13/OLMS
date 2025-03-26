@@ -1,0 +1,21 @@
+﻿@if (!(User?.Identity?.IsAuthenticated ?? false))
+{
+	<a class="logo" asp-controller="Home" asp-action="Index">OLMS</a>
+}
+else
+{
+	<a class="logo">OLMS</a>
+}
+
+
+<style>
+	.logo{
+		font-size: 48px;
+		color: black;
+		font-weight: 450;
+
+		display: flex;
+		align-items: center;
+		justify-items: center;
+	}
+</style>
