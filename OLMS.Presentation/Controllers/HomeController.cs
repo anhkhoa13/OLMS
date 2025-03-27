@@ -75,5 +75,10 @@ namespace OLMS.Presentation.Controllers
 
             return View(course); // Pass course to the JoinCourse view
         }
+
+        public IActionResult LandingPage()
+        {
+            return View();
+        }
     }
 }

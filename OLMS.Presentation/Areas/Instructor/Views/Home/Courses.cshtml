@@ -176,7 +176,7 @@
                 <td>${course.description || "No description"}</td>
                 <td>
                     <button class="btn btn-edit">Edit</button>
-                    <button class="btn btn-view" onclick="viewDetail('${course.id}')">View Detail</button>
+                    <button class="btn btn-view" onclick="viewDetail('${course.code}')">View Detail</button>
                     <button class="btn btn-delete" onclick="confirmDelete('${course.id}')">Delete</button>
                 </td>
             </tr>`;
@@ -193,8 +193,8 @@
         renderCourses(filteredCourses);
     }
 
-    function viewDetail(courseId) {
-        window.location.href = `/course/${courseId}`;
+    function viewDetail(courseCode) {
+        window.location.href = `/Instructor/CourseDetail/Index?courseCode=` + courseCode;
     }
 
     function confirmDelete(courseId) {

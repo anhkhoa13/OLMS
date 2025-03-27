@@ -21,7 +21,13 @@ public class AuthenticationController : BaseController
     }
 
     [HttpGet]
-    public IActionResult Index()
+    public IActionResult Login()
+    {
+        return View();
+    }
+
+    [HttpGet]
+    public IActionResult Register()
     {
         return View();
     }
@@ -133,5 +139,8 @@ public class AuthenticationController : BaseController
 
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
     }
+
+
+
 }
     

@@ -1,6 +1,6 @@
 ﻿@if (!(User?.Identity?.IsAuthenticated ?? false))
 {
- 	<a class="login-btn" asp-controller="Authentication" asp-action="Index" method="get">Login</a>
+ 	<a class="login-btn" asp-controller="Authentication" asp-action="Login" method="get">Login</a>
 }else{ 
 	<span class="user-info">Welcome, @User.Identity.Name</span>
 	<form asp-area="" asp-controller="Authentication" asp-action="Logout" method="post">
