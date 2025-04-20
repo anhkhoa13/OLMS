@@ -51,24 +51,36 @@ CREATE TABLE Enrollment (
     FOREIGN KEY (CourseID) REFERENCES Course(Id) ON DELETE CASCADE
 );
 
-
-
+-- Quiz
 CREATE TABLE Quiz (
     Id UNIQUEIDENTIFIER PRIMARY KEY,
+	InstructorID UNIQUEIDENTIFIER NOT NULL,
 	Code NVARCHAR(6) UNIQUE NOT NULL,
-    Title NVARCHAR(255) NOT NULL,
-    Description NVARCHAR(2000) NULL,
+    Title NVARCHAR(100) NOT NULL,
+    Description NVARCHAR(255) NULL,
     StartTime DATETIME NOT NULL,
     EndTime DATETIME NOT NULL,
-    IsTimeLimited BIT NOT NULL
+    IsTimeLimited BIT NOT NULL,
+	TimeLimit Time NULL,
+	NumberOfAttempts INT CHECK (NumberOfAttempts > 0),
+
+	FOREIGN KEY (InstructorID) REFERENCES Instructor(Id) ON DELETE CASCADE,
+);
+
+-- many-to-many table
+CREATE TABLE QuizCourse (
+    QuizID UNIQUEIDENTIFIER NOT NULL,
+    CourseID UNIQUEIDENTIFIER NOT NULL,
+    PRIMARY KEY (QuizID, CourseID),
+    FOREIGN KEY (QuizID) REFERENCES Quiz(Id) ON DELETE CASCADE,
+    FOREIGN KEY (CourseID) REFERENCES Course(Id) ON DELETE CASCADE
 );
 
 CREATE TABLE Question (
     Id UNIQUEIDENTIFIER PRIMARY KEY,
-    Content NVARCHAR(1000) NOT NULL,
-    QuestionType NVARCHAR(50) NOT NULL, -- Stores enum as string
-	QuizId UNIQUEIDENTIFIER,
-	IsDeleted BIT DEFAULT 0,
+	QuizId UNIQUEIDENTIFIER NOT NULL,
+    Content NVARCHAR(MAX) NOT NULL,
+    QuestionType NVARCHAR(50) CHECK (QuestionType IN ('MultipleChoice', 'ShortAnswer', 'Essay', 'FillInTheBlanks')) NOT NULL,
 
     FOREIGN KEY (QuizId) REFERENCES Quiz(Id) ON DELETE CASCADE
 );
@@ -93,17 +105,45 @@ CREATE TABLE QuizAttempt (
     SubmittedAt DATETIME NULL,
     StartTime DATETIME NOT NULL,
     Status INT NOT NULL, 
-    Score FLOAT NOT NULL DEFAULT 0,
+    Score FLOAT CHECK (Score >= 0) NOT NULL DEFAULT 0,
+	AttemptNumber INT CHECK (AttemptNumber > 0),
+
 	FOREIGN KEY (StudentId) REFERENCES Student(Id) ON DELETE CASCADE,
-    FOREIGN KEY (QuizId) REFERENCES Quiz(Id) ON DELETE CASCADE
+    FOREIGN KEY (QuizId) REFERENCES Quiz(Id) ON DELETE NO ACTION
 );
 
-CREATE TABLE StudentAnswer (
+CREATE TABLE StudentResponse  (
     Id UNIQUEIDENTIFIER PRIMARY KEY,
     QuizAttemptId UNIQUEIDENTIFIER NOT NULL,
     QuestionId UNIQUEIDENTIFIER NOT NULL,
-    Answer NVARCHAR(50) NOT NULL,
+    ResponseText NVARCHAR(MAX) NOT NULL,
+	IsDeleted BIT DEFAULT 0,
     FOREIGN KEY (QuizAttemptId) REFERENCES QuizAttempt(Id) ON DELETE CASCADE,
-    FOREIGN KEY (QuestionId) REFERENCES Question(Id) ON DELETE NO ACTION -- Prevent cascade conflict
+    FOREIGN KEY (QuestionId) REFERENCES Question(Id) ON DELETE NO ACTION 
 );
 
+-- Insert Users (for Students and Instructors)
+INSERT INTO [User] (Id, Username, [Password], FullName, Email, Age, Role)
+VALUES
+    (NEWID(), 'Student1', 'Password123!', 'John Doe', 'john.doe@example.com', 22, 'Student'),
+    (NEWID(), 'Student2', 'Password123!', 'Jane Smith', 'jane.smith@example.com', 20, 'Student'),
+    (NEWID(), 'Teacher1', 'Password123!', 'Dr. Emily Brown', 'emily.brown@example.com', 40, 'Instructor'),
+    (NEWID(), 'Teacher2', 'Password123!', 'Prof. Michael Wilson', 'michael.wilson@example.com', 45, 'Instructor');
+
+-- Insert Students
+INSERT INTO Student (Id, EnrollmentDate, Major)
+SELECT Id, GETDATE(), 'Computer Science'
+FROM [User] WHERE Username = 'Student1';
+
+INSERT INTO Student (Id, EnrollmentDate, Major)
+SELECT Id, GETDATE(), 'Information Technology'
+FROM [User] WHERE Username = 'Student2';
+
+-- Insert Instructors
+INSERT INTO Instructor (Id, HireDate, Department)
+SELECT Id, GETDATE(), 'Computer Science Department'
+FROM [User] WHERE Username = 'Teacher1';
+
+INSERT INTO Instructor (Id, HireDate, Department)
+SELECT Id, GETDATE(), 'Information Technology Department'
+FROM [User] WHERE Username = 'Teacher2';

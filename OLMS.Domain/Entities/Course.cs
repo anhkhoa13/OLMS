@@ -1,4 +1,5 @@
-﻿using OLMS.Domain.Primitives;
+﻿using OLMS.Domain.Entities.QuizEntity;
+using OLMS.Domain.Primitives;
 using OLMS.Domain.ValueObjects;
 
 
@@ -20,6 +21,8 @@ public class Course : Entity, IAggregateRoot
     private readonly List<MaterialCourse> _materialCourse = new();
     public IReadOnlyCollection<MaterialCourse> MaterialCourse => _materialCourse.AsReadOnly();
 
+    private readonly List<QuizCourse> _quizCourses = new();
+    public IReadOnlyCollection<QuizCourse> QuizCourses => _quizCourses.AsReadOnly();
 
     private Course() : base() { }
 

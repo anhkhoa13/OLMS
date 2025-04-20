@@ -44,10 +44,10 @@ public class QuizControllerTests
     public async Task RemoveQuestion_Should_Return_NotFound_When_QuestionNotExists()
     {
         // Arrange
-        var command = new RemoveMulChQuesCommand(Guid.NewGuid(), Guid.NewGuid());
+        var command = new RemoveQuestionCommand(Guid.NewGuid(), Guid.NewGuid());
 
         _mockSender
-            .Setup(sender => sender.Send(It.IsAny<RemoveMulChQuesCommand>(), It.IsAny<CancellationToken>()))
+            .Setup(sender => sender.Send(It.IsAny<RemoveQuestionCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
 
         // Act

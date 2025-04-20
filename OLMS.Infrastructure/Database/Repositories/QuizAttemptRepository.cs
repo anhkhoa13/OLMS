@@ -13,4 +13,10 @@ public class QuizAttemptRepository : Repository<QuizAttempt>, IQuizAttemptReposi
     {
         throw new NotImplementedException();
     }
+    public async Task<List<QuizAttempt>> GetAttemptsByStudentAndQuizAsync(Guid studentId, Guid quizId) {
+        return await _context.QuizAttempts
+            .Where(a => a.StudentId == studentId && a.QuizId == quizId)
+            .ToListAsync();
+    }
+
 }

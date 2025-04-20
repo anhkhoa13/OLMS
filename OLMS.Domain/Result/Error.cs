@@ -3,6 +3,9 @@
 public sealed record Error(string Code, string? ErrorMessage = null)
 {
     public static readonly Error None = new(string.Empty);
+    public static Error NotFound(string message) => new("NotFound", message);
+    public static Error Validation(string message) => new("Validation", message);
+    public static Error Failure(string message) => new("Failure", message);
 }
 
 public static class UserError
@@ -42,3 +45,4 @@ public static class CourseError
     public static readonly Error CourseNotFound = new("Course Not Found", "Course not found");
 
 }
+

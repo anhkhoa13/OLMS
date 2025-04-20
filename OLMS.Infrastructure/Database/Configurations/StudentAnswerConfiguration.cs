@@ -5,12 +5,12 @@ using OLMS.Domain.Primitives;
 
 namespace OLMS.Infrastructure.Database.Configurations;
 
-public sealed class StudentAnswerConfiguration : IEntityTypeConfiguration<StudentAnswer>
+public sealed class StudentAnswerConfiguration : IEntityTypeConfiguration<StudentResponse>
 {
-    public void Configure(EntityTypeBuilder<StudentAnswer> builder)
+    public void Configure(EntityTypeBuilder<StudentResponse> builder)
     {
         // Table mapping
-        builder.ToTable("StudentAnswer");
+        builder.ToTable("StudentResponse");
         // Set primary key
         builder.HasKey(sa => sa.Id);
 
@@ -26,7 +26,7 @@ public sealed class StudentAnswerConfiguration : IEntityTypeConfiguration<Studen
             .OnDelete(DeleteBehavior.Restrict); // Prevent deletion if Question exists
 
         // Set column constraints
-        builder.Property(sa => sa.Answer)
+        builder.Property(sa => sa.ResponseText)
             .IsRequired()
             .HasMaxLength(500); // Adjust max length as needed
     }

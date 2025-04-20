@@ -41,6 +41,11 @@ public sealed class QuizConfiguration : IEntityTypeConfiguration<Quiz>
             .WithOne()
             .HasForeignKey(q => q.QuizId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(q => q.QuizCourses)
+               .WithOne(qc => qc.Quiz)
+               .HasForeignKey(qc => qc.QuizId)
+               .OnDelete(DeleteBehavior.Cascade);
     }
 }
 

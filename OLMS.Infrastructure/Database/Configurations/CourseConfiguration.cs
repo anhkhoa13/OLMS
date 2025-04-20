@@ -40,6 +40,11 @@ public sealed class CourseConfiguration : IEntityTypeConfiguration<Course>
               .WithOne()
               .HasForeignKey(e => e.CourseId)
               .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(c => c.QuizCourses)
+               .WithOne(qc => qc.Course)
+               .HasForeignKey(qc => qc.CourseId)
+               .OnDelete(DeleteBehavior.Cascade);
     }
 }
 

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using OLMS.Application.Feature.CourseUC;
 using OLMS.Domain.Entities;
 using OLMS.Domain.Repositories;
+using OLMS.Domain.Result;
 
 namespace OLMS.Presentation.Controllers;
 
@@ -24,9 +25,11 @@ public class CourseController : ControllerBase
         {
             return BadRequest(ModelState);
         }
-
-        var courseId = await _sender.Send(command);
-
-        return RedirectToAction("Index");
+        var result = await _sender.Send(command);
+        if (result.IsFailure) {
+            return BadRequest(result.Error);
+        }
+        // Assuming result.Value is the course code (e.g. "C0AD28")
+        return Ok(new { code = result.Value });
     }
 }

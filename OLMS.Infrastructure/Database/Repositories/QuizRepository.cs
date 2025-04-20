@@ -12,9 +12,21 @@ public class QuizRepository : Repository<Quiz>, IQuizRepository
 
     public override async Task<Quiz?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        return await _context.Quizzes
-            .Include(q => q.Questions)
-            .SingleOrDefaultAsync(q => q.Id == id, cancellationToken);
+        try {
+            var quiz = await _context.Quizzes
+                .Include(q => q.Questions)
+                .SingleOrDefaultAsync(q => q.Id == id, cancellationToken);
+
+            if (quiz == null) {
+                throw new Exception("Quiz not found.");
+            }
+
+            return quiz;
+        } catch (Exception ex) {
+            // Log the exception to get more information about the failure
+            Console.WriteLine(ex.ToString());
+            throw new Exception("An error occurred while fetching the quiz.");
+        }
     }
     public async Task<Quiz?> GetByCodeAsync(string code)
     {

@@ -35,13 +35,17 @@ public class QuizController : Controller
     }
 
     [HttpDelete("remove-question")]
-    public async Task<IActionResult> RemoveQuestion([FromBody] RemoveMulChQuesCommand command)
+    public async Task<IActionResult> RemoveQuestion([FromBody] RemoveQuestionCommand command)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
         var result = await _sender.Send(command);
-        if (!result) return NotFound("Question not found");
+        if (result.IsFailure) {
+            // Return an appropriate error response
+            return NotFound(result.Error.Code);  // or result.Error.Message depending on your use case
+        }
 
+        // Return success if no failure
         return Ok("Question removed successfully");
     }
     [HttpGet("code/{code}")]
@@ -64,13 +68,18 @@ public class QuizController : Controller
         return Ok(new { AttemptId = attemptId });
     }
     [HttpPost("attempts/submit")]
-    public async Task<IActionResult> SubmitQuiz([FromBody] SubmitQuizCommand command)
-    {
-        if (!ModelState.IsValid) return BadRequest(ModelState);
+    public async Task<IActionResult> SubmitQuiz([FromBody] SubmitQuizCommand command) {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
         var result = await _sender.Send(command);
-        return result ? Ok("Quiz submitted successfully.") : BadRequest("Submission failed.");
+
+        if (result.IsFailure)
+            return BadRequest(result.Error.ErrorMessage);  // Returning the error message from the result
+
+        return Ok("Quiz submitted successfully.");
     }
+
 
     [HttpGet("list")]
     public async Task<IActionResult> GetQuizzes()

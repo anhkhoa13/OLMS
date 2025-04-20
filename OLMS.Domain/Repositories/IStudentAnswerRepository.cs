@@ -3,7 +3,7 @@ using OLMS.Domain.Entities.QuizEntity;
 
 namespace OLMS.Domain.Repositories;
 
-public interface IStudentAnswerRepository : IRepository<StudentAnswer>
+public interface IStudentAnswerRepository : IRepository<StudentResponse>
 {
-    Task AddRangeAsync(IEnumerable<StudentAnswer> answers, CancellationToken cancellationToken);
+    Task AddRangeAsync(IEnumerable<StudentResponse> answers, CancellationToken cancellationToken);
 }
