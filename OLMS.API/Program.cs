@@ -44,6 +44,12 @@ public class Program
                     .WithExposedHeaders("Authorization")
                     .AllowAnyHeader();
             });
+            options.AddPolicy("AllowReactApp", builder =>
+            {
+                builder.WithOrigins("http://localhost:5174")
+                       .AllowAnyHeader()
+                       .AllowAnyMethod();
+            });
         });
 
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -86,6 +92,9 @@ public class Program
 
         app.UseHttpsRedirection();
         app.UseCors();
+        // Add CORS middleware
+        app.UseCors("AllowReactApp");
+
 
         app.Use(async (context, next) =>
         {

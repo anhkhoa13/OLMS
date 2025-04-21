@@ -1,0 +1,4 @@
+.rbc-day-bg:hover {
+  background-color: rgba(52, 152, 219, 0.2); /* Light blue hover effect */
+  cursor: pointer;
+}

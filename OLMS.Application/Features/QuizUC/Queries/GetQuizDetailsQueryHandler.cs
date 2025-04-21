@@ -25,13 +25,14 @@ public class GetQuizDetailsQueryHandler : IRequestHandler<GetQuizDetailsQuery, Q
 
         return new QuizDto
         {
-            QuizId = quiz.Id,
             Code = quiz.Code,
             Title = quiz.Title,
             Description = quiz.Description,
             StartTime = quiz.StartTime,
             EndTime = quiz.EndTime,
             IsTimeLimited = quiz.IsTimeLimited,
+            TimeLimit = quiz.TimeLimit,
+            NumberOfAttempts = quiz.NumberOfAttempts,
             Questions = quiz.Questions.Select(q => q.Adapt<QuestionDto>()).ToList()
         };
     }

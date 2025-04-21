@@ -34,7 +34,7 @@ public class MapsterConfig
             });
         TypeAdapterConfig<Quiz, QuizDto>
             .NewConfig()
-            .Map(dest => dest.QuizId, src => src.Id);
+            .Map(dest => dest.Code, src => src.Code);
     }
 }
 
