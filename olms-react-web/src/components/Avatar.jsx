@@ -1,5 +1,11 @@
+import defaultAvatar from "../assets/images/defaultAvatar.jpg";
+
 function Avatar({ name, image = null }) {
-  const initial = name?.charAt(0)?.toUpperCase() || "?";
+  // Check if name is null, undefined, or empty string
+  const isNameEmpty = !name || name.trim() === "";
+
+  // Only calculate initial if name is not empty
+  const initial = isNameEmpty ? "?" : name.charAt(0).toUpperCase();
 
   // Simple hashing function to generate a color from the name
   const hashCode = (str) => {
@@ -27,18 +33,27 @@ function Avatar({ name, image = null }) {
     return colors[colorIndex];
   };
 
-  // Get color based on the name
-  const color = getColorFromHash(hashCode(name || ""));
+  // Get color based on the name (use a default string if name is empty)
+  const color = getColorFromHash(hashCode(isNameEmpty ? "default" : name));
 
   return (
     <div className="w-10 h-10">
+      {/* If image is provided, use it */}
       {image ? (
         <img
           src={image}
-          alt={name}
+          alt={name || "User"}
+          className="w-full h-full rounded-full object-cover"
+        />
+      ) : isNameEmpty ? (
+        // If name is empty and no image is provided, use default avatar
+        <img
+          src={defaultAvatar}
+          alt="Default User"
           className="w-full h-full rounded-full object-cover"
         />
       ) : (
+        // Otherwise use the initial with background color
         <div
           className={`w-full h-full ${color} text-white font-semibold rounded-full flex items-center justify-center`}
         >

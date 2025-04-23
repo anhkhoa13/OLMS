@@ -1,16 +1,22 @@
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { ArrowRightEndOnRectangleIcon } from "@heroicons/react/24/solid";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import axios from "axios";
+import { useAuth } from "../contexts/AuthContext";
 
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 
 function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { login } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [apiError, setApiError] = useState("");
+
+  // Get the redirect path from location state or default to dashboard
+  const from = location.state?.from?.pathname || "/dashboard";
 
   const {
     register,
@@ -36,29 +42,45 @@ function Login() {
       };
 
       // Call login API
-      const response = await axios.post(
-        `${API_URL}/api/auth/login`,
-        loginData,
-        {
-          withCredentials: true, // Important for cookies if you're using them
+      const response = await axios.post(`${API_URL}/api/auth/login`, loginData);
+
+      // Check if response contains token
+      if (response.data && response.data.token) {
+        // Use the login function from AuthContext
+        const userData = login(response.data.token);
+
+        // If remember me is checked, set a longer expiration
+        if (data.rememberMe) {
+          // This is handled by the token itself, but you could
+          // store a flag to refresh the token automatically
+          localStorage.setItem("rememberMe", "true");
         }
-      );
 
-      // Handle successful login
-      console.log("Login successful:", response.data);
+        console.log("Login successful:", userData);
 
-      // Store user data in localStorage or context
-      localStorage.setItem("user", JSON.stringify(response.data.user));
-      localStorage.setItem("token", response.data.token);
-
-      // Redirect to dashboard or home page
-      navigate("/dashboard");
+        // Redirect to the page the user was trying to access, or dashboard
+        navigate(from, { replace: true });
+      } else {
+        throw new Error("No token received from server");
+      }
     } catch (error) {
       console.error("Login error:", error);
-      setApiError(
-        error.response?.data?.message ||
-          "Invalid username or password. Please try again."
-      );
+
+      // Handle different types of errors
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        setApiError(
+          error.response.data.message ||
+            "Invalid username or password. Please try again."
+        );
+      } else if (error.request) {
+        // The request was made but no response was received
+        setApiError("No response from server. Please try again later.");
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        setApiError("An error occurred. Please try again.");
+      }
     } finally {
       setIsSubmitting(false);
     }

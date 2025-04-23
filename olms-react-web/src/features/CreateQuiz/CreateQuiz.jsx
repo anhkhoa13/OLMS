@@ -1,14 +1,16 @@
 import React, { useState } from "react";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import { useAuth } from "../../contexts/AuthContext";
+
 import axios from "axios";
 import QuizInfoForm from "./QuizInfoForm";
 import QuestionListEditor from "./QuestionListEditor";
 import Error from "../../components/Error";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 
 const API_URL = import.meta.env.VITE_BACKEND_URL;
-const instructorId = "C93A3362-77BD-4EAC-BC09-4DD67E2776F5";
+//const instructorId = "C93A3362-77BD-4EAC-BC09-4DD67E2776F5";
 
 // Yup schema
 const quizInfoSchema = Yup.object().shape({
@@ -33,6 +35,8 @@ function CreateQuiz() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
+
+  const { currentUser } = useAuth();
 
   const {
     register,
@@ -68,7 +72,7 @@ function CreateQuiz() {
 
     try {
       const quizJson = {
-        instructorId,
+        instructorId: currentUser.id,
         ...data,
         timeLimit: data.isTimeLimited
           ? data.timeLimit.length === 5

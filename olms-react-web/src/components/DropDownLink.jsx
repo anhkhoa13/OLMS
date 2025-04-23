@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 function DropDownLink({
   title,
@@ -14,7 +14,13 @@ function DropDownLink({
     setTabOpen((prev) => (prev === title ? null : title));
   };
 
-  const handleLinkClick = () => {
+  const handleItemClick = (item) => {
+    // If the item has a custom onClick handler, use it
+    if (item.onClick) {
+      item.onClick();
+    }
+
+    // Close the dropdown
     setTabOpen(null);
   };
 
@@ -44,16 +50,29 @@ function DropDownLink({
           }
         `}
       >
-        {items.map((item) => (
-          <Link
-            key={item.name}
-            to={item.link}
-            onClick={handleLinkClick}
-            className="block px-6 py-3 text-base text-gray-700 hover:bg-gray-100"
-          >
-            {item.name}
-          </Link>
-        ))}
+        {items.map((item) =>
+          item.onClick ? (
+            // For items with custom onClick handlers (like logout)
+            <button
+              key={item.name}
+              onClick={() => handleItemClick(item)}
+              className="block w-full text-left px-6 py-3 text-base text-gray-700 hover:bg-gray-100 flex items-center justify-between"
+            >
+              <span>{item.name}</span>
+              {item.icon && item.icon}
+            </button>
+          ) : (
+            // For regular navigation links
+            <Link
+              key={item.name}
+              to={item.link}
+              onClick={() => handleItemClick(item)}
+              className="block px-6 py-3 text-base text-gray-700 hover:bg-gray-100"
+            >
+              {item.name}
+            </Link>
+          )
+        )}
       </div>
     </div>
   );
