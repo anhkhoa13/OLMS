@@ -32,4 +32,7 @@ public class CourseController : ControllerBase
         // Assuming result.Value is the course code (e.g. "C0AD28")
         return Ok(new { code = result.Value });
     }
+
+
+
 }

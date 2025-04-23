@@ -48,7 +48,8 @@ public class Program
             {
                 builder.WithOrigins("http://localhost:5173")
                        .AllowAnyHeader()
-                       .AllowAnyMethod();
+                       .AllowAnyMethod()
+                       .AllowCredentials(); // This is crucial for your error
             });
         });
 

@@ -16,7 +16,7 @@ const navSideBar = [
   { name: "Create Course", link: "/createCourse" },
 ];
 
-const isLogged = true;
+const isLogged = false;
 
 function NavBar() {
   const [tabOpen, setTabOpen] = useState(null);

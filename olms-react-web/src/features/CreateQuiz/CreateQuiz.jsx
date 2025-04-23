@@ -1,75 +1,81 @@
-import React, { useState, useReducer } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import QuizInfoForm from "./QuizInfoForm";
 import QuestionListEditor from "./QuestionListEditor";
 import Error from "../../components/Error";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
 
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 const instructorId = "C93A3362-77BD-4EAC-BC09-4DD67E2776F5";
 
-const initialQuizInfo = {
-  instructorId: instructorId,
-  title: "",
-  description: "",
-  startTime: "",
-  endTime: "",
-  isTimeLimited: false,
-  timeLimit: "",
-  numberOfAttempts: 1,
-};
-
-function quizInfoReducer(state, action) {
-  switch (action.type) {
-    case "SET_FIELD":
-      return { ...state, [action.field]: action.value, instructorId };
-    case "RESET":
-      return { ...initialQuizInfo };
-    default:
-      throw new Error("Unknown action type: " + action.type);
-  }
-}
+// Yup schema
+const quizInfoSchema = Yup.object().shape({
+  title: Yup.string().required("Quiz title is required"),
+  description: Yup.string().required("Description is required"),
+  startTime: Yup.string().required("Start time is required"),
+  endTime: Yup.string().required("End time is required"),
+  isTimeLimited: Yup.boolean(),
+  timeLimit: Yup.string().when("isTimeLimited", {
+    is: true,
+    then: (schema) => schema.required("Time limit is required"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  numberOfAttempts: Yup.number()
+    .typeError("Number of attempts is required")
+    .min(1, "Number of attempts must be at least 1")
+    .required("Number of attempts is required"),
+});
 
 function CreateQuiz() {
-  const [quizInfo, dispatchQuizInfo] = useReducer(
-    quizInfoReducer,
-    initialQuizInfo
-  );
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
 
-  const handleQuizInfoChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    dispatchQuizInfo({
-      type: "SET_FIELD",
-      field: name,
-      value: type === "checkbox" ? checked : value,
-    });
-  };
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(quizInfoSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      startTime: "",
+      endTime: "",
+      isTimeLimited: false,
+      timeLimit: "",
+      numberOfAttempts: 1,
+    },
+    mode: "onBlur",
+  });
 
-  const handleSubmit = async () => {
+  const onSubmit = async (data) => {
     if (!window.confirm("Are you sure you want to submit this quiz?")) {
       return;
     }
+    if (questions.length <= 0) {
+      alert("⚠️ Warning: Please add at least one question before proceeding.");
+    }
+
     setErrorMsg(null);
     setSuccessMsg(null);
     setLoading(true);
 
     try {
       const quizJson = {
-        instructorId: quizInfo.instructorId,
-        title: quizInfo.title,
-        description: quizInfo.description,
-        startTime: quizInfo.startTime,
-        endTime: quizInfo.endTime,
-        isTimeLimited: quizInfo.isTimeLimited,
-        timeLimit: quizInfo.isTimeLimited
-          ? quizInfo.timeLimit.length === 5
-            ? `00:${quizInfo.timeLimit}`
-            : quizInfo.timeLimit
+        instructorId,
+        ...data,
+        timeLimit: data.isTimeLimited
+          ? data.timeLimit.length === 5
+            ? `00:${data.timeLimit}`
+            : data.timeLimit
           : null,
-        numberOfAttempts: Number(quizInfo.numberOfAttempts),
+        numberOfAttempts: Number(data.numberOfAttempts),
       };
 
       const createRes = await axios.post(
@@ -97,18 +103,13 @@ function CreateQuiz() {
       await axios.post(`${API_URL}/api/quiz/add-questions`, questionsJson);
 
       setSuccessMsg("Quiz and questions created successfully!");
-      dispatchQuizInfo({ type: "RESET" }); // <-- Reset quiz info
+      reset(); // <-- Reset quiz info form
       setQuestions([]); // <-- Clear all questions
       window.alert("Quiz and questions created successfully!");
     } catch (error) {
       let message = "Something went wrong. Please try again later.";
       if (axios.isAxiosError(error)) {
         if (error.response) {
-          // message =
-          //   error.response.data?.message ||
-          //   error.response.data?.error ||
-          //   JSON.stringify(error.response.data) ||
-          //   `Server error: ${error.response.status}`;
           message = error.message;
         } else if (error.request) {
           message = "No response from server. Please check your network.";
@@ -118,7 +119,6 @@ function CreateQuiz() {
       } else if (error instanceof Error) {
         message = error.message;
       }
-
       setErrorMsg(message);
     } finally {
       setLoading(false);
@@ -137,16 +137,21 @@ function CreateQuiz() {
             {successMsg}
           </div>
         )}
-        <QuizInfoForm value={quizInfo} onChange={handleQuizInfoChange} />
-        <QuestionListEditor questions={questions} setQuestions={setQuestions} />
-        <button
-          className="mt-6 w-full bg-[#89b46c] text-white font-semibold py-3 rounded-lg hover:bg-[#6f8f54] transition-colors duration-300"
-          type="button"
-          onClick={handleSubmit}
-          disabled={questions.length === 0 || loading}
-        >
-          {loading ? "Submitting..." : "Submit"}
-        </button>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <QuizInfoForm register={register} errors={errors} watch={watch} />
+          <QuestionListEditor
+            questions={questions}
+            setQuestions={setQuestions}
+          />
+          <button
+            className="mt-6 w-full bg-[#89b46c] text-white font-semibold py-3 rounded-lg hover:bg-[#6f8f54] transition-colors duration-300"
+            type="submit"
+            // disabled={questions.length === 0 || loading}
+            disabled={loading}
+          >
+            {loading ? "Submitting..." : "Submit"}
+          </button>
+        </form>
       </div>
     </div>
   );
