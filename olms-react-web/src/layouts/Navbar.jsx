@@ -59,18 +59,11 @@ function NavBar() {
       {/* Right side: Links */}
       <div className="flex items-center space-x-10 text-gray-600 font-medium">
         <Link
-          key="home"
-          to="/about"
+          key="explore"
+          to="/explore"
           className="px-6 py-3 hover:bg-gray-100 cursor-pointer transition-all duration-200"
         >
-          © About
-        </Link>
-        <Link
-          key="contact"
-          to="/contact"
-          className="px-6 py-3 hover:bg-gray-100 cursor-pointer transition-all duration-200"
-        >
-          📱 Contact
+          ⭐ Explore
         </Link>
         <Link
           key="dashboard"

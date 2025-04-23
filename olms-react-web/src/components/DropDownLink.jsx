@@ -56,7 +56,7 @@ function DropDownLink({
             <button
               key={item.name}
               onClick={() => handleItemClick(item)}
-              className="block w-full text-left px-6 py-3 text-base text-gray-700 hover:bg-gray-100 flex items-center justify-between"
+              className="w-full text-left px-6 py-3 text-base text-gray-700 hover:bg-gray-100 flex items-center justify-between"
             >
               <span>{item.name}</span>
               {item.icon && item.icon}

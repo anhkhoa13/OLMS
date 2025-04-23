@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OLMS.Application.Feature.CourseUC;
+using OLMS.Application.Features.CourseUC;
 using OLMS.Application.Features.Instructor;
 using OLMS.Shared.DTO;
 

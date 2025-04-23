@@ -1,6 +1,7 @@
 @import "tailwindcss";
 :root {
   --main-color: #89b46c; /* Replace with your desired color */
+  --sec-color: #6f8f54;
 }
 
 /* :root {

@@ -19,7 +19,6 @@ export const AuthProvider = ({ children }) => {
         try {
           // Verify and decode the token
           const decodedToken = jwtDecode(token);
-          console.log("Decoded token:", decodedToken);
 
           // Check if token is expired
           const currentTime = Date.now() / 1000;
@@ -57,7 +56,6 @@ export const AuthProvider = ({ children }) => {
     try {
       // Decode the token
       const decodedToken = jwtDecode(token);
-      console.log(token);
 
       // Extract user info
       const userData = {

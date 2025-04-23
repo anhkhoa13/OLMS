@@ -1,9 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OLMS.Application.Feature.CourseUC;
-using OLMS.Domain.Entities;
-using OLMS.Domain.Repositories;
-using OLMS.Domain.Result;
+using OLMS.Application.Features.CourseUC;
 
 namespace OLMS.Presentation.Controllers;
 
@@ -33,6 +31,29 @@ public class CourseController : ControllerBase
         return Ok(new { code = result.Value });
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetAllCourses() {
+        var command = new GetCoursesListCommand();
+        var result = await _sender.Send(command);
 
+        if (result.IsFailure) {
+            return BadRequest(new {
+                Code = 400,
+                Message = result.Error.ErrorMessage,
+                Errors = result.Error.Code
+            });
+        }
 
+        var courses = result.Value.Select(c => new {
+            Code = c.Code.Value,
+            c.Title,
+            c.Description,
+            Instructor = new {
+                Id = c.InstructorId,
+                Name = c.Instructor?.FullName,
+            }
+        });
+
+        return Ok(new { courses, Message = "Courses retrieved successfully" });
+    }
 }

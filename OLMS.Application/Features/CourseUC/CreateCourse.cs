@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using MediatR;
-using OLMS.Application.Feature.User;
 using OLMS.Domain.Entities;
 using OLMS.Domain.Repositories;
 using OLMS.Domain.Result;

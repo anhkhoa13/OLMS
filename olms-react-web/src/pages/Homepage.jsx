@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import Courses from "../pages/Courses";
+import Courses from "../features/Course/Courses";
 
 const HomePage = () => {
   const [quizCode, setQuizCode] = useState("");
@@ -67,11 +67,7 @@ const HomePage = () => {
       </div>
 
       {/* Courses Section */}
-      <Courses
-        isEnrolled={false}
-        maxNoDisplay={3}
-        title="OUR POPULAR COURSES"
-      />
+      <Courses isEnroll={false} maxNoDisplay={3} title="OUR POPULAR COURSES" />
 
       {/* Quiz Section */}
       <div className="py-20 px-4 md:px-8 lg:px-16 bg-white">

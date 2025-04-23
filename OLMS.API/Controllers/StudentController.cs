@@ -31,31 +31,33 @@ public class StudentController : Controller
                 ErrorCode = result.Error.Code
             });
         }
-
-
         return Ok(new { Message = "Enrolled course success"});
     }
 
     [HttpGet("courses")]
-    public async Task<IActionResult> GetAllCourses([FromQuery] GetAllEnrollmentsCommand command)
-    {
+    public async Task<IActionResult> GetAllCourses([FromQuery] GetAllEnrollmentsCommand command) {
         var result = await _sender.Send(command);
-        if (!result.IsSuccess || result.Value is null)
-        {
-            return BadRequest(new
-            {
+        if (!result.IsSuccess || result.Value is null) {
+            return BadRequest(new {
                 Code = 400,
                 Message = result.Error.ErrorMessage,
                 Errors = result.Error.Code
             });
         }
+
         var courses = result.Value.Select(c => new
         {
             Code = c.Code.Value,
             c.Title,
             c.Description,
+            Instructor = new {
+                Id = c.InstructorId,
+                Name = c.Instructor.FullName.Value,
+            }
         });
+
         return Ok(new { courses, Message = "Courses retrieve successful" });
     }
+
 }
-    
+
