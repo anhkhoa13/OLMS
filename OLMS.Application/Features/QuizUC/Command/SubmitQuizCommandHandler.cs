@@ -10,9 +10,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace OLMS.Application.Features.QuizUC.Command;
-public record SubmitQuizCommand(Guid AttemptId, List<StudentAnswerDto> Answers) : IRequest<Result>;
+public record SubmitQuizCommand(Guid AttemptId, List<StudentAnswerDto> Answers) : IRequest<Result<double>>;
 
-public class SubmitQuizCommandHandler : IRequestHandler<SubmitQuizCommand, Result> {
+public class SubmitQuizCommandHandler : IRequestHandler<SubmitQuizCommand, Result<double>> {
     private readonly IQuizAttemptRepository _quizAttemptRepo;
     private readonly IQuizRepository _quizRepo;
     private readonly IStudentAnswerRepository _studentAnswerRepo;
@@ -29,14 +29,16 @@ public class SubmitQuizCommandHandler : IRequestHandler<SubmitQuizCommand, Resul
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result> Handle(SubmitQuizCommand request, CancellationToken cancellationToken) {
-        // Fetch quiz attempt
+    public async Task<Result<double>> Handle(SubmitQuizCommand request, CancellationToken cancellationToken) {
         var attempt = await _quizAttemptRepo.GetByIdAsync(request.AttemptId, cancellationToken);
-        if (attempt == null) return Result.Failure(Error.NotFound("Quiz Attempt not found"));
+        if (attempt == null)
+            return Result<double>.Failure(Error.NotFound("Quiz Attempt not found"));
 
-        // Fetch quiz
+
         var quiz = await _quizRepo.GetByIdAsync(attempt.QuizId, cancellationToken);
-        if (quiz == null) return Result.Failure(Error.NotFound("Quiz not found"));
+        if (quiz == null)
+            return Result<double>.Failure(Error.NotFound("Quiz Attempt not found"));
+
 
         int correctAnswers = 0;
 
@@ -44,7 +46,6 @@ public class SubmitQuizCommandHandler : IRequestHandler<SubmitQuizCommand, Resul
             var question = quiz.Questions.FirstOrDefault(q => q.Id == answerDto.QuestionId);
             if (question == null) continue;
 
-            // Create and add student answer
             var studentAnswer = new StudentResponse(
                 Guid.NewGuid(), request.AttemptId, answerDto.QuestionId, answerDto.Answer);
 
@@ -53,7 +54,6 @@ public class SubmitQuizCommandHandler : IRequestHandler<SubmitQuizCommand, Resul
             await _studentAnswerRepo.AddAsync(studentAnswer, cancellationToken);
         }
 
-        // Update the quiz attempt
         attempt.Score = (double)correctAnswers / quiz.Questions.Count * 100;
         attempt.SubmittedAt = DateTime.Now;
         attempt.Status = QuizAttemptStatus.Submitted;
@@ -61,7 +61,9 @@ public class SubmitQuizCommandHandler : IRequestHandler<SubmitQuizCommand, Resul
         _quizAttemptRepo.Update(attempt);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Result.Success();
+        // ✅ Return the score using Result<T>
+        return Result<double>.Success(attempt.Score);
     }
+
 }
 

@@ -8,6 +8,8 @@ import Courses from "./pages/Courses";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard.jsx";
 import Quiz from "./features/Quiz/Quiz";
+import CreateQuiz from "./features/CreateQuiz/CreateQuiz.jsx";
+import CreateCourse from "./features/Course/CreateCourse.jsx";
 
 function App() {
   return (
@@ -21,7 +23,9 @@ function App() {
           <Route path="/courses" element={<Courses isEnrolled={true} />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/createQuiz" element={<CreateQuiz />} />
           <Route path="/quiz/:code" element={<Quiz />} />
+          <Route path="/createCourse" element={<CreateCourse />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -5,10 +5,18 @@ import DropDownLink from "../components/DropDownLink";
 import Avatar from "../components/Avatar";
 import { Link } from "react-router-dom";
 
-const UserLogin = [
+const userLogin = [
   { name: "Login", link: "/login" },
   { name: "Sign up", link: "/signup" },
 ];
+
+const navSideBar = [
+  { name: "Profile", link: "/profile" },
+  { name: "Create Quiz", link: "/createQuiz" },
+  { name: "Create Course", link: "/createCourse" },
+];
+
+const isLogged = true;
 
 function NavBar() {
   const [tabOpen, setTabOpen] = useState(null);
@@ -53,11 +61,11 @@ function NavBar() {
         <DropDownLink
           icon={<Avatar name={"Hoang"} />}
           title="Người dùng"
-          items={UserLogin}
+          items={isLogged ? navSideBar : userLogin}
           tabOpen={tabOpen}
           setTabOpen={setTabOpen}
           isAlignLeft={false}
-          dropDownWidth="w-36"
+          dropDownWidth="w-40"
         />
       </div>
     </nav>

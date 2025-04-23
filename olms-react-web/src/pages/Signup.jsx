@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 function Signup() {
   return (
     <div className="flex items-center justify-center p-4 mt-4 mb-4">
-      <div className="w-full max-w-5xl flex bg-white h-100">
+      <div className="w-full max-w-5xl flex bg-white h-125">
         {/* Left side - Animation */}
         <div className="w-1/2 flex items-center justify-center p-4">
           <DotLottieReact

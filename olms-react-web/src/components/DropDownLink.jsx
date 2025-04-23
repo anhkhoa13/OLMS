@@ -19,7 +19,7 @@ function DropDownLink({
   };
 
   return (
-    <div className="relative inline-block text-left ms-auto">
+    <div className="relative inline-block text-left ms-auto pr-16">
       <div
         onClick={toggleDropdown}
         className={`flex items-center justify-center text-base font-medium text-gray-700 px-6 py-3 hover:bg-gray-100 cursor-pointer transition-all duration-200 relative

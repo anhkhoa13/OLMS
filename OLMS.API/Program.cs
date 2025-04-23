@@ -46,7 +46,7 @@ public class Program
             });
             options.AddPolicy("AllowReactApp", builder =>
             {
-                builder.WithOrigins("http://localhost:5174")
+                builder.WithOrigins("http://localhost:5173")
                        .AllowAnyHeader()
                        .AllowAnyMethod();
             });

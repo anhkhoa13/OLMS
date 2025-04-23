@@ -11,11 +11,11 @@ public record GetQuizzesQuery : IRequest<List<QuizDto>>
 
 }
 
-public class GetQuizzesQueryQueryHandler : IRequestHandler<GetQuizzesQuery, List<QuizDto>>
+public class GetQuizzesQueryHandler : IRequestHandler<GetQuizzesQuery, List<QuizDto>>
 {
     private readonly IQuizRepository _quizRepo;
 
-    public GetQuizzesQueryQueryHandler(IQuizRepository quizRepo)
+    public GetQuizzesQueryHandler(IQuizRepository quizRepo)
     {
         _quizRepo = quizRepo;
     }

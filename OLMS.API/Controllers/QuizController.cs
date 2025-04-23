@@ -75,10 +75,16 @@ public class QuizController : Controller
         var result = await _sender.Send(command);
 
         if (result.IsFailure)
-            return BadRequest(result.Error.ErrorMessage);  // Returning the error message from the result
+            return BadRequest(new {
+                error = result.Error.ErrorMessage
+            });
 
-        return Ok("Quiz submitted successfully.");
+        return Ok(new {
+            message = "Quiz submitted successfully.",
+            score = result.Value
+        });
     }
+
 
 
     [HttpGet("list")]

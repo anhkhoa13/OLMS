@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace OLMS.Application.Features.QuizUC.DTO;
 public class QuizDto
 {
+    public Guid QuizId { get; set; }
     public Code Code { get; set; }
     public required string Title { get; set; }
     public string? Description { get; set; }
