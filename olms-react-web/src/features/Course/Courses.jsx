@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import CourseCard from "../../components/CourseCard";
 import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import AddCourse from "./AddCourse";
 
@@ -11,12 +12,19 @@ function Courses({ isEnroll, maxNoDisplay = null, title = "All Courses" }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const navigate = useNavigate();
 
   const { isAuthenticated, userRole, currentUser } = useAuth();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   console.log("isEnroll ", isEnroll);
+
+  function handleInstructorViewCourse(course) {
+    navigate(`/courses/view?code=${course.code}`, {
+      state: { courseData: course },
+    });
+  }
 
   const handleAddCourse = async (courseData) => {
     const courseJson = {
@@ -164,7 +172,10 @@ function Courses({ isEnroll, maxNoDisplay = null, title = "All Courses" }) {
                     <button className="bg-[#89b46c] text-white px-4 py-2 rounded-lg hover:bg-[#6f8f54] transition-colors mr-2 cursor-pointer">
                       Edit
                     </button>
-                    <button className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors cursor-pointer">
+                    <button
+                      className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors cursor-pointer"
+                      onClick={() => handleInstructorViewCourse(course)}
+                    >
                       View
                     </button>
                   </div>

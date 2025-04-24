@@ -56,7 +56,9 @@ const CourseCard = ({ course, isEnrolled }) => {
   }
 
   function handleView() {
-    console.log("handleView");
+    navigate(`/courses/view?code=${code}`, {
+      state: { courseData: course },
+    });
   }
 
   return (

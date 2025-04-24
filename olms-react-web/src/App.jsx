@@ -12,6 +12,7 @@ import AddCourse from "./features/Course/AddCourse.jsx";
 import { AuthProvider } from "./contexts/AuthContext";
 import RoleProtectedRoute from "./utils/RoleProtectedRoute.jsx";
 import Unauthorized from "./pages/Unauthorized.jsx";
+import CourseView from "./features/Course/CourseView.jsx";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
                 path="/courses"
                 element={<Courses isEnroll={true} title="Your courses" />}
               />
+              <Route path="/courses/:courseCode" element={<CourseView />} />
             </Route>
 
             {/* Instructor-only routes */}

@@ -10,7 +10,6 @@ import Error from "../../components/Error";
 import * as Yup from "yup";
 
 const API_URL = import.meta.env.VITE_BACKEND_URL;
-//const instructorId = "C93A3362-77BD-4EAC-BC09-4DD67E2776F5";
 
 // Yup schema
 const quizInfoSchema = Yup.object().shape({

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Courses from "../features/Course/Courses";
+import bgImage from "../assets/images/bg_main.png";
 
 const HomePage = () => {
   const [quizCode, setQuizCode] = useState("");
@@ -15,8 +16,26 @@ const HomePage = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <div className="relative h-[80vh] bg-gray-100 bg-cover bg-center flex items-center justify-center">
-        <div className="text-center px-4 md:px-8 lg:px-16">
+      <div className="relative h-[80vh] flex items-center justify-center overflow-hidden">
+        {/* Background image with blur effect */}
+        <div
+          className="absolute inset-0 z-0"
+          style={{
+            backgroundImage: `url(${bgImage})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            filter: "blur(2px)",
+            opacity: "0.8",
+            transform: "scale(1.1)", // Slightly scale up to avoid blur edges
+          }}
+        ></div>
+
+        {/* Optional semi-transparent overlay (reduced opacity) */}
+        <div className="absolute inset-0 bg-opacity-10 z-10"></div>
+
+        {/* Content */}
+        <div className="text-center px-4 md:px-8 lg:px-16 relative z-20">
           <h1 className="text-4xl md:text-6xl font-bold text-black mb-4 drop-shadow-lg">
             Welcome to Our OLMS Platform
           </h1>
