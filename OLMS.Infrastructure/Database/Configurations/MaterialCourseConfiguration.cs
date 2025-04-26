@@ -10,7 +10,7 @@
 //    {
 //        builder.ToTable("MaterialCourse");
 
-//        builder.HasKey(mc => new { mc.MaterialId, mc.CourseId });
+//        builder.HasKey(mc => new { mc.MaterialId, mc.ForumId });
 
 //        builder.HasOne(mc => mc.Material)
 //               .WithOne()
@@ -20,7 +20,7 @@
 
 //        builder.HasOne(mc => mc.Course)
 //               .WithMany(c => c.MaterialCourse)
-//               .HasForeignKey(mc => mc.CourseId)
+//               .HasForeignKey(mc => mc.ForumId)
 //               .OnDelete(DeleteBehavior.Cascade);
 //    }
 //}

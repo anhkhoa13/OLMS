@@ -47,6 +47,9 @@ namespace OLMS.Infrastructure.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
+                    b.Property<Guid>("ForumId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("InstructorId")
                         .HasColumnType("uniqueidentifier");
 
@@ -61,9 +64,113 @@ namespace OLMS.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ForumId")
+                        .IsUnique();
+
                     b.HasIndex("InstructorId");
 
                     b.ToTable("Course", (string)null);
+                });
+
+            modelBuilder.Entity("OLMS.Domain.Entities.ForumAggregate.Forum", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId")
+                        .IsUnique();
+
+                    b.ToTable("Forums");
+                });
+
+            modelBuilder.Entity("OLMS.Domain.Entities.ForumAggregate.PostAggregate.Comment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comment", (string)null);
+                });
+
+            modelBuilder.Entity("OLMS.Domain.Entities.ForumAggregate.PostAggregate.Post", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<Guid>("ForumId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("VoteScore")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ForumId");
+
+                    b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("OLMS.Domain.Entities.ForumAggregate.PostAggregate.Vote", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Vote", (string)null);
                 });
 
             modelBuilder.Entity("OLMS.Domain.Entities.ProgressAggregate.Progress", b =>
@@ -149,6 +256,12 @@ namespace OLMS.Infrastructure.Migrations
 
             modelBuilder.Entity("OLMS.Domain.Entities.CourseAggregate.Course", b =>
                 {
+                    b.HasOne("OLMS.Domain.Entities.ForumAggregate.Forum", null)
+                        .WithOne()
+                        .HasForeignKey("OLMS.Domain.Entities.CourseAggregate.Course", "ForumId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("OLMS.Domain.Entities.InstructorAggregate.Instructor", null)
                         .WithMany("Courses")
                         .HasForeignKey("InstructorId")
@@ -178,6 +291,54 @@ namespace OLMS.Infrastructure.Migrations
                         });
 
                     b.Navigation("Code")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("OLMS.Domain.Entities.ForumAggregate.Forum", b =>
+                {
+                    b.HasOne("OLMS.Domain.Entities.CourseAggregate.Course", null)
+                        .WithOne()
+                        .HasForeignKey("OLMS.Domain.Entities.ForumAggregate.Forum", "CourseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("OLMS.Domain.Entities.ForumAggregate.PostAggregate.Comment", b =>
+                {
+                    b.HasOne("OLMS.Domain.Entities.ForumAggregate.PostAggregate.Post", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OLMS.Domain.Entities.UserBase", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("OLMS.Domain.Entities.ForumAggregate.PostAggregate.Post", b =>
+                {
+                    b.HasOne("OLMS.Domain.Entities.ForumAggregate.Forum", null)
+                        .WithMany("Posts")
+                        .HasForeignKey("ForumId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("OLMS.Domain.Entities.ForumAggregate.PostAggregate.Vote", b =>
+                {
+                    b.HasOne("OLMS.Domain.Entities.ForumAggregate.PostAggregate.Post", null)
+                        .WithMany("Votes")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OLMS.Domain.Entities.UserBase", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -309,6 +470,18 @@ namespace OLMS.Infrastructure.Migrations
                         .HasForeignKey("OLMS.Domain.Entities.StudentAggregate.Student", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("OLMS.Domain.Entities.ForumAggregate.Forum", b =>
+                {
+                    b.Navigation("Posts");
+                });
+
+            modelBuilder.Entity("OLMS.Domain.Entities.ForumAggregate.PostAggregate.Post", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("Votes");
                 });
 
             modelBuilder.Entity("OLMS.Domain.Entities.InstructorAggregate.Instructor", b =>

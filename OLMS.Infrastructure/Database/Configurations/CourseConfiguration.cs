@@ -51,6 +51,9 @@
 //                       .HasForeignKey("CoursesId")
 //                       .OnDelete(DeleteBehavior.Restrict));
 
+        builder.HasOne<Forum>()
+               .WithOne()
+               .HasForeignKey<Course>(c => c.ForumId);
 
 //        //builder.HasOne(c => c.Instructor)  // Một Course có một Instructor
 //        //       .WithMany(i => i.Courses)
@@ -63,10 +66,10 @@
 //        //      .HasForeignKey(e => e.CourseId)
 //        //      .OnDelete(DeleteBehavior.Cascade);
 
-//        //builder.HasMany(c => c.QuizCourses)
-//        //       .WithOne(qc => qc.Course)
-//        //       .HasForeignKey(qc => qc.CourseId)
-//        //       .OnDelete(DeleteBehavior.Cascade);
-//    }
-//}
+        //builder.HasMany(c => c.QuizCourses)
+        //       .WithOne(qc => qc.Course)
+        //       .HasForeignKey(qc => qc.CourseId)
+        //       .OnDelete(DeleteBehavior.Cascade);
+    }
+}
 

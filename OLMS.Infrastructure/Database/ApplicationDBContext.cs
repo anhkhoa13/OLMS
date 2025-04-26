@@ -2,6 +2,8 @@
 
 using OLMS.Domain.Entities;
 using OLMS.Domain.Entities.CourseAggregate;
+using OLMS.Domain.Entities.ForumAggregate;
+using OLMS.Domain.Entities.ForumAggregate.PostAggregate;
 using OLMS.Domain.Entities.InstructorAggregate;
 using OLMS.Domain.Entities.ProgressAggregate;
 using OLMS.Domain.Entities.QuestionEntity;

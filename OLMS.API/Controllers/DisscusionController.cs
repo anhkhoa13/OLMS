@@ -20,17 +20,17 @@
 //        [HttpPost]
 //        public async Task<IActionResult> CreateDiscussion([FromBody] Discussion discussion)
 //        {
-//            if (string.IsNullOrWhiteSpace(discussion.CourseId) || string.IsNullOrWhiteSpace(discussion.CreatorId) || string.IsNullOrWhiteSpace(discussion.Content))
+//            if (string.IsNullOrWhiteSpace(discussion.ForumId) || string.IsNullOrWhiteSpace(discussion.CreatorId) || string.IsNullOrWhiteSpace(discussion.Content))
 //            {
-//                return BadRequest("CourseId, CreatorId, and Content are required.");
+//                return BadRequest("ForumId, CreatorId, and Content are required.");
 //            }
 
-//            var discussions = await _discussionService.GetDiscussionsByCourseIdAsync(discussion.CourseId);
+//            var discussions = await _discussionService.GetDiscussionsByCourseIdAsync(discussion.ForumId);
 //            int count = discussions.Count() + 1;
-//            discussion.Id = $"{discussion.CourseId}-D{count}";
+//            discussion.Id = $"{discussion.ForumId}-D{count}";
 
 //            var createdDiscussion = await _discussionService.CreateDiscussionAsync(discussion);
-//            return CreatedAtAction(nameof(GetDiscussionsByCourse), new { courseId = discussion.CourseId }, createdDiscussion);
+//            return CreatedAtAction(nameof(GetDiscussionsByCourse), new { courseId = discussion.ForumId }, createdDiscussion);
 //        }
 
 //        [HttpGet("{courseId}")]

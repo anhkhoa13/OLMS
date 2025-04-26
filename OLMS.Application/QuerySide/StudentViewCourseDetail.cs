@@ -5,7 +5,7 @@
 
 //namespace OLMS.Application.QuerySide;
 
-//public sealed record StudentViewCourseDetailCommand(Guid StudentId, Guid CourseId) : IRequest<Result<IReadOnlyCollection<Course>>>
+//public sealed record StudentViewCourseDetailCommand(Guid StudentId, Guid ForumId) : IRequest<Result<IReadOnlyCollection<Course>>>
 //{
 //}
 

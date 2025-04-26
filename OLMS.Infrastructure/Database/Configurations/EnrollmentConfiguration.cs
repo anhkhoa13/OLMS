@@ -10,7 +10,7 @@
 //    {
 //        builder.ToTable("Enrollment");
 
-//        builder.HasKey(e => new { e.StudentId, e.CourseId });
+//        builder.HasKey(e => new { e.StudentId, e.ForumId });
 
 //        builder.HasOne(e => e.Student)
 //               .WithMany()
@@ -19,7 +19,7 @@
 
 //        builder.HasOne(e => e.Course)
 //               .WithMany(c => c.Enrollments)
-//               .HasForeignKey(e => e.CourseId)
+//               .HasForeignKey(e => e.ForumId)
 //               .OnDelete(DeleteBehavior.Cascade);
 //    }
 //}
