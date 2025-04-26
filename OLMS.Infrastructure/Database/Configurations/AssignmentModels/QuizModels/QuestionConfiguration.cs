@@ -2,14 +2,14 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OLMS.Domain.Entities.QuestionEntity;
 using OLMS.Domain.Entities.QuizEntity;
-using OLMS.Domain.Primitives;
 
-namespace OLMS.Infrastructure.Database.Configurations;
+namespace OLMS.Infrastructure.Database.Configurations.AssignmentModels.QuizModels;
 
-public sealed class QuestionConfiguration : IEntityTypeConfiguration<Question> {
-    public void Configure(EntityTypeBuilder<Question> builder) {
-        builder.ToTable("Question");
-
+public sealed class QuestionConfiguration : IEntityTypeConfiguration<Question>
+{
+    public void Configure(EntityTypeBuilder<Question> builder)
+    {
+        //builder.ToTable("Questions");
         builder.HasKey(q => q.Id);
 
         builder.Property(q => q.Content)
@@ -20,11 +20,8 @@ public sealed class QuestionConfiguration : IEntityTypeConfiguration<Question> {
             .IsRequired()
             .HasDefaultValue(false);
 
-        builder.Property(q => q.QuizId)
-            .IsRequired();
 
         builder.Property(q => q.Type)
-            .HasColumnName("QuestionType")
             .HasConversion<string>() // Store Enum as string
             .IsRequired();
 
@@ -33,14 +30,6 @@ public sealed class QuestionConfiguration : IEntityTypeConfiguration<Question> {
             .HasForeignKey(q => q.QuizId);
 
 
-        // add
-
-
-        // Soft delete query filter
-        builder.HasQueryFilter(q => !q.IsDeleted);
-
-        // TPH inheritance strategy
-        builder.HasDiscriminator(q => q.Type);
     }
 }
 

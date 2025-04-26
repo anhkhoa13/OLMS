@@ -4,15 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class Lesson : Entity {
-    public string Title { get; private set; }
-    public string Content { get; private set; }
-    public string VideoUrl { get; private set; }
+    public string Title { get; private set; } = default!;
+    public string Content { get; private set; } = default!;
+    public string VideoUrl { get; private set; } = default!;
     public Guid SectionId { get; private set; }
 
-    private readonly List<Attachment> _attachments = [];
-    public IReadOnlyCollection<Attachment> Attachments => _attachments.AsReadOnly();
+    private readonly List<LessonAttachment> _lessonAttachment = [];
+    public IReadOnlyCollection<LessonAttachment> LessonAttachments => _lessonAttachment.AsReadOnly();
 
-    private Lesson() { } // Required for EF Core
+    private Lesson() : base(){ } // Required for EF Core
 
     public Lesson(Guid id, string title, string content, string videoUrl, Guid sectionId) : base(id) {
         Title = title;
@@ -38,22 +38,21 @@ public class Lesson : Entity {
         return new Lesson(Guid.NewGuid(), title, content, videoUrl, sectionId);
     }
 
-    // Methods to manage attachments
-    public void AddAttachment(Attachment attachment) {
+    public void AddAttachment(LessonAttachment attachment) {
         if (attachment == null)
             throw new ArgumentNullException(nameof(attachment));
 
-        _attachments.Add(attachment);
+        _lessonAttachment.Add(attachment);
     }
 
-    public void RemoveAttachment(Attachment attachment) {
+    public void RemoveAttachment(LessonAttachment attachment) {
         if (attachment == null)
             throw new ArgumentNullException(nameof(attachment));
 
-        _attachments.Remove(attachment);
+        _lessonAttachment.Remove(attachment);
     }
 
     public void ClearAttachments() {
-        _attachments.Clear();
+        _lessonAttachment.Clear();
     }
 }

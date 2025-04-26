@@ -1,21 +1,21 @@
 ﻿using OLMS.Domain.Primitives;
-public class Attachment : Entity {
-    public string Name { get; private set; }
-    public string Type { get; private set; }
-    public byte[] Data { get; private set; }
+public class ExerciseAttachment : Entity {
+    public string Name { get; private set; } = default!;
+    public string Type { get; private set; } = default!;
+    public byte[] Data { get; private set; } = default!;
     public Guid ExerciseId { get; private set; }
 
     // Private constructor for EF Core and factory method usage
-    private Attachment() { }
+    private ExerciseAttachment() : base() { }
 
-    private Attachment(string name, string type, byte[] data, Guid exerciseId) {
+    private ExerciseAttachment(Guid id, string name, string type, byte[] data, Guid exerciseId) : base(id) {
         Name = name;
         Type = type;
         Data = data;
         ExerciseId = exerciseId;
     }
 
-    public static Attachment Create(string name, byte[] data, Guid exerciseId) {
+    public static ExerciseAttachment Create(string name, byte[] data, Guid exerciseId) {
         // Validate inputs
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Name cannot be empty", nameof(name));
@@ -30,6 +30,6 @@ public class Attachment : Entity {
         string type = Path.GetExtension(name).TrimStart('.');
 
         // Create new instance
-        return new Attachment(name, type, data, exerciseId);
+        return new ExerciseAttachment(Guid.NewGuid(), name, type, data, exerciseId);
     }
 }

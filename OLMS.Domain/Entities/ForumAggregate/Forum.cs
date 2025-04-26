@@ -13,6 +13,7 @@ public class Forum : AggregateRoot
     public Guid CourseId { get; private set; }
     private readonly List<Post> _posts = [];
     public IReadOnlyCollection<Post> Posts => _posts.AsReadOnly();
+    
     #endregion
     private Forum() : base() { }
     private Forum(Guid id, string title, Guid courseId) : base(id)

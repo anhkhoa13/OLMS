@@ -8,16 +8,18 @@ namespace OLMS.Domain.Entities.QuizEntity;
 
 public class Quiz : Assignment, IAggregateRoot
 {
+    #region Properties
     public Code Code { get; private set; } = default!;
     public bool IsTimeLimited { get; protected set; }
     public TimeSpan? TimeLimit { get; protected set; }
+    #endregion
 
 
-    private readonly List<Question> _questions = new();
+    private readonly List<Question> _questions = [];
     public IReadOnlyCollection<Question> Questions => _questions.AsReadOnly();
 
 
-    private readonly List<QuizCourse> _quizCourses = new();
+    private readonly List<QuizCourse> _quizCourses = [];
     public IReadOnlyCollection<QuizCourse> QuizCourses => _quizCourses.AsReadOnly();
 
 

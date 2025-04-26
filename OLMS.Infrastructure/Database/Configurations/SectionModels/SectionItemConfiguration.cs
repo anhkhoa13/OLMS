@@ -5,18 +5,27 @@ using OLMS.Domain.Entities.InstructorAggregate;
 using OLMS.Domain.Entities.SectionEntity;
 using OLMS.Domain.Entities.StudentAggregate;
 
-namespace OLMS.Infrastructure.Database.Configurations;
+namespace OLMS.Infrastructure.Database.Configurations.SectionModels;
 
 public sealed class SectionItemConfigurations : IEntityTypeConfiguration<SectionItem>
 {
     public void Configure(EntityTypeBuilder<SectionItem> builder)
     {
-        builder.ToTable("SectionItem");
 
         builder.HasKey(si => si.Id);
-        builder.Property(si => si.Order).IsRequired();
-        builder.Property(si => si.ItemId).IsRequired();
-        builder.Property(si => si.SectionId).IsRequired();
+
+        builder.Property(si => si.Order)
+            .IsRequired();
+
+        builder.Property(si => si.ItemType)
+            .HasConversion<string>()
+            .IsRequired();
+
+        builder.Property(si => si.ItemId);
+
+        builder.HasOne<Section>()
+            .WithMany(s => s.SectionItems)
+            .HasForeignKey(si => si.SectionId);
     }
 }
 

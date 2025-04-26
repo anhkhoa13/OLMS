@@ -6,39 +6,88 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OLMS.Domain.Entities.SectionEntity {
-    public class Section : Entity {
-        public string Title { get; set; }
-        public Guid CourseId { get; set; }
+namespace OLMS.Domain.Entities.SectionEntity; 
 
-        private readonly List<Lesson> _lessons = [];
-        public IReadOnlyCollection<Lesson> Lessons => _lessons.AsReadOnly();
+public class Section : Entity 
+{
+    #region Properties
+    public string Title { get; set; }
+    public Guid CourseId { get; set; }
+    #endregion
 
-        private readonly List<SectionItem> _sectionItems = [];
-        public IReadOnlyCollection<SectionItem> SectionItems => _sectionItems.AsReadOnly();
+    private readonly List<Lesson> _lessons = [];
+    public IReadOnlyCollection<Lesson> Lessons => _lessons.AsReadOnly();
 
-        private readonly List<Assignment> _assignments = [];
-        public IReadOnlyCollection<Assignment> Assignments => _assignments.AsReadOnly();
+    private readonly List<SectionItem> _sectionItems = [];
+    public IReadOnlyCollection<SectionItem> SectionItems => _sectionItems.AsReadOnly();
 
-        // Constructor
-        public Section(Guid id, string title, Guid courseId) : base(id) {
-            Title = title;
-            CourseId = courseId;
+    private readonly List<Assignment> _assignments = [];
+    public IReadOnlyCollection<Assignment> Assignments => _assignments.AsReadOnly();
+
+    // Constructor
+    public Section(Guid id, string title, Guid courseId) : base(id) {
+        Title = title;
+        CourseId = courseId;
+    }
+
+    // Static factory method to create a SectionItem
+    public static Section Create(string title, Guid courseId) {
+        return new Section(new Guid(), title, courseId);
+    }
+
+    public void AddLesson(Lesson lesson, int order)
+    {
+        // Dồn các order lớn hơn hoặc bằng order mới
+        foreach (var item in _sectionItems.Where(item => item.Order >= order).OrderByDescending(item => item.Order))
+        {
+            item.IncreaseOrder();
         }
 
-        // Static factory method to create a SectionItem
-        public static Section Create(string title, Guid courseId) {
-            return new Section(new Guid(), title, courseId);
+        _lessons.Add(lesson);
+        _sectionItems.Add(SectionItem.Create(Guid.NewGuid(), lesson.Id, order, SectionItemType.Lesson, Id));
+    }
+
+    public void AddAssigment(Assignment assignment, int order)
+    {
+        foreach (var item in _sectionItems.Where(item => item.Order >= order).OrderByDescending(item => item.Order))
+        {
+            item.IncreaseOrder();
         }
 
-        public void AddLesson(string title, string content, string videoUrl) {
-            Lesson lesson = Lesson.Create(title, content, videoUrl, this.Id);
-            _lessons.Add(lesson);
-        }
+        _assignments.Add(assignment);
+        _sectionItems.Add(SectionItem.Create(Guid.NewGuid(), assignment.Id, order, SectionItemType.Assignment, Id));
+    }
 
-        public void AddSectionItem(int order, Guid itemId, Guid sectionId) {
-            SectionItem sectionItem = new SectionItem(Guid.NewGuid(),order,itemId, sectionId);
-            _sectionItems.Add(sectionItem);
+    public void RemoveItem(Guid itemId)
+    {
+        var item = _sectionItems.FirstOrDefault(i => i.ItemId == itemId);
+        if (item != null)
+        {
+            _sectionItems.Remove(item);
+            foreach (var sectionItem in _sectionItems.Where(i => i.Order > item.Order))
+            {
+                sectionItem.DecreaseOrder();
+            }
+
+            switch (item.ItemType)
+            {
+                case SectionItemType.Assignment:
+                    var assignment = _assignments.FirstOrDefault(a => a.Id == item.ItemId);
+                    if (assignment != null)
+                    {
+                        _assignments.Remove(assignment);
+                    }
+                    break;
+                case SectionItemType.Lesson:
+                    var lesson = _lessons.FirstOrDefault(l => l.Id == item.ItemId);
+                    if (lesson != null)
+                    {
+                        _lessons.Remove(lesson);
+                    }
+                    break;
+                default:
+                    throw new ArgumentException("Invalid item type");
+            }
         }
     }
 }
