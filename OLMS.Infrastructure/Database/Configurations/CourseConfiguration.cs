@@ -68,7 +68,7 @@
 
         //builder.HasMany(c => c.QuizCourses)
         //       .WithOne(qc => qc.Course)
-        //       .HasForeignKey(qc => qc.CourseId)
+        //       .HasForeignKey(qc => qc.ForumId)
         //       .OnDelete(DeleteBehavior.Cascade);
     }
 }
