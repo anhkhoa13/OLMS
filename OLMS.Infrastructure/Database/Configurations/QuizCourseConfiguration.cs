@@ -9,7 +9,7 @@
 //{
 //    public void Configure(EntityTypeBuilder<QuizCourse> builder)
 //    {
-//        builder.HasKey(qc => new { qc.QuizId, qc.CourseId });
+//        builder.HasKey(qc => new { qc.QuizId, qc.ForumId });
 
 //        builder.HasOne(qc => qc.Quiz)
 //               .WithMany(q => q.QuizCourses)
@@ -17,7 +17,7 @@
 
 //        builder.HasOne(qc => qc.Course)
 //               .WithMany(c => c.QuizCourses)
-//               .HasForeignKey(qc => qc.CourseId);
+//               .HasForeignKey(qc => qc.ForumId);
 //    }
 //}
 

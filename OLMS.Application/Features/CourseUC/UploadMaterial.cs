@@ -12,7 +12,7 @@
 //namespace OLMS.Application.Features.CourseUC;
 //public record UploadMaterialCommand(
 //    Guid UserId,
-//    Guid CourseId,
+//    Guid ForumId,
 //    IFormFile File
 //) : IRequest<Result>;
 
@@ -39,7 +39,7 @@
 //    {
 //        //if (!await _instuctorRepository.IsUserExist(request.UserId, cancellationToken)) return UserNotFound;
 
-//        //var course = await _courseRepository.GetByIdAsync(request.CourseId);
+//        //var course = await _courseRepository.GetByIdAsync(request.ForumId);
 //        //if (course == null) return CourseNotFound;
 
 //        //var file = request.File;

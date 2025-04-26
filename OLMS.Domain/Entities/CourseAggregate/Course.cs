@@ -1,9 +1,7 @@
-﻿using OLMS.Domain.Entities.InstructorAggregate;
-using OLMS.Domain.Entities.QuizEntity;
+﻿using OLMS.Domain.Entities.ForumAggregate.PostAggregate;
 using OLMS.Domain.Entities.StudentAggregate;
 using OLMS.Domain.Primitives;
 using OLMS.Domain.ValueObjects;
-
 
 namespace OLMS.Domain.Entities.CourseAggregate;
 
@@ -22,6 +20,8 @@ public class Course : AggregateRoot
 
     private readonly List<Student> _students = [];
     public IReadOnlyCollection<Student> Students => _students.AsReadOnly();
+
+    public Guid ForumId { get; private set; }
     #endregion
 
     private Course() : base() { }
