@@ -29,7 +29,6 @@
   <ItemGroup>
     <ProjectReference Include="..\OLMS.Application\OLMS.Application.csproj" />
     <ProjectReference Include="..\OLMS.Domain\OLMS.Domain.csproj" />
-    <ProjectReference Include="..\OLMS.Presentation\OLMS.Presentation.csproj" />
   </ItemGroup>
 
   <ItemGroup>

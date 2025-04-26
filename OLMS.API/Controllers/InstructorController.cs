@@ -1,9 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OLMS.Application.Feature.CourseUC;
-using OLMS.Application.Features.CourseUC;
-using OLMS.Application.Features.Instructor;
+using OLMS.Application.Features.InstructorUC;
 using OLMS.Shared.DTO;
 
 namespace OLMS.API.Controllers;
@@ -70,6 +68,6 @@ public class InstructorController : Controller
             c.Title,
             c.Description,
         });
-        return Ok(new { courses , Message = "Courses retrieve successful"});
+        return Ok(new { courses, Message = "Courses retrieve successful" });
     }
 }

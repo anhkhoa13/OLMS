@@ -29,8 +29,6 @@ public class Program
         builder.Services.AddApplication();
         builder.Services.AddInfrastructure(builder.Configuration);
 
-        //Register Discussion Service
-        builder.Services.AddScoped<IDiscussionService, DiscussionService>();
 
         builder.Services.AddCors(options =>
         {
@@ -99,7 +97,7 @@ public class Program
 
         app.Use(async (context, next) =>
         {
-            var token = context.Request.Headers["Authorization"];
+            var token = context.Request.Headers.Authorization;
             Console.WriteLine($"Incoming Token: {token}");
             await next();
         });

@@ -5,10 +5,8 @@ using OLMS.Domain.Primitives;
 
 namespace OLMS.Infrastructure.Database.Configurations;
 
-public sealed class QuizAttemptConfiguration : IEntityTypeConfiguration<QuizAttempt>
-{
-    public void Configure(EntityTypeBuilder<QuizAttempt> builder)
-    {
+public sealed class QuizAttemptConfiguration : IEntityTypeConfiguration<QuizAttempt> {
+    public void Configure(EntityTypeBuilder<QuizAttempt> builder) {
         builder.ToTable("QuizAttempt");
 
         builder.Property(q => q.StudentId)

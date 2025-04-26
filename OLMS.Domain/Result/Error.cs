@@ -1,4 +1,6 @@
-﻿namespace OLMS.Domain.Result;
+﻿using System.Net;
+
+namespace OLMS.Domain.Result;
 
 public sealed record Error(string Code, string? ErrorMessage = null)
 {
@@ -7,7 +9,6 @@ public sealed record Error(string Code, string? ErrorMessage = null)
     public static Error Validation(string message) => new("Validation", message);
     public static Error Failure(string message) => new("Failure", message);
 }
-
 public static class UserError
 {   
     public static readonly Error EmptyGuid = new("Empty Guid", "Guid cannot be empty");

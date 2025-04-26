@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OLMS.Application.Features.StudentUC;
 using OLMS.Shared.DTO;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+
 
 namespace OLMS.API.Controllers;
 
@@ -31,14 +31,17 @@ public class StudentController : Controller
                 ErrorCode = result.Error.Code
             });
         }
-        return Ok(new { Message = "Enrolled course success"});
+        return Ok(new { Message = "Enrolled course success" });
     }
 
     [HttpGet("courses")]
-    public async Task<IActionResult> GetAllCourses([FromQuery] GetAllEnrollmentsCommand command) {
+    public async Task<IActionResult> GetAllCourses([FromQuery] GetAllCoursesCommand command)
+    {
         var result = await _sender.Send(command);
-        if (!result.IsSuccess || result.Value is null) {
-            return BadRequest(new {
+        if (!result.IsSuccess || result.Value is null)
+        {
+            return BadRequest(new
+            {
                 Code = 400,
                 Message = result.Error.ErrorMessage,
                 Errors = result.Error.Code
@@ -50,10 +53,6 @@ public class StudentController : Controller
             Code = c.Code.Value,
             c.Title,
             c.Description,
-            Instructor = new {
-                Id = c.InstructorId,
-                Name = c.Instructor.FullName.Value,
-            }
         });
 
         return Ok(new { courses, Message = "Courses retrieve successful" });

@@ -10,6 +10,18 @@ public class ShortAnswerQuestion : Question
     {
         CorrectAnswer = correctAnswer;
     }
+    public static ShortAnswerQuestion Create(string content, Guid quizId, string correctAnswer) {
+        if (string.IsNullOrWhiteSpace(content))
+            throw new ArgumentException("Content cannot be empty", nameof(content));
+
+        if (quizId == Guid.Empty)
+            throw new ArgumentException("Quiz ID cannot be empty", nameof(quizId));
+
+        if (string.IsNullOrWhiteSpace(correctAnswer))
+            throw new ArgumentException("Correct answer cannot be empty", nameof(correctAnswer));
+
+        return new ShortAnswerQuestion(Guid.NewGuid(), content, correctAnswer, quizId);
+    }
     public override bool IsCorrect(string answer)
     {
         return string.Equals(CorrectAnswer, answer, StringComparison.OrdinalIgnoreCase);

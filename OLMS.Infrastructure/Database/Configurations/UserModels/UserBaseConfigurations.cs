@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OLMS.Domain.Entities;
 
-namespace OLMS.Infrastructure.Database.Configurations;
+namespace OLMS.Infrastructure.Database.Configurations.UserModels;
 public sealed class UserBaseConfigurations : IEntityTypeConfiguration<UserBase>
 {
     public void Configure(EntityTypeBuilder<UserBase> builder)

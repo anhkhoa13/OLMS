@@ -1,3 +1,5 @@
+using OLMS.Domain.Entities.CourseAggregate;
+
 namespace OLMS.Domain.Entities;
 
 public class MaterialCourse

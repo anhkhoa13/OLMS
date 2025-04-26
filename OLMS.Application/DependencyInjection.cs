@@ -20,10 +20,8 @@ public static class DependencyInjection
         services.AddSingleton<IAuthService, AuthService>();
         services.AddScoped<IJwtService, JwtService>();
 
-        MapsterConfig.RegisterMappings();
+        //MapsterConfig.RegisterMappings();
 
-        //Register Discussion Service
-        services.AddSingleton<IDiscussionService, DiscussionService>();
 
         return services;
     }

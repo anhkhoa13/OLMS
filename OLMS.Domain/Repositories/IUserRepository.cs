@@ -9,7 +9,5 @@ public interface IUserRepository : IRepository<UserBase>
     Task<UserBase?> GetByUsernameAsync(Username username, CancellationToken cancellationToken = default);
     Task<bool> IsUsernameUniqueAsync(Username userName, CancellationToken cancellationToken = default);
     Task<bool> IsEmailUniqueAsync(Email email, CancellationToken cancellationToken = default);
-    Task<bool> IsInstructor(Guid guid, CancellationToken cancellationToken = default);
-    Task<bool> IsStudent(Guid guid, CancellationToken cancellationToken = default);
     Task<bool> IsUserExist(Guid userId, CancellationToken cancellation = default);
 }

@@ -12,6 +12,21 @@ public class MultipleChoiceQuestion : Question
         Options = options;
         CorrectOptionIndex = correctOptionIndex;
     }
+    public static MultipleChoiceQuestion Create(string content, Guid quizId, List<string> options, int correctOptionIndex) {
+        if (string.IsNullOrWhiteSpace(content))
+            throw new ArgumentException("Content cannot be empty", nameof(content));
+
+        if (quizId == Guid.Empty)
+            throw new ArgumentException("Quiz ID cannot be empty", nameof(quizId));
+
+        if (options == null || options.Count == 0)
+            throw new ArgumentException("Options cannot be empty", nameof(options));
+
+        if (correctOptionIndex < 0 || correctOptionIndex >= options.Count)
+            throw new ArgumentException("Correct option index is out of range", nameof(correctOptionIndex));
+
+        return new MultipleChoiceQuestion(Guid.NewGuid(), content, options, correctOptionIndex, quizId);
+    }
     public override bool IsCorrect(string answer)
     {
         int result = -1;

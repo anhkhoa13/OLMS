@@ -5,10 +5,8 @@ using OLMS.Domain.Primitives;
 
 namespace OLMS.Infrastructure.Database.Configurations;
 
-public sealed class MultipleChoiceQuestionConfiguration : IEntityTypeConfiguration<MultipleChoiceQuestion>
-{
-    public void Configure(EntityTypeBuilder<MultipleChoiceQuestion> builder)
-    {
+public sealed class MultipleChoiceQuestionConfiguration : IEntityTypeConfiguration<MultipleChoiceQuestion> {
+    public void Configure(EntityTypeBuilder<MultipleChoiceQuestion> builder) {
         builder.ToTable("MultipleChoiceQuestion");
 
         builder.Property(mcq => mcq.CorrectOptionIndex)

@@ -5,10 +5,8 @@ using OLMS.Domain.Primitives;
 
 namespace OLMS.Infrastructure.Database.Configurations;
 
-public sealed class ShortAnswerQuestionConfiguration : IEntityTypeConfiguration<ShortAnswerQuestion>
-{
-    public void Configure(EntityTypeBuilder<ShortAnswerQuestion> builder)
-    {
+public sealed class ShortAnswerQuestionConfiguration : IEntityTypeConfiguration<ShortAnswerQuestion> {
+    public void Configure(EntityTypeBuilder<ShortAnswerQuestion> builder) {
         builder.ToTable("ShortAnswerQuestion");
 
         /*// Configure primary key (inherited from Question)
@@ -23,7 +21,6 @@ public sealed class ShortAnswerQuestionConfiguration : IEntityTypeConfiguration<
             .WithOne()
             .HasForeignKey<ShortAnswerQuestion>(saq => saq.Id)
             .OnDelete(DeleteBehavior.Cascade);
-
     }
 }
 

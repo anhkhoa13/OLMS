@@ -1,9 +1,11 @@
-﻿using OLMS.Domain.Primitives;
+﻿using OLMS.Domain.Entities.InstructorAggregate;
+using OLMS.Domain.Entities.StudentAggregate;
+using OLMS.Domain.Primitives;
 using OLMS.Domain.ValueObjects;
 
 namespace OLMS.Domain.Entities;
 
-public abstract class UserBase : Entity
+public abstract class UserBase : AggregateRoot
 {
     public Username Username { get; private set; } = default!;
     public FullName FullName { get; private set; } = default!;

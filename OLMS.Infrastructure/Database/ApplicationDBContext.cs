@@ -1,8 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
 using OLMS.Domain.Entities;
+using OLMS.Domain.Entities.CourseAggregate;
+using OLMS.Domain.Entities.ForumAggregate;
+using OLMS.Domain.Entities.ForumAggregate.PostAggregate;
+using OLMS.Domain.Entities.InstructorAggregate;
+using OLMS.Domain.Entities.ProgressAggregate;
 using OLMS.Domain.Entities.QuestionEntity;
 using OLMS.Domain.Entities.QuizEntity;
+using OLMS.Domain.Entities.SectionEntity;
+using OLMS.Domain.Entities.StudentAggregate;
 
 namespace OLMS.Infrastructure.Database;
 
@@ -15,14 +22,24 @@ public class ApplicationDbContext : DbContext
     public DbSet<Student> Students { get; set; }
     public DbSet<Instructor> Instructors { get; set; }
     public DbSet<Course> Courses { get; set; }
+    public DbSet<Progress> Progresses { get; set; }
     public DbSet<QuizAttempt> QuizAttempts { get; set; }
     public DbSet<StudentResponse> StudentAnswers { get; set; }
-    //public DbSet<Enrollment> Enrollments { get; set; }
+    public DbSet<Enrollment> Enrollments { get; set; }
 
     public DbSet<Quiz> Quizzes { get; set; }
     public DbSet<Question> Questions { get; set; }
     public DbSet<MultipleChoiceQuestion> MultipleChoiceQuestions { get; set; }
-    public DbSet<Material> Materials { get; set; }
+
+    public DbSet<Section> Sections { get; set; }
+    public DbSet<SectionItem> SectionItems { get; set; }
+    public DbSet<Lesson> Lessons { get; set; }
+    public DbSet<Assignment> Assignments { get; set; }
+    public DbSet<Exercise> Exercises { get; set; }
+    public DbSet<Attachment> Attachments { get; set; }
+
+
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
@@ -32,11 +49,6 @@ public class ApplicationDbContext : DbContext
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     { 
-        //// Định nghĩa Table-Per-Type (TPT)
-        //modelBuilder.Entity<UserBase>().ToTable("User");
-        //modelBuilder.Entity<Student>().ToTable("Student"); // Bảng Student mở rộng từ UserBase
-        //modelBuilder.Entity<Instructor>().ToTable("Instructor"); // Bảng Instructor mở rộng từ UserBase
-
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
     }

@@ -5,15 +5,12 @@ using OLMS.Domain.Primitives;
 
 namespace OLMS.Infrastructure.Database.Configurations;
 
-public sealed class QuizConfiguration : IEntityTypeConfiguration<Quiz>
-{
-    public void Configure(EntityTypeBuilder<Quiz> builder)
-    {
+public sealed class QuizConfiguration : IEntityTypeConfiguration<Quiz> {
+    public void Configure(EntityTypeBuilder<Quiz> builder) {
         builder.ToTable("Quiz");
 
         builder.HasKey(q => q.Id);
-        builder.OwnsOne(c => c.Code, c =>
-        {
+        builder.OwnsOne(c => c.Code, c => {
             c.Property(c => c.Value)
              .HasColumnName("Code")
              .IsRequired()
@@ -28,14 +25,16 @@ public sealed class QuizConfiguration : IEntityTypeConfiguration<Quiz>
         builder.Property(q => q.Description)
             .HasMaxLength(2000);
 
-        builder.Property(q => q.StartTime)
+        builder.Property(q => q.StartDate)
             .IsRequired();
 
-        builder.Property(q => q.EndTime)
+        builder.Property(q => q.DueDate)
             .IsRequired();
 
         builder.Property(q => q.IsTimeLimited)
             .IsRequired();
+
+        builder.Property(q => q.TimeLimit);
 
         builder.HasMany(ques => ques.Questions)
             .WithOne()
@@ -46,6 +45,13 @@ public sealed class QuizConfiguration : IEntityTypeConfiguration<Quiz>
                .WithOne(qc => qc.Quiz)
                .HasForeignKey(qc => qc.QuizId)
                .OnDelete(DeleteBehavior.Cascade);
+
+        // add
+        builder.Metadata.FindNavigation(nameof(Quiz.Questions))
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.Metadata.FindNavigation(nameof(Quiz.QuizCourses))
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }
 

@@ -1,8 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OLMS.Domain.Entities;
+using OLMS.Domain.Entities.CourseAggregate;
+using OLMS.Domain.Entities.InstructorAggregate;
 
-namespace OLMS.Infrastructure.Database.Configurations;
+
+namespace OLMS.Infrastructure.Database.Configurations.UserModels;
 
 public sealed class InstructorConfiguration : IEntityTypeConfiguration<Instructor>
 {
@@ -10,24 +13,19 @@ public sealed class InstructorConfiguration : IEntityTypeConfiguration<Instructo
     {
         builder.ToTable("Instructor");
 
-        //builder.Property(i => i.Id).HasColumnName("Id_instructor");
-
-        builder.Property(i => i.HireDate)
-               .HasColumnName("HireDate");
-
         builder.Property(i => i.Department)
                .HasColumnName("Department")
                .HasMaxLength(100);
 
-        builder.HasOne<UserBase>() 
+        builder.HasOne<UserBase>()
                .WithOne()
-               .HasForeignKey<Instructor>(i => i.Id) 
+               .HasForeignKey<Instructor>(i => i.Id)
                .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasMany(i => i.Courses) // Một Instructor có nhiều Course
-               .WithOne(c => c.Instructor)
-               .HasForeignKey(c => c.InstructorId)
-               .OnDelete(DeleteBehavior.Cascade);
+        builder.HasMany(i => i.Courses)
+            .WithOne()
+            .HasForeignKey(c => c.InstructorId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
 

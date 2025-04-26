@@ -6,12 +6,10 @@ using OLMS.Domain.ValueObjects;
 
 namespace OLMS.Infrastructure.Database.Repositories;
 
-public class QuizRepository : Repository<Quiz>, IQuizRepository
-{
-    public QuizRepository(ApplicationDbContext context) : base(context) {}
+public class QuizRepository : Repository<Quiz>, IQuizRepository {
+    public QuizRepository(ApplicationDbContext context) : base(context) { }
 
-    public override async Task<Quiz?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
-    {
+    public override async Task<Quiz?> GetByIdAsync(Guid id, CancellationToken cancellationToken) {
         try {
             var quiz = await _context.Quizzes
                 .Include(q => q.Questions)
@@ -28,14 +26,12 @@ public class QuizRepository : Repository<Quiz>, IQuizRepository
             throw new Exception("An error occurred while fetching the quiz.");
         }
     }
-    public async Task<Quiz?> GetByCodeAsync(string code)
-    {
+    public async Task<Quiz?> GetByCodeAsync(string code) {
         return await _context.Quizzes
             .Include(q => q.Questions.Where(q => !q.IsDeleted))
             .SingleOrDefaultAsync(q => q.Code.Value == code);
     }
-    public virtual async Task<IEnumerable<Quiz>> GetAllQuizsAsyncIncludeQuestions(CancellationToken cancellationToken)
-    {
+    public virtual async Task<IEnumerable<Quiz>> GetAllQuizsAsyncIncludeQuestions(CancellationToken cancellationToken) {
         return await _context.Quizzes
             .Include(q => q.Questions.Where(q => !q.IsDeleted))
             .ToListAsync(cancellationToken);
