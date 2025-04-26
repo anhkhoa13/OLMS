@@ -3,21 +3,27 @@ using OLMS.Domain.Primitives;
 using System.Collections.ObjectModel;
 
 public abstract class Assignment : Entity {
-    public Guid InstructorID { get; set; }
-    public Guid SectionId { get; private set; }
-    public string Title { get; private set; }
-    public string Description { get; private set; }
+
+    #region Properties
+    public string Title { get; private set; } = default!;
+    public string Description { get; private set; } = default!;
     public DateTime StartDate { get; private set; }
     public DateTime DueDate { get; private set; }
     public AssignmentType Type { get; private set; }
     public bool AllowLateSubmission { get; private set; }
 
-    public int NumberOfAttempts { get; private set; }   
+    public int NumberOfAttempts { get; private set; }
+    #endregion
 
-    private readonly List<Guid> _assignmentAttempts = [];
-    public IReadOnlyCollection<Guid> AssignmentAttempts => _assignmentAttempts.AsReadOnly();
+    #region Navigations
+    public Guid InstructorID { get; set; }
+    public Guid SectionId { get; private set; }
 
-    protected Assignment() { }
+    //private readonly List<Guid> _assignmentAttempts = [];
+    //public IReadOnlyCollection<Guid> AssignmentAttempts => _assignmentAttempts.AsReadOnly();
+    #endregion
+
+    protected Assignment() : base(){ }
     protected Assignment(
         Guid id,
         string title,

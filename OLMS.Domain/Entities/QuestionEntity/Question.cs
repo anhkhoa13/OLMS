@@ -9,10 +9,11 @@ public enum QuestionType
 }
 public abstract class Question : Entity
 {
-    public string Content { get; set; }
+    public string Content { get; set; } = default!;
     public abstract QuestionType Type { get; protected set; }
     public Guid QuizId { get; set; }
     public bool IsDeleted { get; set; } // Soft delete flag
+    protected Question() : base() { } // For EF Core
 
     protected Question(Guid id, string content, Guid quizId) : base(id)
     {

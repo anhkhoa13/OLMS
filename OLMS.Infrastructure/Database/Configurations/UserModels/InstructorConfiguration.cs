@@ -23,7 +23,7 @@ public sealed class InstructorConfiguration : IEntityTypeConfiguration<Instructo
                .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(i => i.Courses)
-            .WithOne()
+            .WithOne(c => c.Instructor)
             .HasForeignKey(c => c.InstructorId)
             .OnDelete(DeleteBehavior.Cascade);
     }

@@ -33,7 +33,7 @@ public class CreateLessonCommandHandler : IRequestHandler<CreateLessonCommand, R
             // Add attachments to the lesson
             if (request.Attachments != null && request.Attachments.Any()) {
                 foreach (var attachmentDto in request.Attachments) {
-                    var attachment = Attachment.Create(
+                    var attachment = LessonAttachment.Create(
                         attachmentDto.Name,
                         attachmentDto.Data,
                         lesson.Id);

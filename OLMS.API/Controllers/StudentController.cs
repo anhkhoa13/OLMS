@@ -53,6 +53,10 @@ public class StudentController : Controller
             Code = c.Code.Value,
             c.Title,
             c.Description,
+            Instructor = new {
+                Id = c.InstructorId,
+                Name = c.Instructor.FullName.Value,
+            }
         });
 
         return Ok(new { courses, Message = "Courses retrieve successful" });

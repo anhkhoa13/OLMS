@@ -1,4 +1,5 @@
-﻿using OLMS.Domain.Entities.ForumAggregate.PostAggregate;
+﻿using OLMS.Domain.Entities.InstructorAggregate;
+using OLMS.Domain.Entities.SectionEntity;
 using OLMS.Domain.Entities.StudentAggregate;
 using OLMS.Domain.Primitives;
 using OLMS.Domain.ValueObjects;
@@ -16,8 +17,12 @@ public class Course : AggregateRoot
 
     #region Navigations
     public Guid InstructorId { get; private set; }
+    public Instructor Instructor { get; private set; } = default!;
+
     private readonly List<Student> _students = [];
     public IReadOnlyCollection<Student> Students => _students.AsReadOnly();
+    private readonly List<Section> _sections = [];
+    public IReadOnlyCollection<Section> Sections => _sections.AsReadOnly();
 
     public Guid ForumId { get; private set; }
     #endregion
@@ -43,7 +48,7 @@ public class Course : AggregateRoot
         Guid id = Guid.NewGuid();
 
         var code = Code.Generate(id);
-        return new Course(id, code, title, description, instructorId, CourseStatus.Pending);
+        return new Course(id, code, title, description, instructorId, CourseStatus.Enrolling);
     }
 
     public void AddStudent(Student student)

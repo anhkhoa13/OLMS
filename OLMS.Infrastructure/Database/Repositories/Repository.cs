@@ -12,7 +12,7 @@ public class Repository<T>(ApplicationDbContext context) : IRepository<T> where 
         return await _context.Set<T>().SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken)
+    public virtual async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken)
     {
         return await _context.Set<T>().ToListAsync(cancellationToken);
     }

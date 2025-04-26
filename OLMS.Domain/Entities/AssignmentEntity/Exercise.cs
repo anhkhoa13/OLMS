@@ -1,10 +1,12 @@
 ﻿using OLMS.Domain.ValueObjects;
 using System.Collections.ObjectModel;
 
-public class Exercise : Assignment {
-    private readonly List<Attachment> _attachments = new();
-    public IReadOnlyCollection<Attachment> Attachments =>
-        new ReadOnlyCollection<Attachment>(_attachments);
+public class Exercise : Assignment 
+{
+    #region
+    private readonly List<ExerciseAttachment> _exerciseAttachments = [];
+    public IReadOnlyCollection<ExerciseAttachment> ExerciseAttachments => _exerciseAttachments.AsReadOnly();
+    #endregion
 
     private Exercise() : base() { } // Required for EF Core
 
@@ -51,7 +53,7 @@ public class Exercise : Assignment {
         return new Exercise(Guid.NewGuid(), title, description, startDate, dueDate, true, numberOfAttempts, sectionId, instructorId);
     }
 
-    public void AddAttachment(Attachment attachment) {
-        _attachments.Add(attachment);
+    public void AddAttachment(ExerciseAttachment attachment) {
+        _exerciseAttachments.Add(attachment);
     }
 }

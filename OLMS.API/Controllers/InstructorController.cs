@@ -7,7 +7,7 @@ using OLMS.Shared.DTO;
 namespace OLMS.API.Controllers;
 
 [ApiController]
-[Authorize(Roles = "Instructor")]
+//[Authorize(Roles = "Instructor")]
 [Route("api/instructor")]
 public class InstructorController : Controller
 {

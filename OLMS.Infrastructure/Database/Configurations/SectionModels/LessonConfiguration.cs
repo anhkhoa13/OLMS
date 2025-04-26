@@ -5,12 +5,12 @@ using OLMS.Domain.Entities.InstructorAggregate;
 using OLMS.Domain.Entities.SectionEntity;
 using OLMS.Domain.Entities.StudentAggregate;
 
-namespace OLMS.Infrastructure.Database.Configurations;
+namespace OLMS.Infrastructure.Database.Configurations.SectionModels;
 
 public sealed class LessonConfiguration : IEntityTypeConfiguration<Lesson>
 {
-    public void Configure(EntityTypeBuilder<Lesson> builder) {
-        builder.ToTable("Lessons");
+    public void Configure(EntityTypeBuilder<Lesson> builder)
+    {
 
         builder.HasKey(l => l.Id);
 
@@ -25,18 +25,14 @@ public sealed class LessonConfiguration : IEntityTypeConfiguration<Lesson>
             .IsRequired()
             .HasMaxLength(2048);
 
-        builder.Property(l => l.SectionId)
-            .IsRequired();
+        builder.HasOne<Section>()
+            .WithMany()
+            .HasForeignKey(l => l.SectionId);
 
-        // Configure relationship with Attachments
-        builder.HasMany(l => l.Attachments)
+        builder.HasMany(l => l.LessonAttachments)
             .WithOne()
-            .HasForeignKey("LessonId")  // The foreign key in Attachment table
+            .HasForeignKey(la => la.LessonId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        // Configure privately owned collection
-        builder.Metadata.FindNavigation(nameof(Lesson.Attachments))
-            .SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }
 

@@ -10,7 +10,7 @@ public class CourseRepository(ApplicationDbContext context) : Repository<Course>
     public async Task<IReadOnlyCollection<Course>> FindCoursesByInstructorIdAsync(Guid instructorId, CancellationToken cancellationToken = default)
     {
         return await _context.Courses.Where(c => c.InstructorId == instructorId)
-                                     .ToListAsync(cancellationToken);
+                                    .ToListAsync(cancellationToken);
     }
 
     public async Task<Course?> GetByCodeAsync(string code, CancellationToken cancellationToken = default)
@@ -20,7 +20,14 @@ public class CourseRepository(ApplicationDbContext context) : Repository<Course>
 
     public override async Task<Course?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        return await _context.Courses.SingleOrDefaultAsync(c => c.Id == id, cancellationToken);
+        return await _context.Courses
+                            .Include(c => c.Instructor)
+                            .SingleOrDefaultAsync(c => c.Id == id, cancellationToken);
+    }
+    public override async Task<IEnumerable<Course>> GetAllAsync(CancellationToken cancellationToken) {
+        return await _context.Courses
+            .Include(c => c.Instructor)
+            .ToListAsync(cancellationToken);
     }
 }
 
