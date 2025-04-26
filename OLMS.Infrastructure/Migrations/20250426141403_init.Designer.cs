@@ -12,8 +12,8 @@ using OLMS.Infrastructure.Database;
 namespace OLMS.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250425192901_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250426141403_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,8 +53,9 @@ namespace OLMS.Infrastructure.Migrations
                     b.Property<Guid>("InstructorId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -151,7 +152,7 @@ namespace OLMS.Infrastructure.Migrations
 
             modelBuilder.Entity("OLMS.Domain.Entities.CourseAggregate.Course", b =>
                 {
-                    b.HasOne("OLMS.Domain.Entities.InstructorAggregate.Instructor", null)
+                    b.HasOne("OLMS.Domain.Entities.InstructorAggregate.Instructor", "Instructor")
                         .WithMany("Courses")
                         .HasForeignKey("InstructorId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -181,6 +182,8 @@ namespace OLMS.Infrastructure.Migrations
 
                     b.Navigation("Code")
                         .IsRequired();
+
+                    b.Navigation("Instructor");
                 });
 
             modelBuilder.Entity("OLMS.Domain.Entities.ProgressAggregate.Progress", b =>

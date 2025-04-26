@@ -14,6 +14,7 @@ public class ApplicationDbContext : DbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
+
     }
     public DbSet<UserBase> Users { get; set; }
     public DbSet<Student> Students { get; set; }

@@ -12,6 +12,8 @@ public class StudentReposiroty(ApplicationDbContext context) : Repository<Studen
     public async Task<IReadOnlyCollection<Course>> GetAllCourses(Guid studentId, CancellationToken cancellationToken = default)
     {
         var student =  await _context.Students.Include(s => s.Courses)
+            .ThenInclude(c => c.Instructor)
+            .IgnoreAutoIncludes()
             .SingleOrDefaultAsync(s => s.Id == studentId, cancellationToken);
 
         if (student == null)

@@ -149,7 +149,7 @@ namespace OLMS.Infrastructure.Migrations
 
             modelBuilder.Entity("OLMS.Domain.Entities.CourseAggregate.Course", b =>
                 {
-                    b.HasOne("OLMS.Domain.Entities.InstructorAggregate.Instructor", null)
+                    b.HasOne("OLMS.Domain.Entities.InstructorAggregate.Instructor", "Instructor")
                         .WithMany("Courses")
                         .HasForeignKey("InstructorId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -179,6 +179,8 @@ namespace OLMS.Infrastructure.Migrations
 
                     b.Navigation("Code")
                         .IsRequired();
+
+                    b.Navigation("Instructor");
                 });
 
             modelBuilder.Entity("OLMS.Domain.Entities.ProgressAggregate.Progress", b =>

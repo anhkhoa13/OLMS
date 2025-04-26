@@ -23,6 +23,7 @@ public sealed class CourseConfiguration : IEntityTypeConfiguration<Course>
 
             c.HasIndex(c => c.Value).IsUnique();
         });
+
         builder.Property(c => c.Title)
                .IsRequired()
                .HasMaxLength(255);
@@ -32,7 +33,7 @@ public sealed class CourseConfiguration : IEntityTypeConfiguration<Course>
         builder.Property(c => c.Status)
             .HasConversion<string>();
 
-        builder.HasOne<Instructor>()
+        builder.HasOne(i => i.Instructor)
             .WithMany()
             .HasForeignKey(c => c.InstructorId);
 

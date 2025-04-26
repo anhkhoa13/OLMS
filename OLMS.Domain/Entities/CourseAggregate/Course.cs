@@ -18,6 +18,8 @@ public class Course : AggregateRoot
 
     #region Navigations
     public Guid InstructorId { get; private set; }
+    public Instructor Instructor { get; private set; } = default!;
+
     private readonly List<Student> _students = [];
     public IReadOnlyCollection<Student> Students => _students.AsReadOnly();
     #endregion
@@ -43,7 +45,7 @@ public class Course : AggregateRoot
         Guid id = Guid.NewGuid();
 
         var code = Code.Generate(id);
-        return new Course(id, code, title, description, instructorId, CourseStatus.Pending);
+        return new Course(id, code, title, description, instructorId, CourseStatus.Enrolling);
     }
 
     public void AddStudent(Student student)
