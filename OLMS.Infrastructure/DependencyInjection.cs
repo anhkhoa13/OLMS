@@ -22,9 +22,9 @@ public static class DependencyInjection
         services.AddScoped<IStudentRepository, StudentReposiroty>();
         services.AddScoped<IInstructorRepository, InstructorRepository>();
         services.AddScoped<IProgressRepository, ProgressRepository>();
-        services.AddScoped<IQuestionRepository, QuestionRepository>();
-        services.AddScoped<IQuizRepository, QuizRepository>();
-        services.AddScoped<IQuizAttemptRepository, QuizAttemptRepository>();
+        //services.AddScoped<IQuestionRepository, QuestionRepository>();
+        //services.AddScoped<IQuizRepository, QuizRepository>();
+        //services.AddScoped<IQuizAttemptRepository, QuizAttemptRepository>();
         services.AddScoped<ILessonRepository, LessonRepository>();
 
 

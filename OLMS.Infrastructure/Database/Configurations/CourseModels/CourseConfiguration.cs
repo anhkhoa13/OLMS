@@ -50,14 +50,15 @@ public sealed class CourseConfiguration : IEntityTypeConfiguration<Course>
                 );
 
         
-        builder.HasOne<Forum>()
+        builder.HasOne(c => c.Forum)
                .WithOne()
-               .HasForeignKey<Course>(c => c.ForumId)
-               .OnDelete(DeleteBehavior.Restrict);
+               .HasForeignKey<Forum>(f => f.CourseId)
+               .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(c => c.Instructor)
                .WithMany(i => i.Courses)
                .HasForeignKey(c => c.InstructorId)
+               .OnDelete(DeleteBehavior.Restrict)
                .IsRequired();
 
         builder.HasMany(c => c.Sections)
