@@ -7,20 +7,16 @@
 
 //[ApiController]
 //[Route("api/course")]
-//public class CourseController : ControllerBase
-//{
+//public class CourseController : ControllerBase {
 //    private readonly ISender _sender;
 
-//    public CourseController(ISender sender)
-//    {
+//    public CourseController(ISender sender) {
 //        _sender = sender;
 //    }
 
 //    [HttpPost("create")]
-//    public async Task<IActionResult> CreateCourse([FromBody] CreateCourseCommand command)
-//    {
-//        if (!ModelState.IsValid)
-//        {
+//    public async Task<IActionResult> CreateCourse([FromBody] CreateCourseCommand command) {
+//        if (!ModelState.IsValid) {
 //            return BadRequest(ModelState);
 //        }
 //        var result = await _sender.Send(command);
