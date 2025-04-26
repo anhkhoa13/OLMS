@@ -1,4 +1,6 @@
-﻿using OLMS.Domain.Primitives;
+﻿using OLMS.Domain.Entities.CourseAggregate;
+using OLMS.Domain.Entities.StudentAggregate;
+using OLMS.Domain.Primitives;
 
 namespace OLMS.Domain.Entities;
 

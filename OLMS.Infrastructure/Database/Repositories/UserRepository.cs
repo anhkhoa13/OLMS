@@ -5,14 +5,12 @@ using OLMS.Domain.ValueObjects;
 
 namespace OLMS.Infrastructure.Database.Repositories;
 
-public class UserRepository : Repository<UserBase>, IUserRepository
+public class UserRepository(ApplicationDbContext context) : Repository<UserBase>(context), IUserRepository
 {
-    public UserRepository(ApplicationDbContext context) : base(context) {}
-
-    public override async Task<UserBase?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
-    {
-        return await _context.Users.SingleOrDefaultAsync(u => u.Id == id, cancellationToken);
-    }
+    //public override async Task<UserBase?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    //{
+    //    return await _context.Users.SingleOrDefaultAsync(u => u.Id == id, cancellationToken);
+    //}
 
     public async Task<UserBase?> GetByUsernameAsync(Username username, CancellationToken cancellationToken = default)
     {
@@ -28,16 +26,6 @@ public class UserRepository : Repository<UserBase>, IUserRepository
             throw new ArgumentNullException(nameof(email), "Email cannot be null");
 
         return !await _context.Users.AnyAsync(u => u.Email.Value == email.Value, cancellationToken);
-    }
-
-    public async Task<bool> IsInstructor(Guid guid, CancellationToken cancellationToken = default)
-    {
-        return await _context.Instructors.AnyAsync(i => i.Id == guid, cancellationToken: cancellationToken);
-    }
-
-    public async Task<bool> IsStudent(Guid guid, CancellationToken cancellationToken = default)
-    {
-        return await _context.Students.AnyAsync(s => s.Id == guid, cancellationToken);
     }
 
     public async Task<bool> IsUserExist(Guid userId, CancellationToken cancellation = default)

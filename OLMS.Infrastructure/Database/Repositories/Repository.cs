@@ -4,26 +4,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace OLMS.Infrastructure.Database.Repositories;
 
-public class Repository<T> : IRepository<T> where T : Entity
+public class Repository<T>(ApplicationDbContext context) : IRepository<T> where T : Entity
 {
-    protected readonly ApplicationDbContext _context;
-    public Repository(ApplicationDbContext context)
-    {
-        _context = context;
-    }
+    protected readonly ApplicationDbContext _context = context;
+
     public virtual async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken) {
-        try {
-            return await _context.Set<T>().FindAsync(id, cancellationToken);
-        } catch (Exception ex) {
-            // Log the exception (using your logging mechanism)
-            Console.WriteLine($"An error occurred while fetching the entity by id: {ex.Message}");
-
-            // You can also log the full exception for more details
-            // Logger.LogError(ex, "Error in GetByIdAsync method.");
-
-            // Optionally, rethrow the exception or return null depending on your error handling strategy
-            throw new ApplicationException($"An error occurred while fetching the entity with id {id}.", ex);
-        }
+        return await _context.Set<T>().SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
     public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken)

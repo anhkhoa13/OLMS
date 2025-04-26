@@ -99,7 +99,7 @@ public class Program
 
         app.Use(async (context, next) =>
         {
-            var token = context.Request.Headers["Authorization"];
+            var token = context.Request.Headers.Authorization;
             Console.WriteLine($"Incoming Token: {token}");
             await next();
         });

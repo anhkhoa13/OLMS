@@ -1,36 +1,30 @@
 ﻿using MediatR;
 using OLMS.Domain.Repositories;
 using OLMS.Domain.Result;
-using OLMS.Domain.Entities;
-
 using static OLMS.Domain.Result.Result;
 using static OLMS.Domain.Result.UserError;
 using static OLMS.Domain.Result.CourseError;
+using OLMS.Domain.Entities.StudentAggregate;
 
 
 namespace OLMS.Application.Features.StudentUC;
 
 public sealed record EnrollCourseCommand(Guid StudentId, string CourseCode) : IRequest<Result>;
 
-public class EnrollCourseCommandHandler : IRequestHandler<EnrollCourseCommand, Result>
+public class EnrollCourseCommandHandler(
+    IUnitOfWork unitOfWork,
+    IUserRepository userRepository,
+    ICourseRepository courseRepository,
+    IProgressRepository progressRepository) : IRequestHandler<EnrollCourseCommand, Result>
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IUserRepository _userRepository;
-    private readonly ICourseRepository _courseRepository;
-
-    public EnrollCourseCommandHandler(
-        IUnitOfWork unitOfWork,
-        IUserRepository userRepository,
-        ICourseRepository courseRepository)
-    {
-        _unitOfWork = unitOfWork;
-        _userRepository = userRepository;
-        _courseRepository = courseRepository;
-    }
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly IUserRepository _userRepository = userRepository;
+    private readonly ICourseRepository _courseRepository = courseRepository;
+    private readonly IProgressRepository _progressRepository = progressRepository;
 
     public async Task<Result> Handle(EnrollCourseCommand request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByIdAsync(request.StudentId);
+        var user = await _userRepository.GetByIdAsync(request.StudentId, cancellationToken);
 
         if (user is null)
             return UserNotFound;
@@ -43,9 +37,9 @@ public class EnrollCourseCommandHandler : IRequestHandler<EnrollCourseCommand, R
         if (course is null)
             return CourseNotFound;
 
-        course.EnrollStudent(student);
+        var progress = student.EnrollCourse(course);
 
-        _courseRepository.Update(course);
+        await _progressRepository.AddAsync(progress, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Success();
