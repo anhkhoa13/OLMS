@@ -64,6 +64,7 @@ public class InstructorController : Controller
         }
         var courses = result.Value.Select(c => new
         {
+            c.Id,
             Code = c.Code.Value,
             c.Title,
             c.Description,

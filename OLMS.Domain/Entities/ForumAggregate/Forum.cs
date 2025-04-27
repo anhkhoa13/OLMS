@@ -1,4 +1,5 @@
-﻿using OLMS.Domain.Entities.ForumAggregate.PostAggregate;
+﻿using OLMS.Domain.Entities.CourseAggregate;
+using OLMS.Domain.Entities.ForumAggregate.PostAggregate;
 using OLMS.Domain.Primitives;
 
 namespace OLMS.Domain.Entities.ForumAggregate;
@@ -11,6 +12,7 @@ public class Forum : AggregateRoot
 
     #region Navigations
     public Guid CourseId { get; private set; }
+
     private readonly List<Post> _posts = [];
     public IReadOnlyCollection<Post> Posts => _posts.AsReadOnly();
     
