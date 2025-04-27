@@ -695,13 +695,13 @@ namespace OLMS.Infrastructure.Migrations
                     b.HasOne("OLMS.Domain.Entities.ForumAggregate.PostAggregate.Post", null)
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("OLMS.Domain.Entities.UserBase", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -725,7 +725,7 @@ namespace OLMS.Infrastructure.Migrations
                     b.HasOne("OLMS.Domain.Entities.UserBase", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 

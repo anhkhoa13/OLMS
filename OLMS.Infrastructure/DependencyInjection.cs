@@ -22,17 +22,14 @@ public static class DependencyInjection
         services.AddScoped<IStudentRepository, StudentReposiroty>();
         services.AddScoped<IInstructorRepository, InstructorRepository>();
         services.AddScoped<IProgressRepository, ProgressRepository>();
-        //services.AddScoped<IQuestionRepository, QuestionRepository>();
-        //services.AddScoped<IQuizRepository, QuizRepository>();
-        //services.AddScoped<IQuizAttemptRepository, QuizAttemptRepository>();
+        services.AddScoped<IForumRepository, ForumRepository>();
+        services.AddScoped<IPostRepository, PostRepository>();
+        services.AddScoped<IVoteRepository, VoteRepository>();
+        services.AddScoped<ICommentRepository, CommentRepository>();
+
         services.AddScoped<ILessonRepository, LessonRepository>();
 
 
-        //services.AddScoped<IStudentAnswerRepository, StudentAnswerRepository>();
-
-        //services.AddScoped<IMaterialRepository, MaterialRepository>();
-
-        //services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
 
         return services;
     }

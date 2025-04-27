@@ -7,7 +7,7 @@ using OLMS.Shared.DTO;
 namespace OLMS.API.Controllers;
 
 [ApiController]
-//[Authorize(Roles = "Instructor")]
+[Authorize(Roles = "Instructor")]
 [Route("api/instructor")]
 public class InstructorController : Controller
 {
@@ -66,7 +66,7 @@ public class InstructorController : Controller
         {
             Code = c.Code.Value,
             c.Title,
-            c.Description,
+            c.Description
         });
         return Ok(new { courses, Message = "Courses retrieve successful" });
     }
