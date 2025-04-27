@@ -76,4 +76,10 @@ public class Course : AggregateRoot
         Forum = Forum.Create(Title + " Forum", Id);
     }
 
+    public void Approve()
+    {
+        if (Status != CourseStatus.Pending)
+            throw new InvalidOperationException("Course already approved");
+        Status = CourseStatus.Enrolling;
+    }
 }

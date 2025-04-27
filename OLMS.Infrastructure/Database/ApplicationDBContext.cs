@@ -42,7 +42,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Comment> Comments { get; set; }
     public DbSet<Vote> Votes { get; set; }
 
-
+    public DbSet<Admin> Admins { get; set; }
     public DbSet<QuizCourse> QuizCourses { get; set; }
 
 
