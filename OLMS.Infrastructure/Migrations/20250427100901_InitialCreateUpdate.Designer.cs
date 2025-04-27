@@ -12,8 +12,8 @@ using OLMS.Infrastructure.Database;
 namespace OLMS.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250426190337_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250427100901_InitialCreateUpdate")]
+    partial class InitialCreateUpdate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

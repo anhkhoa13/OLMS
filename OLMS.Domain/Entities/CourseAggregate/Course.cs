@@ -4,6 +4,7 @@ using OLMS.Domain.Entities.SectionEntity;
 using OLMS.Domain.Entities.StudentAggregate;
 using OLMS.Domain.Primitives;
 using OLMS.Domain.ValueObjects;
+using System.Linq;
 
 namespace OLMS.Domain.Entities.CourseAggregate;
 
@@ -64,6 +65,9 @@ public class Course : AggregateRoot
             throw new ArgumentException("Student already enroll this course");
 
         _students.Add(student);
+    }
+    public void AddSection(Section section) {
+        _sections.Add(section);
     }
 
     private void CreateForum()

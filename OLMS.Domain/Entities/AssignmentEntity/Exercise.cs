@@ -25,32 +25,19 @@ public class Exercise : Assignment
 
     }
 
-    public static Exercise CreateWithoutLatePermission(
+    public static Exercise Create(
         string title,
         string description,
         DateTime startDate,
         DateTime dueDate,
         int numberOfAttempts,
+        bool allowLateSubmission,
         Guid sectionId,
         Guid instructorId
         ) {
         Validate(title, description, startDate, dueDate, numberOfAttempts, sectionId, instructorId);
 
-        return new Exercise(Guid.NewGuid(), title, description, startDate, dueDate, false, numberOfAttempts, sectionId, instructorId);
-    }
-
-    public static Exercise CreateWithLatePermission(
-        string title,
-        string description,
-        DateTime startDate,
-        DateTime dueDate,
-        int numberOfAttempts,
-        Guid sectionId,
-        Guid instructorId
-        ) {
-        Validate(title, description, startDate, dueDate, numberOfAttempts, sectionId, instructorId);
-
-        return new Exercise(Guid.NewGuid(), title, description, startDate, dueDate, true, numberOfAttempts, sectionId, instructorId);
+        return new Exercise(Guid.NewGuid(), title, description, startDate, dueDate, allowLateSubmission, numberOfAttempts, sectionId, instructorId);
     }
 
     public void AddAttachment(ExerciseAttachment attachment) {

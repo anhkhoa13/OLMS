@@ -2,21 +2,21 @@
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
-[Route("api/lesson")]
-public class LessonController : ControllerBase {
+[Route("api/assignment")]
+public class AssignmentController : ControllerBase {
     private readonly ISender _sender;
 
-    public LessonController(ISender sender) {
+    public AssignmentController(ISender sender) {
         _sender = sender;
     }
 
     [HttpPost("create")]
-    public async Task<IActionResult> CreateLesson([FromBody] CreateLessonCommand command) {
+    public async Task<IActionResult> CreateAssignment([FromBody] CreateExerciseCommand command) {
         var result = await _sender.Send(command);
 
         if (!result.IsSuccess)
             return BadRequest(result.Error);
 
-        return Ok(new { Message = "Create lesson successfully" });
+        return Ok(new { Message = "Create assignment successfully" });
     }
 }
