@@ -1,27 +1,26 @@
 ﻿
 
 using Microsoft.EntityFrameworkCore;
+using OLMS.Domain.Entities.CourseAggregate;
 using OLMS.Domain.Entities.ForumAggregate;
 using OLMS.Domain.Repositories;
+using OLMS.Domain.ValueObjects;
 
 namespace OLMS.Infrastructure.Database.Repositories;
 
-
-public class ForumRepository : Repository<Forum>, IForumRepository
+public class ForumRepository(ApplicationDbContext context) : Repository<Forum>(context), IForumRepository
 {
-    public ForumRepository(ApplicationDbContext context) : base(context)
-    {
-    }
-
-    public override async Task<Forum?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
-    {
+    public async Task<Forum?> GetForumWithPostsByCourseIdAsync(Guid courseId, CancellationToken cancellationToken) {
         return await _context.Forums
             .Include(f => f.Posts)
                 .ThenInclude(p => p.Votes)
             .Include(f => f.Posts)
                 .ThenInclude(p => p.Comments)
-            .SingleOrDefaultAsync(f => f.Id == id, cancellationToken);
+            .Include(f => f.Posts)
+                .ThenInclude(p => p.Votes)
+            .FirstOrDefaultAsync(f => f.CourseId == courseId, cancellationToken);
     }
+}
 
 
 }

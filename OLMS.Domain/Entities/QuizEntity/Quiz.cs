@@ -53,8 +53,8 @@ public class Quiz : Assignment, IAggregateRoot
         bool isTimeLimited,
         TimeSpan? timeLimit,
         int numberOfAttempts,
-        Guid sectionId,
-        Guid instructorId
+        Guid instructorId,
+        Guid sectionId
         ) {
         Validate(title, description, startDate, dueDate, numberOfAttempts, sectionId, instructorId);
 

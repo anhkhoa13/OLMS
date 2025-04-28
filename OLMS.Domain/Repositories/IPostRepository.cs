@@ -1,7 +1,6 @@
 ﻿using OLMS.Domain.Entities.ForumAggregate.PostAggregate;
 
-namespace OLMS.Domain.Repositories;
-
-public interface IPostRepository : IRepository<Post>
-{
+public interface IPostRepository {
+    Task<Post> CreatePostAsync(Post post, CancellationToken cancellationToken);
+    Task<bool> ForumExistsAsync(Guid forumId, CancellationToken cancellationToken);
 }

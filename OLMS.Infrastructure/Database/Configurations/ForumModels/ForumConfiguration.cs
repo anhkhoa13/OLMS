@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OLMS.Domain.Entities.CourseAggregate;
 using OLMS.Domain.Entities.ForumAggregate;
+using System.Reflection.Emit;
 
 namespace OLMS.Infrastructure.Database.Configurations.ForumModels;
 
