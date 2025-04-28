@@ -7,6 +7,7 @@ function CourseSection({
   activeSection,
   setActiveSection,
   isEditMode,
+  courseId,
 }) {
   const navigate = useNavigate();
 
@@ -69,7 +70,7 @@ function CourseSection({
     >
       <div className="flex items-center justify-between p-4 bg-gray-50">
         <button
-          className="flex items-center flex-1 text-left focus:outline-none"
+          className="flex items-center flex-1 text-left focus:outline-none cursor-pointer"
           onClick={() =>
             setActiveSection(activeSection === index ? null : index)
           }
@@ -123,6 +124,7 @@ function CourseSection({
             index={index + 1}
             item={item}
             type={item.type}
+            courseId={courseId}
           />
         ))}
       </div>

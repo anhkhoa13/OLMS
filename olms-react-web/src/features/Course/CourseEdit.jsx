@@ -2,93 +2,6 @@ import React, { useState } from "react";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import CourseContent from "./CourseSectionNav/CourseContent";
 
-const courseSectionNavBar = {
-  title: "Ultimate React Course",
-  description:
-    "Master modern React from beginner to advanced! Next.js, Context API, React Query, Redux, Tailwind, advanced patterns",
-  status: "In progress",
-  sections: [
-    {
-      id: "6737371B-2028-46E9-4D4E-08DD85A8CFAC",
-      title: "Section 1: React fundamentals",
-      lessons: [
-        {
-          id: "lesson1",
-          title: "Review Javascript",
-        },
-        {
-          id: "lesson2",
-          title: "Useful resources",
-        },
-      ],
-      assignments: [
-        {
-          id: "assignment1",
-          title: "Assignment 1",
-          dueDate: "2025-04-25T13:45:00Z",
-          assignmentType: "Quiz",
-        },
-        {
-          id: "assignment2",
-          title: "Assignment 2",
-          dueDate: "2025-04-25T13:45:00Z",
-          assignmentType: "Exercise",
-        },
-      ],
-      orders: ["lesson1", "assignment1", "lesson2", "assignment2"],
-    },
-    {
-      id: "id2",
-      title: "Section 2: components, useState, and props",
-      lessons: [
-        {
-          id: "Lesson3",
-          title: "Thinking in React: State Management",
-        },
-        {
-          id: "Lesson4",
-          title: "Components, Composition, and Reuseability",
-        },
-      ],
-      assignments: [
-        {
-          id: "assignment3",
-          title: "Assignment 3",
-          dueDate: "2025-04-25T13:45:00Z",
-          assignmentType: "Quiz",
-        },
-        {
-          id: "assignment4",
-          title: "Assignment 4",
-          dueDate: "2025-04-25T13:45:00Z",
-          assignmentType: "Exercise",
-        },
-      ],
-      orders: ["lesson3, lesson4", "assignment3", "assignment4"],
-    },
-    {
-      id: "id3",
-      title: "Section 3: Advance - custom hooks, refs, more state ...",
-      assignments: [],
-      lessons: [
-        {
-          id: "lesson5",
-          title: "The Advanced useReducer Hook",
-        },
-      ],
-      orders: ["lesson5"],
-    },
-  ],
-  // for student only
-  progress: {
-    completedLesson: [
-      {
-        id: "",
-      },
-    ],
-  },
-};
-
 function CourseEdit() {
   const { code } = useParams();
   const location = useLocation();
@@ -153,7 +66,6 @@ function CourseEdit() {
         </div>
         <div className="bg-gray-50 shadow-lg rounded-xl p-8 md:p-12">
           <CourseContent
-            courseSections={courseSectionNavBar.sections}
             activeSection={activeSection}
             setActiveSection={setActiveSection}
             isEditMode={true}

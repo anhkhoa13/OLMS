@@ -6,6 +6,7 @@ public class Section : Entity {
     #region Properties
     public string Title { get; set; }
     public Guid CourseId { get; set; }
+    public int Order {  get; set; }
     #endregion
 
     private readonly List<Lesson> _lessons = [];
@@ -18,14 +19,15 @@ public class Section : Entity {
     public IReadOnlyCollection<Assignment> Assignments => _assignments.AsReadOnly();
 
     // Constructor
-    public Section(Guid id, string title, Guid courseId) : base(id) {
+    public Section(Guid id, string title, Guid courseId, int order) : base(id) {
         Title = title;
         CourseId = courseId;
+        Order = order;
     }
 
     // Static factory method to create a SectionItem
-    public static Section Create(string title, Guid courseId) {
-        return new Section(new Guid(), title, courseId);
+    public static Section Create(string title, Guid courseId, int order) {
+        return new Section(new Guid(), title, courseId, order);
     }
 
     public SectionItem AddLesson(Lesson lesson, int order) {

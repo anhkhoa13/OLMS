@@ -2,6 +2,7 @@
     Guid Id,
     string Title,
     Guid CourseId,
+    int Order,
     List<LessonDto> Lessons,
     List<SectionItemDto> SectionItems,
     List<AssignmentDto> Assignments);

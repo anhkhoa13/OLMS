@@ -66,8 +66,6 @@ public class CourseController : ControllerBase {
     [FromBody] CreateSectionCommand request) {
         var result = await _sender.Send(request);
 
-
-
         if (result.IsSuccess) {
             return Ok(new { result.Value, Message = "Section created successfully" });
         }

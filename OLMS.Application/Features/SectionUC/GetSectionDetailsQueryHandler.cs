@@ -32,6 +32,7 @@ public class GetSectionDetailsQueryHandler
             section.Id,
             section.Title,
             section.CourseId,
+            section.Order,
             section.Lessons.Select(l => new LessonDto(l.Id, l.Title)).ToList(),
             section.SectionItems.Select(si => new SectionItemDto(
                 si.Id,

@@ -14,6 +14,7 @@ function CourseContent({
   const [sections, setSections] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [refreshFlag, setRefreshFlag] = useState(false);
 
   // Fetch sections when courseId changes
   useEffect(() => {
@@ -28,6 +29,7 @@ function CourseContent({
         }
 
         const data = await response.json();
+        console.log(data);
         setSections(data);
         setError(null);
       } catch (err) {
@@ -41,7 +43,7 @@ function CourseContent({
     if (courseId) {
       fetchSections();
     }
-  }, [courseId]);
+  }, [courseId, refreshFlag]);
 
   async function handleAddSection(e) {
     e.preventDefault();
@@ -69,14 +71,13 @@ function CourseContent({
         alert(errorData.message || "Failed to add section");
         return;
       }
-      // Optionally, get the new section from the response
-      const newSection = await response.json();
+      setRefreshFlag((prev) => !prev); // Toggle the flag to trigger useEffect
 
-      setSections([
-        ...sections,
-        // Use the new section from the backend if returned, otherwise use local
-        newSection.title ? newSection : { title: newSectionTitle, content: [] },
-      ]);
+      // setSections([
+      //   ...sections,
+      //   // Use the new section from the backend if returned, otherwise use local
+      //   newSection.title ? newSection : { title: newSectionTitle, content: [] },
+      // ]);
       setNewSectionTitle("");
       setShowAddForm(false);
     } catch (err) {
@@ -150,6 +151,7 @@ function CourseContent({
             activeSection={activeSection}
             setActiveSection={setActiveSection}
             isEditMode={isEditMode}
+            courseId={courseId}
           />
         ))}
       </div>

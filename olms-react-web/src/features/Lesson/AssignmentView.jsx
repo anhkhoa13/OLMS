@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import downloadBase64File from "../../utils/ConvertToFile";
 import FileUpload from "../../components/FileUpload"; // Adjust path as needed
 
+const API_URL = import.meta.env.VITE_BACKEND_URL;
+
 function formatDate(isoString) {
   const date = new Date(isoString);
   return date.toLocaleString(undefined, {
@@ -28,7 +30,7 @@ function AssignmentView() {
     const fetchAssignment = async () => {
       try {
         const response = await fetch(
-          `https://localhost:7212/api/assignment/${assignmentId}`
+          `${API_URL}/api/assignment/${assignmentId}`
         );
         if (!response.ok)
           throw new Error(`HTTP error! status: ${response.status}`);
