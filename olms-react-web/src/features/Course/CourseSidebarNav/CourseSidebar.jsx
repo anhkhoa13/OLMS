@@ -7,83 +7,6 @@ import SidebarToggle from "./SidebarToggle";
 const NAVBAR_HEIGHT = 72;
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 
-// const courseSectionNavBar = {
-//   title: "Ultimate React Course",
-//   description:
-//     "Master modern React from beginner to advanced! Next.js, Context API, React Query, Redux, Tailwind, advanced patterns",
-//   status: "In progress",
-//   instructor: "Dr. John Paul",
-//   sections: [
-//     {
-//       title: "React fundamentals",
-//       lessons: [
-//         {
-//           id: "lesson1",
-//           title: "Review Javascript",
-//         },
-//         {
-//           id: "lesson2",
-//           title: "Useful resources",
-//         },
-//       ],
-//       assignments: [
-//         {
-//           id: "assignment1",
-//           title: "Assignment 1",
-//           dueDate: "2025-04-25T13:45:00Z",
-//           assignmentType: "Quiz",
-//         },
-//         {
-//           id: "assignment2",
-//           title: "Assignment 2",
-//           dueDate: "2025-04-25T13:45:00Z",
-//           assignmentType: "Exercise",
-//         },
-//       ],
-//       orders: ["lesson1", "assignment1", "lesson2", "assignment2"],
-//     },
-//     {
-//       title: "Components, useState, and props",
-//       lessons: [
-//         {
-//           id: "Lesson3",
-//           title: "Thinking in React: State Management",
-//         },
-//         {
-//           id: "Lesson4",
-//           title: "Components, Composition, and Reuseability",
-//         },
-//       ],
-//       assignments: [
-//         {
-//           id: "F6B2A8",
-//           title: "Assignment 3",
-//           dueDate: "2025-04-25T13:45:00Z",
-//           assignmentType: "Quiz",
-//         },
-//         {
-//           id: "assignment4",
-//           title: "Assignment 4",
-//           dueDate: "2025-04-25T13:45:00Z",
-//           assignmentType: "Exercise",
-//         },
-//       ],
-//       orders: ["lesson3, lesson4", "F6B2A8", "assignment4"],
-//     },
-//     {
-//       title: "Advance - custom hooks, refs, more state ...",
-//       assignments: [],
-//       lessons: [
-//         {
-//           id: "lesson5",
-//           title: "The Advanced useReducer Hook",
-//         },
-//       ],
-//       orders: ["lesson5"],
-//     },
-//   ],
-// };
-
 function CourseSidebar({ courseId }) {
   const [expanded, setExpanded] = useState(false);
   const [navbarVisible, setNavbarVisible] = useState(true);
@@ -104,7 +27,6 @@ function CourseSidebar({ courseId }) {
         }
 
         const data = await response.json();
-        console.log("Course content", data);
         setSections(data);
         setError(null);
       } catch (err) {
@@ -167,7 +89,7 @@ function CourseSidebar({ courseId }) {
         } ${navbarVisible ? "top-18" : "top-0"}`}
       >
         {/* <SidebarHeader course={sections} /> */}
-        <SidebarContent sections={sections} />
+        <SidebarContent sections={sections} courseId={courseId} />
         <SidebarToggle onToggle={toggleSidebar} expanded={expanded} />
       </div>
     </SidebarContext.Provider>

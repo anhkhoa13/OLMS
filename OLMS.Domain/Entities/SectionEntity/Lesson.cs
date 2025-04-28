@@ -10,7 +10,7 @@ public class Lesson : Entity {
     public Guid SectionId { get; private set; }
 
     private readonly List<LessonAttachment> _lessonAttachment = [];
-    public IReadOnlyCollection<LessonAttachment> LessonAttachments => _lessonAttachment.AsReadOnly();
+    public IReadOnlyCollection<LessonAttachment> LessonAttachments => _lessonAttachment;
 
     private Lesson() : base(){ } // Required for EF Core
 

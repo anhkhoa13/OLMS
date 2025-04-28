@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { SidebarContext } from "./SidebarContext";
 import { LessonIcon, QuizIcon, ExerciseIcon } from "../../../components/Icons";
 
-const SidebarItem = ({ item, index, sectionId }) => {
+const SidebarItem = ({ item, index, courseId }) => {
   const { expanded } = useContext(SidebarContext);
 
   // Determine icon based on item type and assignmentType
@@ -13,20 +13,19 @@ const SidebarItem = ({ item, index, sectionId }) => {
     if (item.type === "exercise") return <ExerciseIcon />;
     return null;
   };
-
   // Determine link based on type
   const getLink = () => {
     if (item.type === "lesson") {
-      return `/lesson?id=${item.id}`;
-    } else if (item.type === "assignment") {
-      if (item.assignmentType === "Quiz") {
-        return `/quiz/${item.id}`;
-      } else if (item.assignmentType === "Exercise") {
-        return `/assignment?id=${item.id}`;
-      }
+      return `lesson/${item.id}`; // Use path parameter instead of query
     }
-    // fallback
-    return `/course/${sectionId}/${item.id}`;
+    if (item.type === "quiz") {
+      var code = item.id.slice(0, 6);
+      return `quiz/${code}`;
+    }
+    if (item.type === "exercise") {
+      return `assignment/${item.id}`;
+    }
+    return `/course/${courseId}/${item.id}`;
   };
 
   return (

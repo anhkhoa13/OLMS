@@ -40,7 +40,6 @@ function App() {
                 />
               }
             >
-              <Route path="/quiz/:code" element={<Quiz />} />
               <Route path="/dashboard" element={<Dashboard />} />
               {/* <Route path="/profile" element={<Profile />} /> */}
               <Route
@@ -76,8 +75,12 @@ function App() {
 
               {/* Relative paths */}
               <Route path="view" element={<CourseView />} />
-              <Route path="lesson" element={<LessonView />} />
-              <Route path="assignment" element={<AssignmentView />} />
+              <Route path="lesson/:lessonId" element={<LessonView />} />
+              <Route
+                path="assignment/:assignmentId"
+                element={<AssignmentView />}
+              />
+              <Route path="quiz/:code" element={<Quiz />} />
             </Route>
           </Route>
         </Routes>

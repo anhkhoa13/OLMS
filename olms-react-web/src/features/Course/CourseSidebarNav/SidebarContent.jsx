@@ -3,7 +3,7 @@ import { SidebarContext } from "./SidebarContext";
 import SidebarItem from "./SidebarItem";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 
-const SidebarContent = ({ sections }) => {
+const SidebarContent = ({ sections, courseId }) => {
   const { expanded } = useContext(SidebarContext);
   const [sectionExpanded, setSectionExpanded] = useState({});
 
@@ -80,7 +80,7 @@ const SidebarContent = ({ sections }) => {
                     <SidebarItem
                       item={item}
                       index={idx + 1}
-                      sectionId={section.title}
+                      courseId={courseId}
                     />
                     {idx < orderedItems.length - 1 && (
                       <div className="border-t border-gray-200 mx-4" />

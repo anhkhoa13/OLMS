@@ -3,7 +3,7 @@ using OLMS.Domain.ValueObjects;
 
 namespace OLMS.Domain.Repositories;
 
-public interface ILessonRepository : IRepository<Lesson>
+public interface IExerciseRepository : IRepository<Exercise>
 {
-    public Task<Lesson?> GetLessonById(Guid lessonId);
+
 }

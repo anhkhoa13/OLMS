@@ -19,4 +19,15 @@ public class AssignmentController : ControllerBase {
 
         return Ok(new { Message = "Create assignment successfully" });
     }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAssignment(Guid assignmentId) {
+        var command = new GetAssignmentQuery(assignmentId);
+        var result = await _sender.Send(command);
+
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+
+        return Ok(result.Value);
+    }
 }
