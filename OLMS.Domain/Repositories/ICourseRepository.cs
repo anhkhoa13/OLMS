@@ -7,5 +7,4 @@ public interface ICourseRepository : IRepository<Course>
 {
     Task<Course?> GetByCodeAsync(string code, CancellationToken cancellationToken = default);     
     Task<IReadOnlyCollection<Course>> FindCoursesByInstructorIdAsync(Guid instructorId, CancellationToken cancellationToken = default);
-
 }

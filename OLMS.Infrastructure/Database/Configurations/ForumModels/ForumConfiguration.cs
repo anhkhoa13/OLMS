@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OLMS.Domain.Entities.CourseAggregate;
 using OLMS.Domain.Entities.ForumAggregate;
+using System.Reflection.Emit;
 
 namespace OLMS.Infrastructure.Database.Configurations.ForumModels;
 
@@ -16,7 +17,7 @@ public class ForumConfiguration : IEntityTypeConfiguration<Forum>
                 .HasMaxLength(100);
 
         builder.HasOne<Course>()
-            .WithOne()
+            .WithOne(c => c.Forum)
             .HasForeignKey<Forum>(f => f.CourseId);
 
         builder.HasMany(f => f.Posts)

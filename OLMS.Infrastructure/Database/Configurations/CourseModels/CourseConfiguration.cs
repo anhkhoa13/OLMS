@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OLMS.Domain.Entities.CourseAggregate;
 using OLMS.Domain.Entities.ForumAggregate;
 using OLMS.Domain.Entities.StudentAggregate;
+using System.Reflection.Emit;
 
 namespace OLMS.Infrastructure.Database.Configurations.CourseModels;
 
@@ -50,14 +51,16 @@ public sealed class CourseConfiguration : IEntityTypeConfiguration<Course>
                 );
 
         
-        builder.HasOne<Forum>()
+        builder.HasOne(c => c.Forum)
                .WithOne()
-               .HasForeignKey<Course>(c => c.ForumId)
-               .OnDelete(DeleteBehavior.Restrict);
+               .HasForeignKey<Forum>(f => f.CourseId)
+               .OnDelete(DeleteBehavior.Cascade);
+
 
         builder.HasOne(c => c.Instructor)
                .WithMany(i => i.Courses)
                .HasForeignKey(c => c.InstructorId)
+               .OnDelete(DeleteBehavior.Restrict)
                .IsRequired();
 
         builder.HasMany(c => c.Sections)

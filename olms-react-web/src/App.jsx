@@ -13,6 +13,11 @@ import { AuthProvider } from "./contexts/AuthContext";
 import RoleProtectedRoute from "./utils/RoleProtectedRoute.jsx";
 import Unauthorized from "./pages/Unauthorized.jsx";
 import CourseView from "./features/Course/CourseView.jsx";
+import CourseEdit from "./features/Course/CourseEdit.jsx";
+import CourseLayout from "./layouts/CourseLayout.jsx";
+import LessonView from "./features/Lesson/LessonView.jsx";
+import AssignmentView from "./features/Lesson/AssignmentView.jsx";
+import SectionEdit from "./features/Section/SectionEdit.jsx";
 
 function App() {
   return (
@@ -35,14 +40,15 @@ function App() {
                 />
               }
             >
-              <Route path="/quiz/:code" element={<Quiz />} />
               <Route path="/dashboard" element={<Dashboard />} />
               {/* <Route path="/profile" element={<Profile />} /> */}
               <Route
                 path="/courses"
                 element={<Courses isEnroll={true} title="Your courses" />}
               />
-              <Route path="/courses/:courseCode" element={<CourseView />} />
+              {/* <Route path="/courses/:courseCode" element={<CourseView />} /> */}
+              {/* Explicit static route for viewing a course */}
+              <Route path="/courses/edit" element={<CourseEdit />} />
             </Route>
 
             {/* Instructor-only routes */}
@@ -51,6 +57,30 @@ function App() {
             >
               <Route path="/createQuiz" element={<CreateQuiz />} />
               <Route path="/createCourse" element={<AddCourse />} />
+              <Route path="/editSection" element={<SectionEdit />} />
+            </Route>
+          </Route>
+
+          <Route path="/courses/:courseId" element={<CourseLayout />}>
+            {/* Relative child routes */}
+            <Route
+              element={
+                <RoleProtectedRoute
+                  allowedRoles={["Student", "Instructor", "Admin"]}
+                />
+              }
+            >
+              {/* Index route for /courses/:courseId */}
+              <Route index element={<CourseView />} />
+
+              {/* Relative paths */}
+              <Route path="view" element={<CourseView />} />
+              <Route path="lesson/:lessonId" element={<LessonView />} />
+              <Route
+                path="assignment/:assignmentId"
+                element={<AssignmentView />}
+              />
+              <Route path="quiz/:code" element={<Quiz />} />
             </Route>
           </Route>
         </Routes>

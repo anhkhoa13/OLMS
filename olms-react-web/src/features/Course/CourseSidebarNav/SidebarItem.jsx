@@ -1,34 +1,45 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { SidebarContext } from "./SidebarContext";
+import { LessonIcon, QuizIcon, ExerciseIcon } from "../../../components/Icons";
 
-const SidebarItem = ({ item, sectionId }) => {
+const SidebarItem = ({ item, index, courseId }) => {
   const { expanded } = useContext(SidebarContext);
 
-  // Determine icon based on item type
-  const getIcon = (type) => {
-    switch (type) {
-      case "video":
-        return "🎬";
-      case "quiz":
-        return "📝";
-      case "assignment":
-        return "📋";
-      default:
-        return "📄";
+  // Determine icon based on item type and assignmentType
+  const getIcon = () => {
+    if (item.type === "lesson") return <LessonIcon />;
+    if (item.type === "quiz") return <QuizIcon />;
+    if (item.type === "exercise") return <ExerciseIcon />;
+    return null;
+  };
+  // Determine link based on type
+  const getLink = () => {
+    if (item.type === "lesson") {
+      return `lesson/${item.id}`; // Use path parameter instead of query
     }
+    if (item.type === "quiz") {
+      var code = item.id.slice(0, 6);
+      return `quiz/${code}`;
+    }
+    if (item.type === "exercise") {
+      return `assignment/${item.id}`;
+    }
+    return `/course/${courseId}/${item.id}`;
   };
 
   return (
     <Link
-      to={`/course/${sectionId}/${item.id}`}
+      to={getLink()}
       className={`flex items-center px-4 py-2 text-gray-700 hover:bg-gray-200 transition-colors duration-200 relative ${item.type}`}
     >
-      <div className="text-base">{getIcon(item.type)}</div>
+      <div className="text-base">{getIcon()}</div>
 
       {expanded ? (
         <div className="ml-3 flex justify-between items-center w-full">
-          <span className="text-sm truncate">{item.title}</span>
+          <span className="text-sm truncate">
+            {index}. {item.title}
+          </span>
           {item.duration && (
             <span className="text-xs text-gray-500 ml-2">{item.duration}</span>
           )}

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
-[Route("api/lessons")]
+[Route("api/lesson")]
 public class LessonController : ControllerBase {
     private readonly ISender _sender;
 
@@ -19,4 +19,15 @@ public class LessonController : ControllerBase {
 
         return Ok(new { Message = "Create lesson successfully" });
     }
+    [HttpGet]
+    public async Task<IActionResult> GetLesson(Guid lessonId) {
+        var command = new GetLessonQuery(lessonId);
+        var result = await _sender.Send(command);
+
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+
+        return Ok(result.Value);
+    }
+
 }

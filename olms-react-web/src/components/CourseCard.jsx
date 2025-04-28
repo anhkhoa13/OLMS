@@ -4,6 +4,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Loader } from "lucide-react";
+import cardBg from "../assets/images/card_2.png";
 
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -31,8 +32,6 @@ const CourseCard = ({ course, isEnrolled }) => {
         {
           headers: {
             "Content-Type": "application/json",
-            // Add any auth headers if needed, e.g.:
-            // 'Authorization': `Bearer ${currentUser.token}`
           },
         }
       );
@@ -56,35 +55,48 @@ const CourseCard = ({ course, isEnrolled }) => {
   }
 
   function handleView() {
-    navigate(`/courses/view?code=${code}`, {
+    navigate(`/courses/${course.id}/view`, {
       state: { courseData: course },
     });
   }
 
   return (
-    <div className="w-full bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-xl border border-gray-200 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
-      {/* // <div className="bg-white text-black rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between"> */}
-      <div className="p-6">
-        <h3 className="text-2xl font-bold mb-2 text-[#6d8f56]">{title}</h3>
-        <p className="text-sm text-gray-600 mb-2">{description}</p>
-        <p className="text-sm text-gray-600 mb-4">
-          <b>Course code:</b> {code}
+    <div
+      className="relative w-full rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+      style={{
+        backgroundImage: `url(${cardBg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black/60 to-black/40 z-0" />
+
+      {/* Content */}
+      <div className="relative z-10 p-4 flex flex-col min-h-[180px]">
+        <h2 className="text-3xl font-bold mb-1 text-white drop-shadow">
+          {title}
+        </h2>
+        <p className="text-xs text-gray-100 mb-1 drop-shadow line-clamp-2">
+          {description}
         </p>
-        <div className="flex items-center gap-4 mt-auto">
-          {/* <img
-            src={instructor.avatar || "https://via.placeholder.com/48"}
-            alt={instructor.name}
-            className="w-12 h-12 rounded-full object-cover border"
-          /> */}
+        <p className="text-xs text-gray-200 mb-2">
+          <b>Code:</b> {code}
+        </p>
+        <div className="flex items-center gap-2 mt-auto">
           <Avatar name={instructor.name} />
           <div>
-            <p className="font-semibold">{instructor.name}</p>
-            <p className="text-xs text-gray-500">Instructor</p>
+            <p className="font-semibold text-white text-sm">
+              {instructor.name}
+            </p>
           </div>
         </div>
       </div>
+
+      {/* Button */}
       <button
-        className="bg-lime-500 hover:bg-lime-600 text-black text-center py-3 font-semibold text-lg rounded-b-2xl cursor-pointer w-full"
+        className="relative z-10 bg-lime-500 hover:bg-lime-600 text-black text-center py-2 font-semibold text-base rounded-b-xl cursor-pointer w-full transition-colors duration-200"
         onClick={isEnrolled ? handleView : handleEnroll}
       >
         {isEnrolled ? isLoading ? <Loader /> : "View" : "Enroll Now"}

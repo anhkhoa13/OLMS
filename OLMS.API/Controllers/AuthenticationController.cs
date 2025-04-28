@@ -5,7 +5,6 @@ using OLMS.Application.Services;
 using OLMS.Domain.Entities;
 using OLMS.Domain.Result;
 using OLMS.Shared.DTO;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace OLMS.API.Controllers;

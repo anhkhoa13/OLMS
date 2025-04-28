@@ -6,17 +6,13 @@ const SidebarHeader = ({ course }) => {
 
   return (
     <div className="p-4 border-b border-gray-200">
-      {expanded ? (
+      {expanded && (
         <>
-          <h2 className="text-lg font-semibold text-gray-800 truncate">
+          <h2 className="text-lg font-bold text-gray-800 truncate">
             {course.title}
           </h2>
           <p className="text-sm text-gray-600 mt-1">{course.instructor}</p>
         </>
-      ) : (
-        <div className="w-8 h-8 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold">
-          {course.title.charAt(0)}
-        </div>
       )}
     </div>
   );

@@ -1,4 +1,5 @@
 ﻿using OLMS.Domain.Primitives;
+using System.ComponentModel.DataAnnotations;
 
 namespace OLMS.Domain.Entities.ForumAggregate.PostAggregate;
 
@@ -19,6 +20,7 @@ public class Post : AggregateRoot
     #endregion
 
     #region Navigations
+
     public Guid ForumId { get; }
     private readonly List<Vote> _votes = [];
 
@@ -42,40 +44,47 @@ public class Post : AggregateRoot
         return new Post(Guid.NewGuid(), title, body, forumId);
     }
 
-    public void UpVote(Guid userId)
+    public Vote? UpVote(Guid userId)
     {
         var existingVote = _votes.FirstOrDefault(v => v.UserId == userId);
 
-        if (existingVote != null)
+        if (existingVote is not null)
         {
             if (existingVote.Type == VoteType.UpVote)
                 throw new InvalidOperationException("User has already upvoted.");
 
             existingVote.Type = VoteType.UpVote;
+            return null;
         }
         else
         {
-            _votes.Add(Vote.Create(Id, userId, VoteType.UpVote));
+            var vote = Vote.Create(Id, userId, VoteType.UpVote);
+            _votes.Add(vote);
+
+            return vote;
         }
     }
-    public void DownVote(Guid userId)
+    public Vote? DownVote(Guid userId)
     {
         var existingVote = _votes.FirstOrDefault(v => v.UserId == userId);
-        if (existingVote != null)
+        if (existingVote is not null)
         {
             if (existingVote.Type == VoteType.DownVote)
                 throw new InvalidOperationException("User has already downvoted.");
             existingVote.Type = VoteType.DownVote;
+            return null;
         }
         else
         {
-            _votes.Add(Vote.Create(Id, userId, VoteType.DownVote));
+            var vote = Vote.Create(Id, userId, VoteType.DownVote);
+            _votes.Add(vote);
+            return vote;
         }
     }
     public void UnVote(Guid userId)
     {
         var vote = _votes.FirstOrDefault(v => v.UserId == userId);
-        if (vote != null)
+        if (vote is not null)
         {
             _votes.Remove(vote);
         }
@@ -85,8 +94,10 @@ public class Post : AggregateRoot
         }
     }
 
-    public void AddComment(string content, Guid userId)
+    public Comment AddComment(string content, Guid userId)
     {
-        _comments.Add(Comment.Create(content, Id, userId));
+        Comment comment = Comment.Create(content, Id, userId);
+        _comments.Add(comment);
+        return comment;
     }
 }

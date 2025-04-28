@@ -192,9 +192,6 @@ namespace OLMS.Infrastructure.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<Guid>("ForumId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("InstructorId")
                         .HasColumnType("uniqueidentifier");
 
@@ -209,9 +206,6 @@ namespace OLMS.Infrastructure.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ForumId")
-                        .IsUnique();
 
                     b.HasIndex("InstructorId");
 
@@ -653,12 +647,6 @@ namespace OLMS.Infrastructure.Migrations
 
             modelBuilder.Entity("OLMS.Domain.Entities.CourseAggregate.Course", b =>
                 {
-                    b.HasOne("OLMS.Domain.Entities.ForumAggregate.Forum", null)
-                        .WithOne()
-                        .HasForeignKey("OLMS.Domain.Entities.CourseAggregate.Course", "ForumId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("OLMS.Domain.Entities.InstructorAggregate.Instructor", "Instructor")
                         .WithMany("Courses")
                         .HasForeignKey("InstructorId")
@@ -696,7 +684,7 @@ namespace OLMS.Infrastructure.Migrations
             modelBuilder.Entity("OLMS.Domain.Entities.ForumAggregate.Forum", b =>
                 {
                     b.HasOne("OLMS.Domain.Entities.CourseAggregate.Course", null)
-                        .WithOne()
+                        .WithOne("Forum")
                         .HasForeignKey("OLMS.Domain.Entities.ForumAggregate.Forum", "CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -707,13 +695,13 @@ namespace OLMS.Infrastructure.Migrations
                     b.HasOne("OLMS.Domain.Entities.ForumAggregate.PostAggregate.Post", null)
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("OLMS.Domain.Entities.UserBase", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -737,7 +725,7 @@ namespace OLMS.Infrastructure.Migrations
                     b.HasOne("OLMS.Domain.Entities.UserBase", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -990,6 +978,9 @@ namespace OLMS.Infrastructure.Migrations
 
             modelBuilder.Entity("OLMS.Domain.Entities.CourseAggregate.Course", b =>
                 {
+                    b.Navigation("Forum")
+                        .IsRequired();
+
                     b.Navigation("Sections");
                 });
 

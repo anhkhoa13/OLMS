@@ -24,7 +24,7 @@ public class VoteConfiguration : IEntityTypeConfiguration<Vote>
         builder.HasOne<UserBase>()
             .WithMany()
             .HasForeignKey(v => v.UserId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.NoAction);
 
     }
 }

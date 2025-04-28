@@ -26,13 +26,18 @@ public static class DependencyInjection
         services.AddScoped<IQuizRepository, QuizRepository>();
         services.AddScoped<IQuizAttemptRepository, QuizAttemptRepository>();
         services.AddScoped<ILessonRepository, LessonRepository>();
+        services.AddScoped<IForumRepository, ForumRepository>();
+        services.AddScoped<IPostRepository, PostRepository>();
+        services.AddScoped<ISectionRepository, SectionRepository>();
+        services.AddScoped<IAssignmentRepository, AssignmentRepository>();
 
 
-        //services.AddScoped<IStudentAnswerRepository, StudentAnswerRepository>();
+        services.AddScoped<IStudentAnswerRepository, StudentAnswerRepository>();
+        services.AddScoped<ISectionItemRepository, SectionItemRepository>();
+        services.AddScoped<IExerciseRepository, ExerciseRepository>();
 
         //services.AddScoped<IMaterialRepository, MaterialRepository>();
 
-        //services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
 
         return services;
     }
