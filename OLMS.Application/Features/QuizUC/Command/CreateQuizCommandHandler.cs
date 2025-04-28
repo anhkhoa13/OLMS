@@ -1,7 +1,9 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using OLMS.Domain.Entities.QuizEntity;
+using OLMS.Domain.Entities.SectionEntity;
 using OLMS.Domain.Repositories;
+using OLMS.Domain.Result;
 
 namespace OLMS.Application.Features.QuizUC.Command;
 public record CreateQuizCommand(
@@ -14,19 +16,24 @@ public record CreateQuizCommand(
     TimeSpan? TimeLimit,
     int NumberOfAttempts,
     Guid InstructorId,
-    Guid SectionId
-    ) : IRequest<Guid> {
+    Guid SectionId,
+    int Order
+    ) : IRequest<Result> {
 }
-public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Guid> {
+public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Result> {
     private readonly IQuizRepository _quizRepo;
+    private readonly ISectionRepository _sectionRepository;
+    private readonly ISectionItemRepository _sectionItemRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public CreateQuizCommandHandler(IQuizRepository repository, IUnitOfWork unitOfWork) {
+    public CreateQuizCommandHandler(IQuizRepository repository, ISectionRepository sectionRepository, ISectionItemRepository sectionItemRepository, IUnitOfWork unitOfWork) {
         _quizRepo = repository;
         _unitOfWork = unitOfWork;
+        _sectionRepository = sectionRepository;
+        _sectionItemRepository = sectionItemRepository;
     }
 
-    public async Task<Guid> Handle(CreateQuizCommand request, CancellationToken cancellationToken) {
+    public async Task<Result> Handle(CreateQuizCommand request, CancellationToken cancellationToken) {
         try {
             var quiz = Quiz.Create(
                 request.Title,
@@ -41,10 +48,17 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Guid>
                 request.SectionId
             );
 
+            Section section = await _sectionRepository.GetByIdAsync(request.SectionId);
+            if (section == null) {
+                return new Error("section cannot be null");
+            }
+            var sectionItem = section.AddAssigment(quiz, request.Order);
+
             await _quizRepo.AddAsync(quiz);
+            await _sectionItemRepository.AddAsync(sectionItem);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return quiz.Id;
+            return Result.Success();
         } catch (DbUpdateException dbEx) {
             // Handle database-specific exceptions
             var innerMessage = dbEx.InnerException?.Message ?? dbEx.Message;

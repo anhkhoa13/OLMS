@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using OLMS.Domain.Entities.SectionEntity;
 using OLMS.Domain.Repositories;
 using OLMS.Domain.Result;
 
@@ -11,18 +12,25 @@ public record CreateExerciseCommand(
     int NumberOfAttempts,
     Guid SectionId,
     Guid InstructorId,
-    List<AttachmentDto> Attachments
+    List<AttachmentDto> Attachments,
+    int order
 ) : IRequest<Result>;
 
 public class CreateAssignmentCommandHandler : IRequestHandler<CreateExerciseCommand, Result> {
     private readonly IAssignmentRepository _assignmentRepository;
+    private readonly ISectionRepository _sectionRepository;
+    private readonly ISectionItemRepository _sectionItemRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public CreateAssignmentCommandHandler(
         IAssignmentRepository assignmentRepository,
-        IUnitOfWork unitOfWork) {
+        IUnitOfWork unitOfWork,
+        ISectionRepository sectionRepository,
+        ISectionItemRepository sectionItemRepository) {
         _assignmentRepository = assignmentRepository;
         _unitOfWork = unitOfWork;
+        _sectionRepository = sectionRepository;
+        _sectionItemRepository = sectionItemRepository;
     }
 
     public async Task<Result> Handle(CreateExerciseCommand request, CancellationToken cancellationToken) {
@@ -37,6 +45,12 @@ public class CreateAssignmentCommandHandler : IRequestHandler<CreateExerciseComm
                 request.SectionId,
                 request.InstructorId
                 );
+            Section section = await _sectionRepository.GetByIdAsync(request.SectionId);
+            if (section == null) {
+                return new Error("section cannot be null");
+            }
+            var sectionItem = section.AddAssigment(exercise, request.order);
+
 
             // Add attachments to the lesson
             if (request.Attachments != null && request.Attachments.Any()) {
@@ -52,6 +66,7 @@ public class CreateAssignmentCommandHandler : IRequestHandler<CreateExerciseComm
 
             // Save to repository
             await _assignmentRepository.AddAsync(exercise, cancellationToken);
+            await _sectionItemRepository.AddAsync(sectionItem, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return Result.Success();

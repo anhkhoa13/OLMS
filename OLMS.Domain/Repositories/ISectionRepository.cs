@@ -6,5 +6,6 @@ namespace OLMS.Domain.Repositories;
 
 public interface ISectionRepository : IRepository<Section> {
 
-
+    public Task<List<Section>> GetSectionsByCourseWithDetailsAsync(Guid courseId);
+    public Task<Section> GetSectionById(Guid sectionId);
 }

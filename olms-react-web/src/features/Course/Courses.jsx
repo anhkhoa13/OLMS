@@ -18,10 +18,13 @@ function Courses({ isEnroll, maxNoDisplay = null, title = "All Courses" }) {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  console.log("isEnroll ", isEnroll);
-
   function handleInstructorViewCourse(course) {
-    navigate(`/courses/view?code=${course.code}`, {
+    navigate(`/courses/${course.id}/view`, {
+      state: { courseData: course },
+    });
+  }
+  function handleInstructorEditCourse(course) {
+    navigate(`/courses/edit?code=${course.code}`, {
       state: { courseData: course },
     });
   }
@@ -169,7 +172,10 @@ function Courses({ isEnroll, maxNoDisplay = null, title = "All Courses" }) {
                     </p>
                   </div>
                   <div className="mt-4 md:mt-0 flex items-center">
-                    <button className="bg-[#89b46c] text-white px-4 py-2 rounded-lg hover:bg-[#6f8f54] transition-colors mr-2 cursor-pointer">
+                    <button
+                      className="bg-[#89b46c] text-white px-4 py-2 rounded-lg hover:bg-[#6f8f54] transition-colors mr-2 cursor-pointer"
+                      onClick={() => handleInstructorEditCourse(course)}
+                    >
                       Edit
                     </button>
                     <button

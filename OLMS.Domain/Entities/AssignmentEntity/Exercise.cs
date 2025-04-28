@@ -21,7 +21,7 @@ public class Exercise : Assignment
         Guid sectionId,
         Guid instructorId
         )
-        : base(id, title, description, startDate, dueDate, AssignmentType.Quiz, allowLateSubmission, numberOfAttempts, sectionId, instructorId) {
+        : base(id, title, description, startDate, dueDate, AssignmentType.Exercise, allowLateSubmission, numberOfAttempts, sectionId, instructorId) {
 
     }
 

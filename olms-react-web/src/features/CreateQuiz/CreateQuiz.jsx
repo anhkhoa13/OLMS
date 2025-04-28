@@ -29,7 +29,7 @@ const quizInfoSchema = Yup.object().shape({
     .required("Number of attempts is required"),
 });
 
-function CreateQuiz() {
+function CreateQuiz({ sectionId, onClose, nextOrder, onSuccess }) {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -79,7 +79,10 @@ function CreateQuiz() {
             : data.timeLimit
           : null,
         numberOfAttempts: Number(data.numberOfAttempts),
+        order: nextOrder,
+        sectionId,
       };
+      console.log(quizJson);
 
       const createRes = await axios.post(
         `${API_URL}/api/quiz/create`,
@@ -106,6 +109,8 @@ function CreateQuiz() {
       await axios.post(`${API_URL}/api/quiz/add-questions`, questionsJson);
 
       setSuccessMsg("Quiz and questions created successfully!");
+      onClose();
+      if (onSuccess) onSuccess(); // Trigger refresh
       reset(); // <-- Reset quiz info form
       setQuestions([]); // <-- Clear all questions
       window.alert("Quiz and questions created successfully!");

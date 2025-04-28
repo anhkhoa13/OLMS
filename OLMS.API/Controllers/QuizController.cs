@@ -20,7 +20,10 @@ public class QuizController : Controller {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
         var result = await _sender.Send(command);
-        return Ok(new { QuizId = result });
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+
+        return Ok(new { Message = "Create quiz successfully" });
     }
     [HttpPost("add-questions")]
     public async Task<IActionResult> AddQuestions([FromBody] AddQuestionsCommand command) {
