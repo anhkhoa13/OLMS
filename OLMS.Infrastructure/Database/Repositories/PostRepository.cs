@@ -9,7 +9,7 @@ using OLMS.Domain.ValueObjects;
 
 namespace OLMS.Infrastructure.Database.Repositories;
 
-public class PostRepository(ApplicationDbContext context) : Repository<Forum>(context), IPostRepository {
+public class PostRepository(ApplicationDbContext context) : Repository<Post>(context), IPostRepository {
     public async Task<Post> CreatePostAsync(Post post, CancellationToken cancellationToken) {
         await _context.Posts.AddAsync(post, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);

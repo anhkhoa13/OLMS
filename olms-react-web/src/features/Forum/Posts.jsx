@@ -1,7 +1,41 @@
-function Posts(forum, handleVote) {
+import { useState } from "react";
+import axios from "axios";
+import { useAuth } from "../../contexts/AuthContext";
+const API_URL = import.meta.env.VITE_BACKEND_URL;
+
+function Posts({ forum, onRefresh }) {
+  const [newComment, setNewComment] = useState({}); // { [postId]: commentText }
+  const [submitting, setSubmitting] = useState(false);
+
+  const { currentUser } = useAuth();
+
+  const handleAddComment = async (postId) => {
+    setSubmitting(true);
+    try {
+      await axios.post(`${API_URL}/api/post/addcomment`, {
+        postId: postId,
+        userId: currentUser.id,
+        content: newComment[postId],
+      });
+
+      // Clear comment input
+      setNewComment((prev) => ({ ...prev, [postId]: "" }));
+      onRefresh((prev) => prev + 1);
+
+      // You would typically refresh comments here or update state
+      console.log("Comment added successfully");
+    } catch (error) {
+      // Prefer server error message if available
+      const errorMsg = error.response?.data?.message || error.message;
+      console.error("Comment submission error:", errorMsg);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <div className="space-y-8">
-      {forum.forum.posts.map((post) => (
+      {forum.posts.map((post) => (
         <div
           key={post.id}
           className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
@@ -9,47 +43,6 @@ function Posts(forum, handleVote) {
           <div className="p-6">
             <div className="flex gap-6">
               {/* Voting Controls */}
-              <div className="flex flex-col items-center gap-3">
-                <button
-                  onClick={() => handleVote(post.id, "up")}
-                  className="text-gray-400 hover:text-[#6f8f54] transition-colors p-2 rounded-full hover:bg-gray-100"
-                >
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 15l7-7 7 7"
-                    />
-                  </svg>
-                </button>
-                <span className="font-semibold text-[#6f8f54] text-lg">
-                  {post.voteScore}
-                </span>
-                <button
-                  onClick={() => handleVote(post.id, "down")}
-                  className="text-gray-400 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-gray-100"
-                >
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </button>
-              </div>
 
               {/* Post Content */}
               <div className="flex-1">
@@ -72,7 +65,7 @@ function Posts(forum, handleVote) {
                         className="pl-4 border-l-4 border-[#6f8f54] bg-gray-50 rounded-r-lg p-4"
                       >
                         <p className="text-gray-700 mb-2">{comment.content}</p>
-                        <div className="text-xs text-gray-500 font-medium">
+                        {/* <div className="text-xs text-gray-500 font-medium">
                           {new Date(comment.createdAt).toLocaleDateString(
                             "en-US",
                             {
@@ -81,10 +74,41 @@ function Posts(forum, handleVote) {
                               day: "numeric",
                             }
                           )}
-                        </div>
+                        </div> */}
                       </div>
                     ))}
                   </div>
+                </div>
+
+                <div className="mt-6 pl-4 border-l-4 border-[#6f8f54]">
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      handleAddComment(post.id);
+                    }}
+                  >
+                    <textarea
+                      value={newComment[post.id] || ""}
+                      onChange={(e) =>
+                        setNewComment((prev) => ({
+                          ...prev,
+                          [post.id]: e.target.value,
+                        }))
+                      }
+                      placeholder="Write a comment..."
+                      className="w-full p-3 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#6f8f54] focus:border-[#6f8f54]"
+                      rows="3"
+                    />
+                    <div className="mt-3 flex justify-end">
+                      <button
+                        type="submit"
+                        disabled={submitting || !newComment[post.id]?.trim()}
+                        className="px-5 py-2 text-sm font-medium bg-[#6f8f54] text-white rounded-lg hover:bg-[#5c7a45] disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {submitting ? "Posting..." : "Post Comment"}
+                      </button>
+                    </div>
+                  </form>
                 </div>
               </div>
             </div>

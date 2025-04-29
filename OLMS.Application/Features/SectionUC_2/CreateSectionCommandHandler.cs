@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace OLMS.Application.Features.CourseUC.SectionUC {
-    public sealed record CreateSectionCommand(Guid CourseId, string Title, int order) : IRequest<Result<Guid>>;
+    public sealed record CreateSectionCommand(Guid CourseId, string Title, int Order) : IRequest<Result<Guid>>;
 
     public class CreateSectionCommandHandler : IRequestHandler<CreateSectionCommand, Result<Guid>> {
         private readonly ICourseRepository _courseRepository;
@@ -36,7 +36,7 @@ namespace OLMS.Application.Features.CourseUC.SectionUC {
             var section = Section.Create(
                 request.Title,
                 request.CourseId,
-                request.order
+                request.Order
             );
             course.AddSection(section);
             // Persist section

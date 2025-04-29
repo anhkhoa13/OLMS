@@ -18,7 +18,5 @@ public class ForumRepository(ApplicationDbContext context) : Repository<Forum>(c
                 .ThenInclude(p => p.Votes)
             .FirstOrDefaultAsync(f => f.CourseId == courseId, cancellationToken);
     }
-    }
-
 
 }

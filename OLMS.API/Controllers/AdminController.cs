@@ -7,7 +7,7 @@ using OLMS.Shared.DTO;
 
 namespace OLMS.API.Controllers;
 
-[Authorize(Roles = "Admin")]
+//[Authorize(Roles = "Admin")]
 [Route("api/admin")]
 [ApiController]
 public class AdminController : Controller
@@ -17,10 +17,10 @@ public class AdminController : Controller
     {
         _sender = sender;
     }
-    [HttpGet]
+    [HttpGet("courses")]
     public async Task<IActionResult> GetAllCourse()
     {
-        var result = await _sender.Send(new GetCoursesListCommand());
+        var result = await _sender.Send(new GetCourseListQuery());
         if (!result.IsSuccess && result.Value is null)
         {
             return BadRequest(new ErrorResponse
@@ -32,6 +32,7 @@ public class AdminController : Controller
         }
 
         var courses = result.Value.Select(c => new {
+            c.Id,
             Code = c.Code.Value,
             c.Title,
             c.Description,
@@ -46,7 +47,7 @@ public class AdminController : Controller
         return Ok(courses);
     }
 
-    [HttpPost("approvecourse")]
+    [HttpPost("approveCourse")]
     public async Task<IActionResult> ApproveCourse([FromBody] ApproveCourseCommand command)
     {
         var result = await _sender.Send(command);

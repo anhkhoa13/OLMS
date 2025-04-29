@@ -31,7 +31,7 @@ public class CourseController : ControllerBase {
 
     [HttpGet]
     public async Task<IActionResult> GetAllCourses() {
-        var command = new GetCoursesListCommand();
+        var command = new GetEnrollingCoursesQuery();
         var result = await _sender.Send(command);
 
         if (result.IsFailure) {

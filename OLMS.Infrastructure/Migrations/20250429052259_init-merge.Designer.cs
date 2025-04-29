@@ -12,13 +12,8 @@ using OLMS.Infrastructure.Database;
 namespace OLMS.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-<<<<<<<< HEAD:OLMS.Infrastructure/Migrations/20250429021944_InitialCreate.Designer.cs
-    [Migration("20250429021944_InitialCreate")]
-    partial class InitialCreate
-========
-    [Migration("20250427084746_seconCreate")]
-    partial class seconCreate
->>>>>>>> origin/admin:OLMS.Infrastructure/Migrations/20250427084746_seconCreate.Designer.cs
+    [Migration("20250429052259_init-merge")]
+    partial class initmerge
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,6 +24,34 @@ namespace OLMS.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Announcement", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.ToTable("Announcements");
+                });
 
             modelBuilder.Entity("Assignment", b =>
                 {
@@ -575,6 +598,13 @@ namespace OLMS.Infrastructure.Migrations
                     b.HasDiscriminator().HasValue("ShortAnswerQuestion");
                 });
 
+            modelBuilder.Entity("OLMS.Domain.Entities.Admin", b =>
+                {
+                    b.HasBaseType("OLMS.Domain.Entities.UserBase");
+
+                    b.ToTable("Admins");
+                });
+
             modelBuilder.Entity("OLMS.Domain.Entities.InstructorAggregate.Instructor", b =>
                 {
                     b.HasBaseType("OLMS.Domain.Entities.UserBase");
@@ -597,6 +627,15 @@ namespace OLMS.Infrastructure.Migrations
                         .HasColumnName("Major");
 
                     b.ToTable("Student", (string)null);
+                });
+
+            modelBuilder.Entity("Announcement", b =>
+                {
+                    b.HasOne("OLMS.Domain.Entities.CourseAggregate.Course", null)
+                        .WithMany("Announcements")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Assignment", b =>
@@ -964,6 +1003,15 @@ namespace OLMS.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("OLMS.Domain.Entities.Admin", b =>
+                {
+                    b.HasOne("OLMS.Domain.Entities.UserBase", null)
+                        .WithOne()
+                        .HasForeignKey("OLMS.Domain.Entities.Admin", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("OLMS.Domain.Entities.InstructorAggregate.Instructor", b =>
                 {
                     b.HasOne("OLMS.Domain.Entities.UserBase", null)
@@ -989,6 +1037,8 @@ namespace OLMS.Infrastructure.Migrations
 
             modelBuilder.Entity("OLMS.Domain.Entities.CourseAggregate.Course", b =>
                 {
+                    b.Navigation("Announcements");
+
                     b.Navigation("Forum")
                         .IsRequired();
 

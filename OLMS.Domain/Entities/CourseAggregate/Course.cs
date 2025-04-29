@@ -55,7 +55,7 @@ public class Course : AggregateRoot
 
         var code = Code.Generate(id);
 
-        Course course = new(id, code, title, description, instructorId, CourseStatus.Enrolling);
+        Course course = new(id, code, title, description, instructorId, CourseStatus.Pending);
         course.CreateForum();
         return course;
     }

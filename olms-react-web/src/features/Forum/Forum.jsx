@@ -8,11 +8,21 @@ const Forum = ({ courseId }) => {
   const [forum, setForum] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const token = localStorage.getItem("token");
+
+  const [refresh, setRefresh] = useState(0);
 
   useEffect(() => {
     const fetchForum = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/forum/course/${courseId}`);
+        const response = await fetch(
+          `${API_URL}/api/forum/course/${courseId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         if (!response.ok) throw new Error("Failed to fetch forum");
         const data = await response.json();
         setForum(data);
@@ -24,34 +34,34 @@ const Forum = ({ courseId }) => {
     };
 
     fetchForum();
-  }, [courseId]);
+  }, [courseId, refresh]);
 
-  const handleVote = async (postId, voteType) => {
-    try {
-      const response = await fetch(`/api/posts/${postId}/vote`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ voteType }),
-      });
+  // const handleVote = async (postId, voteType) => {
+  //   try {
+  //     const response = await fetch(`/api/posts/${postId}/vote`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ voteType }),
+  //     });
 
-      if (!response.ok) throw new Error("Vote failed");
+  //     if (!response.ok) throw new Error("Vote failed");
 
-      setForum((prev) => ({
-        ...prev,
-        posts: prev.posts.map((post) =>
-          post.id === postId
-            ? {
-                ...post,
-                voteScore:
-                  voteType === "up" ? post.voteScore + 1 : post.voteScore - 1,
-              }
-            : post
-        ),
-      }));
-    } catch (err) {
-      console.error("Vote error:", err);
-    }
-  };
+  //     setForum((prev) => ({
+  //       ...prev,
+  //       posts: prev.posts.map((post) =>
+  //         post.id === postId
+  //           ? {
+  //               ...post,
+  //               voteScore:
+  //                 voteType === "up" ? post.voteScore + 1 : post.voteScore - 1,
+  //             }
+  //           : post
+  //       ),
+  //     }));
+  //   } catch (err) {
+  //     console.error("Vote error:", err);
+  //   }
+  // };
 
   if (loading) return <div className="p-4 text-gray-500">Loading forum...</div>;
   if (error) return <div className="p-4 text-red-500">Error: {error}</div>;
@@ -67,7 +77,7 @@ const Forum = ({ courseId }) => {
         </div>
 
         {/* Posts List */}
-        <Posts forum={forum} onVote={handleVote} />
+        <Posts forum={forum} onRefresh={setRefresh} />
 
         {/* New Post Form */}
         <PostForm forum={forum} setForum={setForum} courseId={courseId} />

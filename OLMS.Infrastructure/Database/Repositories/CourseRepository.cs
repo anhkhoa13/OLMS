@@ -2,6 +2,7 @@
 using OLMS.Domain.Entities.CourseAggregate;
 using OLMS.Domain.Repositories;
 using OLMS.Domain.ValueObjects;
+using System.Threading;
 
 namespace OLMS.Infrastructure.Database.Repositories;
 
@@ -30,5 +31,11 @@ public class CourseRepository(ApplicationDbContext context) : Repository<Course>
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<IEnumerable<Course>> GetAllEnrollingCourses() {
+        return await _context.Courses
+            .Where(c => c.Status == CourseStatus.Enrolling)
+            .Include(c => c.Instructor)
+            .ToListAsync();
+    }
 }
 

@@ -23,19 +23,12 @@ function NavBar() {
     navigate("/"); // Redirect to home page after logout
   };
 
-  // Check if user has Instructor or Admin role
-  const canCreateContent = userRole === "Instructor" || userRole === "Admin";
-
   // Create base menu items that all authenticated users can see
   let menuItems = [{ name: "Profile", link: "/profile" }];
 
   // Add instructor/admin specific menu items if user has appropriate role
-  if (canCreateContent) {
-    menuItems = [
-      ...menuItems,
-      { name: "Create Quiz", link: "/createQuiz" },
-      { name: "Create Course", link: "/createCourse" },
-    ];
+  if (userRole === "Admin") {
+    menuItems = [...menuItems, { name: "Approve", link: "/approve" }];
   }
 
   // Add logout option for all authenticated users
@@ -43,7 +36,7 @@ function NavBar() {
     name: "Logout",
     link: "#",
     onClick: handleLogout,
-    icon: <ArrowRightOnRectangleIcon className="w-4 h-4 ml-2" />,
+    icon: <ArrowRightOnRectangleIcon className="w-4 h-4 ml-2 " />,
   });
 
   // Final user menu items based on authentication status

@@ -66,7 +66,9 @@ public class Program
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = jwtOptions.Issuer,
                     ValidAudience = jwtOptions.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(key)
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    //RoleClaimType = "role", // Match your JWT claim name
+                    //NameClaimType = "name"  // Match your JWT claim name
                 };
             });
 

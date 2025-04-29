@@ -29,7 +29,9 @@ function CourseContent({
         }
 
         const data = await response.json();
-        setSections(data);
+        console.log(data);
+        const orderedSections = [...data].sort((a, b) => a.order - b.order);
+        setSections(orderedSections);
         setError(null);
       } catch (err) {
         console.log(err);
@@ -50,6 +52,7 @@ function CourseContent({
 
     if (!newSectionTitle.trim()) return;
 
+    console.log(sections.length);
     try {
       const response = await fetch(
         "https://localhost:7212/api/course/section/create",
@@ -61,6 +64,7 @@ function CourseContent({
           body: JSON.stringify({
             courseId: courseId,
             title: newSectionTitle,
+            order: sections.length,
           }),
         }
       );
@@ -118,7 +122,7 @@ function CourseContent({
                 value={newSectionTitle}
                 onChange={(e) => setNewSectionTitle(e.target.value)}
                 placeholder="Section title"
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#6f8f54] focus:border-[#6f8f54]"
+                className="px-3 py-2 border w-full border-gray-300 rounded-lg focus:ring-2 focus:ring-[#6f8f54] focus:border-[#6f8f54]"
                 autoFocus
               />
               <button
@@ -133,7 +137,7 @@ function CourseContent({
                   setShowAddForm(false);
                   setNewSectionTitle("");
                 }}
-                className="py-2 px-4 cursor-pointer rounded-lg text-gray-600 hover:bg-gray-100"
+                className="py-2 px-4 cursor-pointer rounded-lg text-gray-600 hover:bg-gray-100 border"
               >
                 Cancel
               </button>

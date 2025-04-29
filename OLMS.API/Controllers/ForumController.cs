@@ -60,20 +60,20 @@ public class ForumController : ControllerBase
         return BadRequest(new { message = result.Error });
     }
 
-    [HttpPost("createpost")]
-    public async Task<IActionResult> CreatePost([FromBody] CreatePostCommand command)
-    {
-        var result = await _sender.Send(command);
-        if (!result.IsSuccess)
-        {
-            return BadRequest(new ErrorResponse
-            {
-                StatusCode = StatusCodes.Status400BadRequest,
-                Message = result.Error.ErrorMessage ?? "Error occured",
-                ErrorCode = result.Error.Code
-            });
-        }
+    //[HttpPost("createpost")]
+    //public async Task<IActionResult> CreatePost([FromBody] CreatePostCommand command)
+    //{
+    //    var result = await _sender.Send(command);
+    //    if (!result.IsSuccess)
+    //    {
+    //        return BadRequest(new ErrorResponse
+    //        {
+    //            StatusCode = StatusCodes.Status400BadRequest,
+    //            Message = result.Error.ErrorMessage ?? "Error occured",
+    //            ErrorCode = result.Error.Code
+    //        });
+    //    }
 
-        return Ok(new { Message = "Create post success" });
-    }
+    //    return Ok(new { Message = "Create post success" });
+    //}
 }

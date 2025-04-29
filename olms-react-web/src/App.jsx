@@ -18,6 +18,7 @@ import CourseLayout from "./layouts/CourseLayout.jsx";
 import LessonView from "./features/Lesson/LessonView.jsx";
 import AssignmentView from "./features/Lesson/AssignmentView.jsx";
 import SectionEdit from "./features/Section/SectionEdit.jsx";
+import ApproveCourse from "./features/Admin/ApproveCourse.jsx";
 
 function App() {
   return (
@@ -58,6 +59,10 @@ function App() {
               <Route path="/createQuiz" element={<CreateQuiz />} />
               <Route path="/createCourse" element={<AddCourse />} />
               <Route path="/editSection" element={<SectionEdit />} />
+            </Route>
+            {/* Admin-only routes */}
+            <Route element={<RoleProtectedRoute allowedRoles={["Admin"]} />}>
+              <Route path="/approve" element={<ApproveCourse />} />
             </Route>
           </Route>
 

@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
+import axios from "axios";
+
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 
 function PostForm({ forum, setForum, courseId }) {
@@ -20,30 +22,27 @@ function PostForm({ forum, setForum, courseId }) {
 
     setIsSubmitting(true);
     try {
-      const response = await fetch(`${API_URL}/api/forum/post/create`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title,
-          body,
-          forumId: forum.id,
-          userId: currentUser.id,
-        }),
+      // Create post with Axios
+      await axios.post(`${API_URL}/api/forum/post/create`, {
+        title,
+        body,
+        forumId: forum.id,
+        userId: currentUser.id,
       });
 
-      if (!response.ok) throw new Error("Failed to create post");
       alert("Create post successfully");
-      //Refresh forum data
-      const updatedForum = await fetch(
+
+      // Refresh forum data with Axios
+      const { data: updatedForum } = await axios.get(
         `${API_URL}/api/forum/course/${courseId}`
-      ).then((res) => res.json());
+      );
       setForum(updatedForum);
 
       // Clear form
       setTitle("");
       setBody("");
     } catch (err) {
-      setFormError(err.message);
+      setFormError(err.response?.data?.message || err.message);
     } finally {
       setIsSubmitting(false);
     }

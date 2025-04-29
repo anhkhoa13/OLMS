@@ -54,6 +54,11 @@ function Courses({ isEnroll, maxNoDisplay = null, title = "All Courses" }) {
       try {
         setLoading(true);
         let response;
+        const token = localStorage.getItem("token");
+        if (token) {
+          const payload = JSON.parse(atob(token.split(".")[1]));
+          console.log("Token payload:", payload);
+        }
 
         if (userRole === "Instructor") {
           if (isEnroll) {
@@ -72,6 +77,8 @@ function Courses({ isEnroll, maxNoDisplay = null, title = "All Courses" }) {
             //TODO: should be changed to get courses of that student who havent enrolled
             response = await axios.get(`${API_URL}/api/course`);
           }
+        } else if (userRole === "Admin") {
+          response = await axios.get(`${API_URL}/api/course`);
         } else {
           if (!isAuthenticated) {
             // API endpoint for instructors
@@ -138,6 +145,7 @@ function Courses({ isEnroll, maxNoDisplay = null, title = "All Courses" }) {
       </div>
     );
   }
+  console.log(courses);
   if (userRole === "Instructor" && isEnroll) {
     return (
       <div className="bg-gray-100 py-16 px-4 md:px-8 lg:px-16 relative">
@@ -160,20 +168,43 @@ function Courses({ isEnroll, maxNoDisplay = null, title = "All Courses" }) {
               {displayedCourses.map((course, index) => (
                 <li
                   key={index}
-                  className="border border-gray-200 rounded-lg p-5 hover:shadow-lg transition-shadow duration-300 flex flex-col md:flex-row justify-between"
+                  className="border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow duration-300 flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white"
                 >
-                  <div>
-                    <h2 className="text-xl font-bold text-gray-900">
+                  {/* Left: Course Info */}
+                  <div className="flex-1 min-w-0">
+                    <h2 className="text-2xl font-semibold text-gray-900 truncate">
                       {course.title}
                     </h2>
-                    <p className="text-gray-700 mt-1">{course.Description}</p>
+                    <p className="text-gray-700 mt-1 line-clamp-2">
+                      {course.Description}
+                    </p>
                     <p className="text-sm text-gray-500 mt-2">
                       Course Code: {course.code}
                     </p>
                   </div>
-                  <div className="mt-4 md:mt-0 flex items-center">
+
+                  {/* Middle: Status */}
+                  <div className="flex items-center md:justify-center mt-3 md:mt-0">
+                    <span
+                      className={`
+                      px-3 py-1 rounded-full text-xs font-semibold
+                      ${
+                        course.status === "Enrolling"
+                          ? "bg-green-100 text-green-700"
+                          : course.status === "Pending"
+                          ? "bg-yellow-100 text-yellow-700"
+                          : "bg-gray-100 text-red-500"
+                      }
+                    `}
+                    >
+                      {course.status}
+                    </span>
+                  </div>
+
+                  {/* Right: Actions */}
+                  <div className="flex items-center mt-4 md:mt-0 gap-2">
                     <button
-                      className="bg-[#89b46c] text-white px-4 py-2 rounded-lg hover:bg-[#6f8f54] transition-colors mr-2 cursor-pointer"
+                      className="bg-[#89b46c] text-white px-4 py-2 rounded-lg hover:bg-[#6f8f54] transition-colors cursor-pointer"
                       onClick={() => handleInstructorEditCourse(course)}
                     >
                       Edit
