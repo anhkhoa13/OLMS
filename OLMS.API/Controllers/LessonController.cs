@@ -34,7 +34,7 @@ public class LessonController : ControllerBase {
     [HttpPut("update")]
     public async Task<IActionResult> UpdateLesson([FromBody] UpdateLessonCommand command)
     {
-        var result = await _sender.Send(command);
+        var result = await _sender.Send(command); 
         if (!result.IsSuccess)
             return BadRequest(result.Error);
         return Ok(new { Message = "Update lesson successfully" });
