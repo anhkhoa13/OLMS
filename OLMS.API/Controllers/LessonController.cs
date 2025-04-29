@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using OLMS.Application.Features.LessonUC;
 
 [ApiController]
 [Route("api/lesson")]
@@ -28,6 +29,15 @@ public class LessonController : ControllerBase {
             return BadRequest(result.Error);
 
         return Ok(result.Value);
+    }
+
+    [HttpPut("update")]
+    public async Task<IActionResult> UpdateLesson([FromBody] UpdateLessonCommand command)
+    {
+        var result = await _sender.Send(command);
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+        return Ok(new { Message = "Update lesson successfully" });
     }
 
 }
