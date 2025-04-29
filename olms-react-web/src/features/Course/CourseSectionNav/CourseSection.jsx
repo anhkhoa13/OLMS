@@ -12,7 +12,9 @@ function CourseSection({
   const navigate = useNavigate();
 
   function handleEditSection() {
-    navigate("/editSection", { state: { sectionId: section.id } });
+    navigate("/editSection", {
+      state: { sectionId: section.id, courseId: courseId },
+    });
   }
 
   const lessonsMap = Object.fromEntries(

@@ -23,7 +23,7 @@ public class QuizController : Controller {
         if (!result.IsSuccess)
             return BadRequest(result.Error);
 
-        return Ok(new { Message = "Create quiz successfully" });
+        return Ok(new { Message = "Create quiz successfully", QuizId = result.Value });
     }
     [HttpPost("add-questions")]
     public async Task<IActionResult> AddQuestions([FromBody] AddQuestionsCommand command) {

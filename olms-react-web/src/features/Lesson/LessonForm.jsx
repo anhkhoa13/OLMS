@@ -79,9 +79,8 @@ export default function LessonForm({
 
       {/* Video URL field */}
       <div>
-        <label className="block font-medium mb-1">Video URL *</label>
+        <label className="block font-medium mb-1">Video URL</label>
         <input
-          required
           type="url"
           className="w-full border rounded px-3 py-2"
           value={videoUrl}

@@ -105,6 +105,7 @@ function CreateQuiz({ sectionId, onClose, nextOrder, onSuccess }) {
           correctAnswer: q.type === "ShortAnswer" ? q.correctAnswer : null,
         })),
       };
+      console.log(questionsJson);
 
       await axios.post(`${API_URL}/api/quiz/add-questions`, questionsJson);
 

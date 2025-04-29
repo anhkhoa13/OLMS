@@ -30,7 +30,7 @@ function AssignmentView() {
     const fetchAssignment = async () => {
       try {
         const response = await fetch(
-          `${API_URL}/api/assignment/${assignmentId}`
+          `${API_URL}/api/assignment?assignmentId=${assignmentId}`
         );
         if (!response.ok)
           throw new Error(`HTTP error! status: ${response.status}`);

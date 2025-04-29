@@ -18,6 +18,7 @@ function SectionEdit() {
 
   const location = useLocation();
   const sectionId = location.state?.sectionId;
+  const courseId = location.state?.courseId;
 
   // Fetch section data on mount or when sectionId changes
   useEffect(() => {
@@ -116,6 +117,7 @@ function SectionEdit() {
             item={item}
             index={index + 1}
             type={item.type}
+            courseId={courseId}
           />
         ))}
       </div>

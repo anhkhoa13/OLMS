@@ -67,6 +67,12 @@ public sealed class CourseConfiguration : IEntityTypeConfiguration<Course>
                 .WithOne()
                 .HasForeignKey(s => s.CourseId)
                 .IsRequired();
+
+        builder.HasMany(c => c.Announcements)
+            .WithOne()
+            .HasForeignKey(a => a.CourseId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
 
