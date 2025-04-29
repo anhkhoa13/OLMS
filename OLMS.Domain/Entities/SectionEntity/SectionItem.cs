@@ -3,7 +3,7 @@
 
 public class SectionItem : Entity
 {
-    public int Order { get; private set; }
+    public int Order { get; set; }
     public SectionItemType ItemType { get; private set; }
     public Guid ItemId { get; private set; }
     public Guid SectionId { get; private set; }

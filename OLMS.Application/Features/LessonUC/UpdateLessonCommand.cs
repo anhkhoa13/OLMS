@@ -4,8 +4,7 @@ using OLMS.Domain.Result;
 
 namespace OLMS.Application.Features.LessonUC;
 
-public record UpdateLessonCommand(Guid LessonId, string Title, string Content, string VideoUrl, List<AttachmentDto> Attachments,
-    int order) : IRequest<Result>
+public record UpdateLessonCommand(Guid LessonId, string Title, string Content, string VideoUrl, List<AttachmentDto> Attachments) : IRequest<Result>
 {
 }
 
@@ -23,6 +22,7 @@ public class UpdateLessonCommandHandler(
         {
             return new Error("Lesson not found");
         }
+
 
         lesson.Title = request.Title ?? throw new Exception("Title cannot be null or empty");
         lesson.Content = request.Content ?? throw new Exception("Content cannot be null or empty");
@@ -43,6 +43,7 @@ public class UpdateLessonCommandHandler(
         }
 
         _lessonRepository.Update(lesson);
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

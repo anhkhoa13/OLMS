@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using OLMS.Application.Features.SectionUC;
 
 [ApiController]
 [Route("api/section")]
@@ -33,5 +34,14 @@ public class SectionController : ControllerBase {
             return NotFound(result.Error);
 
         return Ok(result.Value);
+    }
+
+    [HttpPut("update")]
+    public async Task<IActionResult> UpdateSection([FromBody] UpdateSectionCommand command)
+    {
+        var result = await _sender.Send(command);
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+        return Ok(new { Message = "Update section successfully"});
     }
 }

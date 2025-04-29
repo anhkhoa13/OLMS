@@ -79,4 +79,44 @@ public class Section : Entity {
             }
         }
     }
+
+    public void UpdateLesson(Lesson lesson, int order)
+    {
+        foreach (var item in _sectionItems.Where(item => item.Order >= order).OrderByDescending(item => item.Order))
+        {
+            item.IncreaseOrder();
+        }
+
+        var sectionItems = _sectionItems.SingleOrDefault(i => i.ItemId == lesson.Id);
+
+        if (sectionItems == null)
+        {
+            throw new Exception("SectionItem not found");
+        }
+
+        if (sectionItems.Order == order)
+        {
+            return;
+        }
+        if (sectionItems.Order < order)
+        {
+            // Move down: decrease order of items between old and new positions
+            foreach (var item in _sectionItems
+                         .Where(i => i.Order > sectionItems.Order && i.Order <= order)
+                         .OrderBy(i => i.Order))
+            {
+                item.DecreaseOrder();
+            }
+        }
+        else
+        {
+            // Move up: increase order of items between new and old positions
+            foreach (var item in _sectionItems
+                         .Where(i => i.Order >=  order && i.Order < sectionItems.Order)
+                         .OrderByDescending(i => i.Order))
+            {
+                item.IncreaseOrder();
+            }
+        }
+    }
 }
