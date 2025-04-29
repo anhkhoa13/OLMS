@@ -63,5 +63,20 @@ public class StudentController : Controller
         return Ok(new { courses, Message = "Courses retrieve successful" });
     }
 
+    [HttpPost("submit-exercise")]
+    public async Task<IActionResult> SubmitExercise([FromBody] SubmitExerciseCommand command)
+    {
+        var result = await _sender.Send(command);
+        if (!result.IsSuccess)
+        {
+            return BadRequest(new
+            {
+                Code = 400,
+                Message = result.Error.ErrorMessage,
+                Errors = result.Error.Code
+            });
+        }
+        return Ok(new { Message = "Submit exercise success" });
+    }
 }
 

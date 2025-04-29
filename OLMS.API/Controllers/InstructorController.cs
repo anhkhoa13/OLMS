@@ -72,4 +72,20 @@ public class InstructorController : Controller
         });
         return Ok(new { courses, Message = "Courses retrieve successful" });
     }
+
+    [HttpPost("getExerciseList")]
+    public async Task<IActionResult> GetExerciseList([FromBody] GetListOfExerciseCommand command)
+    {
+        var result = await _sender.Send(command);
+        if (!result.IsSuccess || result.Value is null)
+        {
+            return BadRequest(new
+            {
+                Code = 400,
+                Message = result.Error.ErrorMessage,
+                Errors = result.Error.Code
+            });
+        }
+        return Ok(result);
+    }
 }

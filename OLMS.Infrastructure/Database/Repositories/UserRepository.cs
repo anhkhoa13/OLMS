@@ -40,4 +40,12 @@ public class UserRepository(ApplicationDbContext context) : Repository<UserBase>
 
         return !await _context.Users.AnyAsync(u => u.Username.Value == userName.Value, cancellationToken);
     }
+
+    public Task<List<UserBase>> GetUsersByIdsAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken)
+    {
+        return _context.Users
+            .Where(u => ids.Contains(u.Id))
+            .ToListAsync(cancellationToken);
+    }
+
 }
