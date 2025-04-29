@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class Lesson : Entity {
-    public string Title { get; private set; } = default!;
-    public string Content { get; private set; } = default!;
-    public string VideoUrl { get; private set; } = default!;
+    public string Title { get;  set; } = default!;
+    public string Content { get;  set; } = default!;
+    public string VideoUrl { get;  set; } = default!;
     public Guid SectionId { get; private set; }
 
     private readonly List<LessonAttachment> _lessonAttachment = [];

@@ -5,5 +5,5 @@ namespace OLMS.Domain.Repositories;
 
 public interface ILessonRepository : IRepository<Lesson>
 {
-    public Task<Lesson?> GetLessonById(Guid lessonId);
+    public Task<Lesson?> GetLessonById(Guid lessonId, CancellationToken cancellationToken = default);
 }
