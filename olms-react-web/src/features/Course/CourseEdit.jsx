@@ -1,9 +1,11 @@
-import React, { useState } from "react";
-import { useLocation, useParams, useNavigate } from "react-router-dom";
+import React, { useState, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 import CourseContent from "./CourseSectionNav/CourseContent";
 
+const API_URL = import.meta.env.VITE_BACKEND_URL;
+
 function CourseEdit() {
-  const { code } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   const courseData = location.state?.courseData;
@@ -13,14 +15,31 @@ function CourseEdit() {
   const [saving, setSaving] = useState(false);
   const [activeSection, setActiveSection] = useState(null);
 
-  const handleSave = (e) => {
-    e.preventDefault();
+  const formRef = useRef();
+
+  // Save handler for both course and sections
+  const handleSave = async (e) => {
+    if (e) e.preventDefault();
     setSaving(true);
-    setTimeout(() => {
-      console.log("Saved data:", { code, title, description });
-      setSaving(false);
+    try {
+      // Combine course and section updates in one API call (adjust as needed)
+      await axios.put(`${API_URL}/api/course/update`, {
+        courseId: courseData.id,
+        title,
+        description,
+      });
+
+      alert("Course and sections updated successfully!");
       navigate(-1);
-    }, 1000);
+    } catch (error) {
+      alert(
+        `Error updating course: ${
+          error.response?.data?.message || error.message
+        }`
+      );
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleCancel = () => {
@@ -35,7 +54,7 @@ function CourseEdit() {
           <h1 className="text-3xl font-extrabold mb-8 text-gray-800 text-center">
             Edit Course
           </h1>
-          <form className="space-y-8">
+          <form ref={formRef} className="space-y-8" onSubmit={handleSave}>
             <div>
               <label className="block text-lg text-gray-700 font-semibold mb-3">
                 Course Title
@@ -88,7 +107,7 @@ function CourseEdit() {
             </button>
             <button
               type="button"
-              onClick={handleSave}
+              onClick={() => formRef.current.requestSubmit()}
               className="px-6 py-3 rounded-lg bg-[#89b46c] text-white font-bold hover:bg-[#6f8f54] transition cursor-pointer"
               disabled={saving}
             >

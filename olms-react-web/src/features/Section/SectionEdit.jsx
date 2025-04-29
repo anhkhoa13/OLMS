@@ -15,6 +15,9 @@ function SectionEdit() {
   const [showAddMenu, setShowAddMenu] = useState(false);
   const [modalType, setModalType] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  // ... existing state ...
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentItem, setCurrentItem] = useState(null);
 
   const location = useLocation();
   const sectionId = location.state?.sectionId;
@@ -43,7 +46,15 @@ function SectionEdit() {
     }
     fetchSection();
   }, [sectionId, refreshKey]);
+
   const handleRefresh = () => setRefreshKey((prev) => prev + 1);
+
+  const handleEditItem = (item) => {
+    setCurrentItem(item);
+    setIsEditing(true);
+    setModalType(item.type);
+  };
+
   if (loading) {
     return (
       <div className="p-8 text-center text-gray-500">Loading section...</div>
@@ -101,9 +112,18 @@ function SectionEdit() {
   function closeModal() {
     setModalType(null);
   }
+  // Modify the modal rendering logic
+  const getModalTitle = () => {
+    if (isEditing) {
+      return `Edit ${
+        currentItem?.type?.charAt(0).toUpperCase() + currentItem?.type?.slice(1)
+      }`;
+    }
+    return `Add ${modalType?.charAt(0).toUpperCase() + modalType?.slice(1)}`;
+  };
 
   return (
-    <div className="max-w-3xl mx-auto p-8 bg-white rounded-xl shadow-md mt-8">
+    <div className="max-w-3xl mx-auto p-8 bg-white rounded-xl shadow-md my-8">
       <h2 className="text-3xl font-bold text-[#6f8f54] mb-2">
         {section.title}
       </h2>
@@ -118,6 +138,8 @@ function SectionEdit() {
             index={index + 1}
             type={item.type}
             courseId={courseId}
+            isEditMode={true}
+            onEdit={handleEditItem}
           />
         ))}
       </div>
@@ -126,7 +148,7 @@ function SectionEdit() {
         <div className="relative">
           <button
             onClick={() => setShowAddMenu((v) => !v)}
-            className="bg-[#6f8f54] hover:bg-[#5e7d4a]  cursor-pointer text-white px-5 py-2 rounded-lg font-medium shadow transition-colors"
+            className="bg-[#89b46c] hover:bg-[#6f8f54]  cursor-pointer text-white px-5 py-2 rounded-lg font-medium shadow transition-colors"
           >
             + Add Item
           </button>
@@ -157,40 +179,53 @@ function SectionEdit() {
 
       {/* Modal */}
       <Modal
-        open={!!modalType}
-        onClose={closeModal}
-        title={
-          modalType === "lesson"
-            ? "Add Lesson"
-            : modalType === "exercise"
-            ? "Add Exercise"
-            : modalType === "quiz"
-            ? "Add Quiz"
-            : ""
-        }
+        open={!!modalType || isEditing}
+        onClose={() => {
+          closeModal();
+          setIsEditing(false);
+          setCurrentItem(null);
+        }}
+        title={getModalTitle()}
       >
         {modalType === "lesson" && (
           <LessonForm
             sectionId={section.id}
-            onClose={closeModal}
+            onClose={() => {
+              closeModal();
+              setIsEditing(false);
+              setCurrentItem(null);
+            }}
             nextOrder={orderedItems.length}
             onSuccess={handleRefresh}
+            isEditing={isEditing} // Add editing mode prop
+            lessonId={currentItem?.id}
           />
         )}
         {modalType === "exercise" && (
           <ExerciseForm
             sectionId={section.id}
-            onClose={closeModal}
+            onClose={() => {
+              closeModal();
+              setIsEditing(false);
+              setCurrentItem(null);
+            }}
             nextOrder={orderedItems.length}
             onSuccess={handleRefresh}
+            isEditing={isEditing}
+            exerciseId={currentItem?.id}
           />
         )}
         {modalType === "quiz" && (
           <CreateQuiz
             sectionId={section.id}
-            onClose={closeModal}
+            onClose={() => {
+              closeModal();
+              setIsEditing(false);
+              setCurrentItem(null);
+            }}
             nextOrder={orderedItems.length}
             onSuccess={handleRefresh}
+            isEditing={isEditing}
           />
         )}
       </Modal>

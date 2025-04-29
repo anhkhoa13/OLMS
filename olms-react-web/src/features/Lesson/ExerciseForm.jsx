@@ -1,11 +1,18 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FileUpload from "../../components/FileUpload";
 import { useAuth } from "../../contexts/AuthContext";
 
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 
-function ExerciseForm({ sectionId, onClose, nextOrder, onSuccess }) {
-  const { currentUser } = useAuth(); // Get instructor ID from context
+function ExerciseForm({
+  sectionId,
+  onClose,
+  nextOrder,
+  onSuccess,
+  isEditing,
+  exerciseId,
+}) {
+  const { currentUser } = useAuth();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -14,12 +21,45 @@ function ExerciseForm({ sectionId, onClose, nextOrder, onSuccess }) {
   const [numberOfAttempts, setNumberOfAttempts] = useState(1);
   const [attachments, setAttachments] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Fetch assignment data when in edit mode
+  useEffect(() => {
+    if (isEditing && exerciseId) {
+      const fetchAssignment = async () => {
+        setLoading(true);
+        try {
+          const response = await fetch(
+            `${API_URL}/api/assignment?assignmentId=${exerciseId}`
+          );
+
+          if (!response.ok) throw new Error("Failed to fetch assignment");
+          const data = await response.json();
+
+          setTitle(data.title);
+          setDescription(data.description);
+          setStartDate(data.startDate.slice(0, 16));
+          setDueDate(data.dueDate.slice(0, 16));
+          setAllowLateSubmission(data.allowLateSubmission);
+          setNumberOfAttempts(data.numberOfAttempts);
+          setAttachments(data.attachments || []);
+        } catch (err) {
+          setError(err.message);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchAssignment();
+    }
+  }, [isEditing, exerciseId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const exerciseData = {
+    const assignmentData = {
+      ...(isEditing && { assignmentId: exerciseId }),
       title,
       description,
       startDate: new Date(startDate).toISOString(),
@@ -27,24 +67,37 @@ function ExerciseForm({ sectionId, onClose, nextOrder, onSuccess }) {
       allowLateSubmission,
       numberOfAttempts: Number(numberOfAttempts),
       sectionId,
-      instructorId: currentUser.id, // Assuming user context contains instructor ID
+      instructorId: currentUser.id,
       attachments,
       order: nextOrder,
     };
 
     try {
-      const response = await fetch(`${API_URL}/api/assignment/create`, {
-        method: "POST",
+      const url = isEditing
+        ? `${API_URL}/api/assignment/update`
+        : `${API_URL}/api/assignment/create`;
+
+      const method = isEditing ? "PUT" : "POST";
+
+      const response = await fetch(url, {
+        method,
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(exerciseData),
+        body: JSON.stringify(assignmentData),
       });
 
-      if (!response.ok) throw new Error("Failed to create exercise");
-      alert("Create assignment successfully!");
-      if (onSuccess) onSuccess(); // Trigger refresh
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Operation failed");
+      }
 
+      alert(
+        isEditing
+          ? "Assignment updated successfully!"
+          : "Assignment created successfully!"
+      );
+      if (onSuccess) onSuccess();
       onClose();
     } catch (error) {
       console.error("Submission error:", error);
@@ -53,6 +106,10 @@ function ExerciseForm({ sectionId, onClose, nextOrder, onSuccess }) {
       setIsSubmitting(false);
     }
   };
+
+  if (loading)
+    return <div className="p-4 text-center">Loading assignment data...</div>;
+  if (error) return <div className="p-4 text-red-500">Error: {error}</div>;
 
   return (
     <form className="space-y-6" onSubmit={handleSubmit}>
@@ -133,7 +190,11 @@ function ExerciseForm({ sectionId, onClose, nextOrder, onSuccess }) {
         {/* Attachments */}
         <div className="md:col-span-2">
           <label className="block font-medium mb-1">Attachments</label>
-          <FileUpload onFilesChange={setAttachments} value={attachments} />
+          <FileUpload
+            onFilesChange={setAttachments}
+            value={attachments}
+            existingFiles={attachments}
+          />
         </div>
       </div>
 
@@ -152,7 +213,11 @@ function ExerciseForm({ sectionId, onClose, nextOrder, onSuccess }) {
           className="bg-[#6f8f54] text-white px-6 py-2 rounded-lg font-medium hover:bg-[#5e7d4a] transition-colors disabled:opacity-50"
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Saving..." : "Save Exercise"}
+          {isSubmitting
+            ? "Saving..."
+            : isEditing
+            ? "Update Exercise"
+            : "Save Exercise"}
         </button>
       </div>
     </form>
