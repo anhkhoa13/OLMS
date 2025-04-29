@@ -8,8 +8,11 @@
 
   <ItemGroup>
     <Compile Remove="Features\Course\**" />
+    <Compile Remove="Features\SectionUC\**" />
     <EmbeddedResource Remove="Features\Course\**" />
+    <EmbeddedResource Remove="Features\SectionUC\**" />
     <None Remove="Features\Course\**" />
+    <None Remove="Features\SectionUC\**" />
   </ItemGroup>
 
   <ItemGroup>

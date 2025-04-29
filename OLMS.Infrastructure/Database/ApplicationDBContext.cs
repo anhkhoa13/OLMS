@@ -43,7 +43,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Vote> Votes { get; set; }
     public DbSet<Announcement> Announcements { get; set; }
 
-
+    public DbSet<Admin> Admins { get; set; }
     public DbSet<QuizCourse> QuizCourses { get; set; }
 
 

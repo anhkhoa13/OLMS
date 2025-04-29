@@ -29,5 +29,6 @@ public class CourseRepository(ApplicationDbContext context) : Repository<Course>
             .Include(c => c.Instructor)
             .ToListAsync(cancellationToken);
     }
+
 }
 

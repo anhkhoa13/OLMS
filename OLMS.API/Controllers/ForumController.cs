@@ -1,17 +1,21 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OLMS.Application.Features.InstructorUC;
 using OLMS.Application.Features.CourseUC;
 using OLMS.Application.Features.ForumUC.PostUC;
 
-namespace OLMS.Presentation.Controllers;
+namespace OLMS.API.Controllers;
 
 [ApiController]
 [Route("api/forum")]
-public class ForumController : ControllerBase {
+[Authorize]
+public class ForumController : ControllerBase
+{
     private readonly ISender _sender;
 
-    public ForumController(ISender sender) {
+    public ForumController(ISender sender)
+    {
         _sender = sender;
     }
 
@@ -56,5 +60,20 @@ public class ForumController : ControllerBase {
         return BadRequest(new { message = result.Error });
     }
 
+    [HttpPost("createpost")]
+    public async Task<IActionResult> CreatePost([FromBody] CreatePostCommand command)
+    {
+        var result = await _sender.Send(command);
+        if (!result.IsSuccess)
+        {
+            return BadRequest(new ErrorResponse
+            {
+                StatusCode = StatusCodes.Status400BadRequest,
+                Message = result.Error.ErrorMessage ?? "Error occured",
+                ErrorCode = result.Error.Code
+            });
+        }
 
+        return Ok(new { Message = "Create post success" });
+    }
 }

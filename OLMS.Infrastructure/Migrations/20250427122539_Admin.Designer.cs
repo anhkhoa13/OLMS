@@ -12,13 +12,8 @@ using OLMS.Infrastructure.Database;
 namespace OLMS.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-<<<<<<<< HEAD:OLMS.Infrastructure/Migrations/20250429021944_InitialCreate.Designer.cs
-    [Migration("20250429021944_InitialCreate")]
-    partial class InitialCreate
-========
-    [Migration("20250427084746_seconCreate")]
-    partial class seconCreate
->>>>>>>> origin/admin:OLMS.Infrastructure/Migrations/20250427084746_seconCreate.Designer.cs
+    [Migration("20250427122539_Admin")]
+    partial class Admin
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -468,9 +463,6 @@ namespace OLMS.Infrastructure.Migrations
                     b.Property<Guid>("CourseId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -573,6 +565,13 @@ namespace OLMS.Infrastructure.Migrations
                         .HasColumnType("nvarchar(500)");
 
                     b.HasDiscriminator().HasValue("ShortAnswerQuestion");
+                });
+
+            modelBuilder.Entity("OLMS.Domain.Entities.Admin", b =>
+                {
+                    b.HasBaseType("OLMS.Domain.Entities.UserBase");
+
+                    b.ToTable("Admins");
                 });
 
             modelBuilder.Entity("OLMS.Domain.Entities.InstructorAggregate.Instructor", b =>
@@ -960,6 +959,15 @@ namespace OLMS.Infrastructure.Migrations
                     b.HasOne("OLMS.Domain.Entities.QuestionEntity.Question", null)
                         .WithOne()
                         .HasForeignKey("OLMS.Domain.Entities.QuestionEntity.ShortAnswerQuestion", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("OLMS.Domain.Entities.Admin", b =>
+                {
+                    b.HasOne("OLMS.Domain.Entities.UserBase", null)
+                        .WithOne()
+                        .HasForeignKey("OLMS.Domain.Entities.Admin", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+
+using Microsoft.EntityFrameworkCore;
 using OLMS.Domain.Entities.CourseAggregate;
 using OLMS.Domain.Entities.ForumAggregate;
 using OLMS.Domain.Repositories;
@@ -16,5 +18,7 @@ public class ForumRepository(ApplicationDbContext context) : Repository<Forum>(c
                 .ThenInclude(p => p.Votes)
             .FirstOrDefaultAsync(f => f.CourseId == courseId, cancellationToken);
     }
-}
+    }
 
+
+}

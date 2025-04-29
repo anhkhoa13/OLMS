@@ -595,6 +595,13 @@ namespace OLMS.Infrastructure.Migrations
                     b.HasDiscriminator().HasValue("ShortAnswerQuestion");
                 });
 
+            modelBuilder.Entity("OLMS.Domain.Entities.Admin", b =>
+                {
+                    b.HasBaseType("OLMS.Domain.Entities.UserBase");
+
+                    b.ToTable("Admins");
+                });
+
             modelBuilder.Entity("OLMS.Domain.Entities.InstructorAggregate.Instructor", b =>
                 {
                     b.HasBaseType("OLMS.Domain.Entities.UserBase");
@@ -735,13 +742,13 @@ namespace OLMS.Infrastructure.Migrations
                     b.HasOne("OLMS.Domain.Entities.ForumAggregate.PostAggregate.Post", null)
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("OLMS.Domain.Entities.UserBase", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -765,7 +772,7 @@ namespace OLMS.Infrastructure.Migrations
                     b.HasOne("OLMS.Domain.Entities.UserBase", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -989,6 +996,15 @@ namespace OLMS.Infrastructure.Migrations
                     b.HasOne("OLMS.Domain.Entities.QuestionEntity.Question", null)
                         .WithOne()
                         .HasForeignKey("OLMS.Domain.Entities.QuestionEntity.ShortAnswerQuestion", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("OLMS.Domain.Entities.Admin", b =>
+                {
+                    b.HasOne("OLMS.Domain.Entities.UserBase", null)
+                        .WithOne()
+                        .HasForeignKey("OLMS.Domain.Entities.Admin", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

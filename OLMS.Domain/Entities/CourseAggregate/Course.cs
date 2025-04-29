@@ -84,10 +84,10 @@ public class Course : AggregateRoot
         Forum = Forum.Create(Title + " Forum", Id);
     }
 
-    //public Announcement CreateAnnouncement(string title, string content) {
-    //    var announcement = Announcement.CreateAnnouncement(title, content, this.Id);
-    //    _announcements.Add(announcement);
-    //    return announcement;
-    //}
-
+    public void Approve()
+    {
+        if (Status != CourseStatus.Pending)
+            throw new InvalidOperationException("Course already approved");
+        Status = CourseStatus.Enrolling;
+    }
 }
