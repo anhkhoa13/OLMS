@@ -12,7 +12,7 @@ public class Course : AggregateRoot
 {
     #region Properties
     public Code Code { get; private set; } = default!;
-    public string Title { get; private set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
     public string? Description { get; set; } = string.Empty;
     public CourseStatus Status { get; private set; }
     #endregion

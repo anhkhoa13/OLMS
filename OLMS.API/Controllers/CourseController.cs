@@ -94,5 +94,24 @@ public class CourseController : ControllerBase {
         };
     }
 
+    [HttpPut("update")]
+    public async Task<IActionResult> UpdateCourse([FromBody] UpdateCourseCommand command)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        var result = await _sender.Send(command);
+        if (result.IsFailure)
+        {
+            return BadRequest(new
+            {
+                Code = 400,
+                Message = result.Error.ErrorMessage,
+                Errors = result.Error.Code
+            });
+        }
+        return Ok(new { Message = "Course updated successfully" });
+    }
 
 }
