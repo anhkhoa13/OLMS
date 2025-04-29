@@ -26,6 +26,10 @@ public class Course : AggregateRoot
     private readonly List<Section> _sections = [];
     public IReadOnlyCollection<Section> Sections => _sections.AsReadOnly();
 
+    // Announcements collection
+    private readonly List<Announcement> _announcements = [];
+    public IReadOnlyCollection<Announcement> Announcements => _announcements.AsReadOnly();
+
     public Forum Forum { get; private set; } = default!;
     #endregion
 
@@ -45,7 +49,7 @@ public class Course : AggregateRoot
         if (string.IsNullOrWhiteSpace(title)) throw new ArgumentNullException(nameof(title), "Title cannot be null");
 
         if (title.Length < 3 || title.Length > 100) throw new ArgumentException("Title must be 3-100 characters long", nameof(title));
-        if (description.Length > 100) throw new ArgumentException("Description must be less than 100 characters", nameof(description));
+        if (description.Length > 1000) throw new ArgumentException("Description must be less than 100 characters", nameof(description));
 
         Guid id = Guid.NewGuid();
 
@@ -79,5 +83,11 @@ public class Course : AggregateRoot
 
         Forum = Forum.Create(Title + " Forum", Id);
     }
+
+    //public Announcement CreateAnnouncement(string title, string content) {
+    //    var announcement = Announcement.CreateAnnouncement(title, content, this.Id);
+    //    _announcements.Add(announcement);
+    //    return announcement;
+    //}
 
 }

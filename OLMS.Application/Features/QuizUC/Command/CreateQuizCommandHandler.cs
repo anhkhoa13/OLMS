@@ -18,9 +18,9 @@ public record CreateQuizCommand(
     Guid InstructorId,
     Guid SectionId,
     int Order
-    ) : IRequest<Result> {
+    ) : IRequest<Result<Guid>> {
 }
-public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Result> {
+public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Result<Guid>> {
     private readonly IQuizRepository _quizRepo;
     private readonly ISectionRepository _sectionRepository;
     private readonly ISectionItemRepository _sectionItemRepository;
@@ -33,7 +33,7 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Resul
         _sectionItemRepository = sectionItemRepository;
     }
 
-    public async Task<Result> Handle(CreateQuizCommand request, CancellationToken cancellationToken) {
+    public async Task<Result<Guid>> Handle(CreateQuizCommand request, CancellationToken cancellationToken) {
         try {
             var quiz = Quiz.Create(
                 request.Title,
@@ -58,7 +58,7 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Resul
             await _sectionItemRepository.AddAsync(sectionItem);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return Result.Success();
+            return Result<Guid>.Success(quiz.Id);
         } catch (DbUpdateException dbEx) {
             // Handle database-specific exceptions
             var innerMessage = dbEx.InnerException?.Message ?? dbEx.Message;

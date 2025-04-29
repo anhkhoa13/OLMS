@@ -29,10 +29,10 @@ function CourseContent({
         }
 
         const data = await response.json();
-        console.log(data);
         setSections(data);
         setError(null);
       } catch (err) {
+        console.log(err);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -123,7 +123,7 @@ function CourseContent({
               />
               <button
                 type="submit"
-                className="bg-[#6f8f54] hover:bg-[#5e7d4a] text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
+                className="bg-[#6f8f54] cursor-pointer hover:bg-[#5e7d4a] text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
               >
                 Add
               </button>
@@ -133,7 +133,7 @@ function CourseContent({
                   setShowAddForm(false);
                   setNewSectionTitle("");
                 }}
-                className="py-2 px-4 rounded-lg text-gray-600 hover:bg-gray-100"
+                className="py-2 px-4 cursor-pointer rounded-lg text-gray-600 hover:bg-gray-100"
               >
                 Cancel
               </button>

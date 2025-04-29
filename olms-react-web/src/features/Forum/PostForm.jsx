@@ -86,7 +86,7 @@ function PostForm({ forum, setForum, courseId }) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="bg-[#6f8f54] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#5e7d4a] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="bg-[#6f8f54] cursor-pointer text-white px-6 py-3 rounded-lg font-medium hover:bg-[#5e7d4a] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting ? "Posting..." : "Create Post"}
         </button>

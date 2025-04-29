@@ -17,14 +17,19 @@ public class GetSectionDetailsQueryHandler
     public async Task<Result<List<SectionDto>>> Handle(
         GetSectionDetailsQuery request,
         CancellationToken cancellationToken) {
-        var sections = await _sectionRepository.GetSectionsByCourseWithDetailsAsync(
-            request.CourseId);
+        try {
+            var sections = await _sectionRepository.GetSectionsByCourseWithDetailsAsync(request.CourseId);
 
-        if (!sections.Any()) {
-            return Result<List<SectionDto>>.Failure(new Error("No sections found for this course"));
+            var sectionDtos = sections.Select(MapToDto).ToList();
+            return Result<List<SectionDto>>.Success(sectionDtos);
+        } catch (Exception ex) {
+            // Log the exception here if you have a logging framework
+            // e.g., _logger.LogError(ex, "Error retrieving sections");
+
+            return Result<List<SectionDto>>.Failure(
+                new Error("SectionRetrievalError", $"An error occurred while retrieving sections: {ex.Message}")
+            );
         }
-
-        return Result<List<SectionDto>>.Success(sections.Select(MapToDto).ToList());
     }
 
     private static SectionDto MapToDto(Section section) {

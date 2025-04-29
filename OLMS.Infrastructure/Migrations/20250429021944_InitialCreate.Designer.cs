@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OLMS.Infrastructure.Database;
 
@@ -11,9 +12,11 @@ using OLMS.Infrastructure.Database;
 namespace OLMS.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250429021944_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,34 +24,6 @@ namespace OLMS.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Announcement", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("CourseId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseId");
-
-                    b.ToTable("Announcements");
-                });
 
             modelBuilder.Entity("Assignment", b =>
                 {
@@ -619,15 +594,6 @@ namespace OLMS.Infrastructure.Migrations
                     b.ToTable("Student", (string)null);
                 });
 
-            modelBuilder.Entity("Announcement", b =>
-                {
-                    b.HasOne("OLMS.Domain.Entities.CourseAggregate.Course", null)
-                        .WithMany("Announcements")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Assignment", b =>
                 {
                     b.HasOne("OLMS.Domain.Entities.InstructorAggregate.Instructor", null)
@@ -1018,8 +984,6 @@ namespace OLMS.Infrastructure.Migrations
 
             modelBuilder.Entity("OLMS.Domain.Entities.CourseAggregate.Course", b =>
                 {
-                    b.Navigation("Announcements");
-
                     b.Navigation("Forum")
                         .IsRequired();
 
