@@ -61,7 +61,7 @@ public class SubmitQuizCommandHandler : IRequestHandler<SubmitQuizCommand, Resul
         _quizAttemptRepo.Update(attempt);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        // ✅ Return the score using Result<T>
+        // ✅ Return the score using ExerciseAttempt<T>
         return Result<double>.Success(attempt.Score);
     }
 

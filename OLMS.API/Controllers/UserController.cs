@@ -4,7 +4,7 @@
 //using OLMS.Application.Features.CourseUC;
 //using OLMS.Application.Features.User;
 //using OLMS.Domain.Entities;
-//using OLMS.Domain.Result;
+//using OLMS.Domain.ExerciseAttempt;
 //using OLMS.Shared.DTO;
 
 //namespace OLMS.API.Controllers;
@@ -24,7 +24,7 @@
 //    [HttpGet("info")]
 //    public async Task<IActionResult> GetInfo([FromQuery]GetUserInfoCommand command)
 //    {
-//        Result<UserBase> result = await _sender.Send(command);
+//        ExerciseAttempt<UserBase> result = await _sender.Send(command);
 
 //        if (!result.IsSuccess || result.Value is null)
 //        {
