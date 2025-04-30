@@ -37,5 +37,14 @@ public class CourseRepository(ApplicationDbContext context) : Repository<Course>
             .Include(c => c.Instructor)
             .ToListAsync();
     }
+    public async Task<List<Course>> GetCoursesByStudentIdAsync(Guid studentId, CancellationToken cancellationToken) {
+        return await _context.Courses
+            .Where(c => c.Students.Any(s => s.Id == studentId))
+            .Include(c => c.Instructor)
+            .Include(c => c.Sections)
+                .ThenInclude(s => s.Assignments)
+            .Include(c => c.Announcements)
+            .ToListAsync(cancellationToken);
+    }
 }
 

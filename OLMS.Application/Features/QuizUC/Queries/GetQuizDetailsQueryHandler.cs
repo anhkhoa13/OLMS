@@ -19,6 +19,30 @@ public class GetQuizDetailsQueryHandler : IRequestHandler<GetQuizDetailsQuery, Q
         var quiz = await _quizRepo.GetByCodeAsync(request.Code);
         if (quiz == null) throw new Exception("Quiz not found");
 
+        var questionDtos = quiz.Questions.Select(q =>
+        {
+            var dto = new QuestionDto {
+                QuestionId = q.Id,
+                Content = q.Content,
+                Type = q.GetType().Name switch {
+                    nameof(MultipleChoiceQuestion) => "MultipleChoice",
+                    nameof(ShortAnswerQuestion) => "ShortAnswer",
+                    _ => "Unknown"
+                }
+            };
+
+            if (q is MultipleChoiceQuestion mcq) {
+                dto.Options = mcq.Options;
+                dto.CorrectOptionIndex = mcq.CorrectOptionIndex;
+            }
+
+            if (q is ShortAnswerQuestion saq) {
+                dto.CorrectAnswer = saq.CorrectAnswer;
+            }
+
+            return dto;
+        }).ToList();
+
         return new QuizDto {
             QuizId = quiz.Id,
             Code = quiz.Code,
@@ -29,8 +53,9 @@ public class GetQuizDetailsQueryHandler : IRequestHandler<GetQuizDetailsQuery, Q
             IsTimeLimited = quiz.IsTimeLimited,
             TimeLimit = quiz.TimeLimit,
             NumberOfAttempts = quiz.NumberOfAttempts,
-            Questions = quiz.Questions.Select(q => q.Adapt<QuestionDto>()).ToList()
+            Questions = questionDtos
         };
     }
+
 }
 
