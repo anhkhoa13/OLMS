@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { QuizIcon, ExerciseIcon } from "../components/Icons";
+import { useAuth } from "../contexts/AuthContext";
 
 function AcademicPlanner() {
   const [data, setData] = useState([]);
@@ -11,12 +12,13 @@ function AcademicPlanner() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isSorting, setIsSorting] = useState(false);
+  const { currentUser } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "https://localhost:7212/api/student/21EA7FB5-04C4-4329-89BB-C7666EB980BC/dashboard"
+          `https://localhost:7212/api/student/${currentUser.id}/dashboard`
         );
         setData(response.data);
       } catch (err) {

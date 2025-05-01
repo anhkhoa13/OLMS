@@ -43,6 +43,7 @@ public static class DependencyInjection
         services.AddScoped<ISectionItemRepository, SectionItemRepository>();
         services.AddScoped<IExerciseRepository, ExerciseRepository>();
         services.AddScoped<IAdminRepository, AdminRepository>();
+        services.AddScoped<IExerciseAttemptRepository, ExerciseAttemptRepository>();
 
         //services.AddScoped<IMaterialRepository, MaterialRepository>();
 

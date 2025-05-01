@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import downloadBase64File from "../../utils/ConvertToFile";
 import FileUpload from "../../components/FileUpload"; // Adjust path as needed
+import { useAuth } from "../../contexts/AuthContext";
 
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -25,6 +26,12 @@ function AssignmentView() {
   const [assignment, setAssignment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { currentUser } = useAuth();
+
+  const [attachments, setAttachments] = useState([]);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
   useEffect(() => {
     const fetchAssignment = async () => {
@@ -46,6 +53,41 @@ function AssignmentView() {
     };
     if (assignmentId) fetchAssignment();
   }, [assignmentId]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setSubmitError(null);
+    setSubmitSuccess(false);
+
+    try {
+      const response = await fetch(
+        "https://localhost:7212/api/student/submit-exercise",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            studentId: currentUser.id,
+            exerciseId: assignment.id,
+            attachments: attachments,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to submit assignment.");
+      }
+
+      setSubmitSuccess(true);
+      setAttachments([]); // Clear attachments after successful submission
+    } catch (err) {
+      setSubmitError(err.message || "Submission failed.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -146,7 +188,26 @@ function AssignmentView() {
             <h2 className="text-2xl font-bold text-[#6f8f54] mb-4">
               Assignment Submission
             </h2>
-            <FileUpload assignmentId={assignment.id} />
+            <form onSubmit={handleSubmit}>
+              <FileUpload value={attachments} onFilesChange={setAttachments} />
+              <button
+                type="submit"
+                className="mt-4 px-6 py-2 bg-[#6f8f54] text-white rounded-lg font-semibold hover:bg-[#5e7d4a] disabled:opacity-50"
+                disabled={submitting || attachments.length === 0}
+              >
+                {submitting ? "Submitting..." : "Submit Assignment"}
+              </button>
+              {submitSuccess && (
+                <div className="mt-2 text-green-600 font-medium">
+                  Submission successful!
+                </div>
+              )}
+              {submitError && (
+                <div className="mt-2 text-red-600 font-medium">
+                  {submitError}
+                </div>
+              )}
+            </form>
           </section>
         </div>
 
