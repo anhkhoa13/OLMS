@@ -1,12 +1,11 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using OLMS.Domain.Entities.QuizEntity;
 using OLMS.Domain.Entities.SectionEntity;
 using OLMS.Domain.Repositories;
 using OLMS.Domain.Result;
 
-namespace OLMS.Application.Features.QuizUC.Command;
-public record CreateQuizCommand(
+public record UpdateQuizCommand(
+    Guid QuizId,
     string Title,
     string Description,
     DateTime StartTime,
@@ -16,26 +15,36 @@ public record CreateQuizCommand(
     TimeSpan? TimeLimit,
     int NumberOfAttempts,
     Guid InstructorId,
-    Guid SectionId,
-    int Order
-    ) : IRequest<Result<Guid>> {
-}
-public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Result<Guid>> {
+    Guid SectionId
+) : IRequest<Result>;
+
+public class UpdateQuizCommandHandler : IRequestHandler<UpdateQuizCommand, Result> {
     private readonly IQuizRepository _quizRepo;
     private readonly ISectionRepository _sectionRepository;
     private readonly ISectionItemRepository _sectionItemRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public CreateQuizCommandHandler(IQuizRepository repository, ISectionRepository sectionRepository, ISectionItemRepository sectionItemRepository, IUnitOfWork unitOfWork) {
-        _quizRepo = repository;
-        _unitOfWork = unitOfWork;
+    public UpdateQuizCommandHandler(
+        IQuizRepository quizRepo,
+        ISectionRepository sectionRepository,
+        ISectionItemRepository sectionItemRepository,
+        IUnitOfWork unitOfWork) {
+        _quizRepo = quizRepo;
         _sectionRepository = sectionRepository;
         _sectionItemRepository = sectionItemRepository;
+        _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result<Guid>> Handle(CreateQuizCommand request, CancellationToken cancellationToken) {
+    public async Task<Result> Handle(UpdateQuizCommand request, CancellationToken cancellationToken) {
         try {
-            var quiz = Quiz.Create(
+            var quiz = await _quizRepo.GetByIdAsync(request.QuizId);
+            if (quiz == null)
+                return new Error("Quiz not found.");
+
+            // Optionally, check if the instructor is allowed to update this quiz
+
+            // Update quiz properties
+            quiz.Update(
                 request.Title,
                 request.Description,
                 request.StartTime,
@@ -48,25 +57,15 @@ public class CreateQuizCommandHandler : IRequestHandler<CreateQuizCommand, Resul
                 request.SectionId
             );
 
-            Section section = await _sectionRepository.GetByIdAsync(request.SectionId);
-            if (section == null) {
-                return new Error("section cannot be null");
-            }
-            var sectionItem = section.AddAssigment(quiz, request.Order);
-
-            await _quizRepo.AddAsync(quiz);
-            await _sectionItemRepository.AddAsync(sectionItem);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return Result<Guid>.Success(quiz.Id);
+            return Result.Success();
         } catch (DbUpdateException dbEx) {
-            // Handle database-specific exceptions
             var innerMessage = dbEx.InnerException?.Message ?? dbEx.Message;
-            throw new Exception($"Database error creating quiz: {innerMessage}", dbEx);
+            throw new Exception($"Database error updating quiz: {innerMessage}", dbEx);
         } catch (Exception ex) {
-            // Handle other exceptions
-            return new Error(ex.Message);
+            throw new Exception($"Error updating quiz: {ex.Message}", ex);
         }
     }
-
 }
+

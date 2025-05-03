@@ -2,8 +2,8 @@
 
 public class MultipleChoiceQuestion : Question
 {
-    public List<string> Options { get; private set; } = [];
-    public int CorrectOptionIndex { get; private set; } 
+    public List<string> Options { get; set; } = [];
+    public int CorrectOptionIndex { get; set; } 
     public override QuestionType Type { get; protected set; } = QuestionType.MultipleChoice;
 
     private MultipleChoiceQuestion() : base() { } // For EF Core
@@ -28,6 +28,10 @@ public class MultipleChoiceQuestion : Question
             throw new ArgumentException("Correct option index is out of range", nameof(correctOptionIndex));
 
         return new MultipleChoiceQuestion(Guid.NewGuid(), content, options, correctOptionIndex, quizId);
+    }
+    public void UpdateOptions(List<string> options, int correctIndex) {
+        Options = options;
+        CorrectOptionIndex = correctIndex;
     }
     public override bool IsCorrect(string answer)
     {

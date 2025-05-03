@@ -20,5 +20,9 @@ public abstract class Question : Entity
         Content = content;
         QuizId = quizId;
     }
+    // Base method
+    public void UpdateContent(string content) {
+        Content = content;
+    }
     public abstract bool IsCorrect(string answer);
 }

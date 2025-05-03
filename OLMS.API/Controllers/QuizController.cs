@@ -97,6 +97,35 @@ public class QuizController : Controller {
         return Ok();
     }
 
+    [HttpPut("update/{quizId}")]
+    public async Task<IActionResult> UpdateQuiz(Guid quizId, [FromBody] UpdateQuizCommand command) {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        // Ensure the route quizId matches the command's QuizId
+        if (quizId != command.QuizId)
+            return BadRequest("Quiz ID mismatch.");
+
+        var result = await _sender.Send(command);
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+
+        return Ok(new { Message = "Quiz updated successfully" });
+    }
+    [HttpPut("update-questions")]
+    public async Task<IActionResult> UpdateQuestions([FromBody] UpdateQuestionsCommand command) {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var result = await _sender.Send(command);
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+
+        return Ok(new {
+            Message = "Questions updated successfully",
+            UpdatedQuestionIds = result.Value
+        });
+    }
+
+
 
 
 }

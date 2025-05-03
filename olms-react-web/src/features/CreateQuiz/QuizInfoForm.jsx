@@ -58,16 +58,23 @@ function QuizInfoForm({ register, errors, watch }) {
           {...register("isTimeLimited")}
           className="form-checkbox h-5 w-5 text-[#89b46c]"
         />
-        <span>Time Limited?</span>
+        <span>Time Limited? (minutes)</span>
       </label>
       {isTimeLimited && (
         <div>
-          <input
+          {/* <input
             {...register("timeLimit")}
             type="time"
             step="1"
             placeholder="Time Limit (hh:mm:ss)"
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#89b46c] text-black"
+          /> */}
+          <input
+            type="number"
+            min="0"
+            placeholder="Minutes"
+            {...register("timeLimit")}
+            className="w-1/2 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#89b46c] text-black"
           />
           {errors.timeLimit && (
             <div className="text-red-600 text-sm">

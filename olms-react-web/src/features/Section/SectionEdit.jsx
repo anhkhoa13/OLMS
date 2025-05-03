@@ -226,6 +226,7 @@ function SectionEdit() {
             nextOrder={orderedItems.length}
             onSuccess={handleRefresh}
             isEditing={isEditing}
+            quizId={currentItem?.id}
           />
         )}
       </Modal>

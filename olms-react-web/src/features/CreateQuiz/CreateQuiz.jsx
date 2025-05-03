@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../contexts/AuthContext";
@@ -29,13 +29,32 @@ const quizInfoSchema = Yup.object().shape({
     .required("Number of attempts is required"),
 });
 
-function CreateQuiz({ sectionId, onClose, nextOrder, onSuccess }) {
+function CreateQuiz({
+  sectionId,
+  onClose,
+  nextOrder,
+  onSuccess,
+  isEditing,
+  quizId,
+}) {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
 
   const { currentUser } = useAuth();
+
+  function minutesToHHMMSS(minutes) {
+    const hrs = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return `${hrs.toString().padStart(2, "0")}:${mins
+      .toString()
+      .padStart(2, "0")}:00`;
+  }
+  const TimeSpanToMinutes = (timeString) => {
+    const [hours, minutes] = timeString.split(":");
+    return parseInt(hours) * 60 + parseInt(minutes);
+  };
 
   const {
     register,
@@ -56,6 +75,11 @@ function CreateQuiz({ sectionId, onClose, nextOrder, onSuccess }) {
     },
     mode: "onBlur",
   });
+  const isGuid = (id) => {
+    const guidRegex =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    return guidRegex.test(id);
+  };
 
   const onSubmit = async (data) => {
     if (!window.confirm("Are you sure you want to submit this quiz?")) {
@@ -74,52 +98,98 @@ function CreateQuiz({ sectionId, onClose, nextOrder, onSuccess }) {
         instructorId: currentUser.id,
         ...data,
         timeLimit: data.isTimeLimited
-          ? data.timeLimit.length === 5
-            ? `00:${data.timeLimit}`
-            : data.timeLimit
+          ? minutesToHHMMSS(Number(data.timeLimit))
           : null,
         numberOfAttempts: Number(data.numberOfAttempts),
         order: nextOrder,
         sectionId,
       };
-      console.log(quizJson);
 
-      const createRes = await axios.post(
-        `${API_URL}/api/quiz/create`,
-        quizJson
-      );
-      const quizId = createRes.data?.quizId || createRes.data || null;
+      if (isEditing) {
+        // Update quiz
+        await axios.put(`${API_URL}/api/quiz/update/${quizId}`, {
+          ...quizJson,
+          QuizId: quizId,
+        });
+        console.log(questions);
 
-      if (!quizId) {
-        throw new Error("Quiz creation did not return a quizId.");
+        // Update questions
+        const questionsUpdatePayload = {
+          QuizId: quizId,
+          Questions: questions
+            .filter((q) => q.id && isGuid(q.id)) // Only existing questions
+            .map((q) => ({
+              QuestionId: q.id,
+              type: q.type,
+              content: q.content,
+              options: q.type === "MultipleChoice" ? q.options : null,
+              correctOptionIndex:
+                q.type === "MultipleChoice" ? q.correctOptionIndex : null,
+              correctAnswer: q.type === "ShortAnswer" ? q.correctAnswer : null,
+            })),
+        };
+
+        if (questionsUpdatePayload.Questions.length > 0) {
+          await axios.put(
+            `${API_URL}/api/quiz/update-questions`,
+            questionsUpdatePayload
+          );
+        }
+
+        //Add new questions
+        const newQuestions = questions.filter((q) => q.id && !isGuid(q.id));
+        if (newQuestions.length > 0) {
+          await axios.post(`${API_URL}/api/quiz/add-questions`, {
+            QuizId: quizId,
+            Questions: newQuestions.map((q) => ({
+              type: q.type,
+              content: q.content,
+              options: q.type === "MultipleChoice" ? q.options : null,
+              correctOptionIndex:
+                q.type === "MultipleChoice" ? q.correctOptionIndex : null,
+              correctAnswer: q.type === "ShortAnswer" ? q.correctAnswer : null,
+            })),
+          });
+        }
+      } else {
+        const createRes = await axios.post(
+          `${API_URL}/api/quiz/create`,
+          quizJson
+        );
+        const quizId = createRes.data?.quizId || createRes.data || null;
+
+        if (!quizId) {
+          throw new Error("Quiz creation did not return a quizId.");
+        }
+
+        const questionsJson = {
+          QuizId: quizId,
+          Questions: questions.map((q) => ({
+            type: q.type,
+            content: q.content,
+            options: q.type === "MultipleChoice" ? q.options : null,
+            correctOptionIndex:
+              q.type === "MultipleChoice" ? q.correctOptionIndex : null,
+            correctAnswer: q.type === "ShortAnswer" ? q.correctAnswer : null,
+          })),
+        };
+
+        await axios.post(`${API_URL}/api/quiz/add-questions`, questionsJson);
+
+        setSuccessMsg("Quiz and questions created successfully!");
       }
 
-      const questionsJson = {
-        QuizId: quizId,
-        Questions: questions.map((q) => ({
-          type: q.type,
-          content: q.content,
-          options: q.type === "MultipleChoice" ? q.options : null,
-          correctOptionIndex:
-            q.type === "MultipleChoice" ? q.correctOptionIndex : null,
-          correctAnswer: q.type === "ShortAnswer" ? q.correctAnswer : null,
-        })),
-      };
-      console.log(questionsJson);
-
-      await axios.post(`${API_URL}/api/quiz/add-questions`, questionsJson);
-
-      setSuccessMsg("Quiz and questions created successfully!");
       onClose();
       if (onSuccess) onSuccess(); // Trigger refresh
       reset(); // <-- Reset quiz info form
       setQuestions([]); // <-- Clear all questions
-      window.alert("Quiz and questions created successfully!");
+      window.alert("Quiz and questions updated successfully!");
     } catch (error) {
+      console.log(error);
       let message = "Something went wrong. Please try again later.";
       if (axios.isAxiosError(error)) {
         if (error.response) {
-          message = error.message;
+          message = error.response.data.code;
         } else if (error.request) {
           message = "No response from server. Please check your network.";
         } else {
@@ -133,6 +203,52 @@ function CreateQuiz({ sectionId, onClose, nextOrder, onSuccess }) {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const fetchQuizData = async () => {
+      if (!isEditing) return;
+
+      try {
+        const shortQuizId = quizId.substring(0, 6);
+        const response = await axios.get(
+          `${API_URL}/api/quiz/code/${shortQuizId}`
+        );
+        const quizData = response.data;
+
+        // Convert TimeSpan to minutes
+        const timeLimitMinutes = quizData.timeLimit
+          ? Math.floor(TimeSpanToMinutes(quizData.timeLimit))
+          : 0;
+
+        // Reset form with existing values
+        reset({
+          title: quizData.title,
+          description: quizData.description,
+          startTime: quizData.startTime,
+          endTime: quizData.endTime,
+          isTimeLimited: quizData.isTimeLimited,
+          timeLimit: timeLimitMinutes.toString(),
+          numberOfAttempts: quizData.numberOfAttempts,
+        });
+
+        // Set existing questions
+        const formattedQuestions = quizData.questions.map((q) => ({
+          id: q.questionId,
+          type: q.type,
+          content: q.content,
+          options: q.options || [],
+          correctOptionIndex: q.correctOptionIndex,
+          correctAnswer: q.correctAnswer,
+        }));
+        setQuestions(formattedQuestions);
+      } catch (error) {
+        console.error("Error fetching quiz data:", error);
+        setErrorMsg("Failed to load quiz data");
+      }
+    };
+
+    fetchQuizData();
+  }, [isEditing, quizId, reset]);
 
   return (
     <div className="min-h-screen bg-[#f6faf3] py-10">
