@@ -15,7 +15,7 @@ function CourseView() {
   const [activeSection, setActiveSection] = useState(null);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 mb-8">
       {/* Header */}
       <CourseViewHeader bgImage={bgImage} courseData={courseData} />
 

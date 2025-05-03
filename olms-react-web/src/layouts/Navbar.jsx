@@ -64,7 +64,7 @@ function NavBar() {
             to="/dashboard"
             className="px-6 py-3 hover:bg-gray-200 cursor-pointer transition-all duration-200"
           >
-            Calendar
+            Dashboard
           </Link>
           <Link
             key="courses"

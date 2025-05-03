@@ -62,7 +62,7 @@ const CourseCard = ({ course, isEnrolled }) => {
 
   return (
     <div
-      className="relative w-full rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+      className="relative w-full rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col"
       style={{
         backgroundImage: `url(${cardBg})`,
         backgroundSize: "cover",
@@ -74,7 +74,7 @@ const CourseCard = ({ course, isEnrolled }) => {
       <div className="absolute inset-0 bg-gradient-to-br from-black/60 to-black/40 z-0" />
 
       {/* Content */}
-      <div className="relative z-10 p-4 flex flex-col min-h-[180px]">
+      <div className="relative z-10 p-4 flex flex-col min-h-[180px] flex-1">
         <h2 className="text-3xl font-bold mb-1 text-white drop-shadow">
           {title}
         </h2>
@@ -84,19 +84,21 @@ const CourseCard = ({ course, isEnrolled }) => {
         <p className="text-xs text-gray-200 mb-2">
           <b>Code:</b> {code}
         </p>
-        <div className="flex items-center gap-2 mt-auto">
-          <Avatar name={instructor.name} />
-          <div>
-            <p className="font-semibold text-white text-sm">
-              {instructor.name}
-            </p>
+        <div className="mt-auto">
+          <div className="flex items-center gap-2 mt-auto">
+            <Avatar name={instructor.name} />
+            <div>
+              <p className="font-semibold text-white text-sm">
+                {instructor.name}
+              </p>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Button */}
       <button
-        className="relative z-10 bg-lime-500 hover:bg-lime-600 text-black text-center py-2 font-semibold text-base rounded-b-xl cursor-pointer w-full transition-colors duration-200"
+        className="relative z-10 bg-lime-500 hover:bg-lime-600 text-black text-center py-2 font-semibold text-base cursor-pointer w-full transition-colors duration-200"
         onClick={isEnrolled ? handleView : handleEnroll}
       >
         {isEnrolled ? isLoading ? <Loader /> : "View" : "Enroll Now"}

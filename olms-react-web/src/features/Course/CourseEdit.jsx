@@ -47,7 +47,7 @@ function CourseEdit() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row gap-8 mt-16 px-4 max-w-6xl mx-auto">
+    <div className="flex flex-col md:flex-row gap-8 mt-8 px-4 max-w-6xl mx-auto">
       {/* Left Column: Main Content */}
       <div className="flex-1 min-w-0">
         <div className="bg-white shadow-2xl rounded-xl p-8 md:p-12 mb-8">
@@ -83,7 +83,7 @@ function CourseEdit() {
             </div>
           </form>
         </div>
-        <div className="bg-gray-50 shadow-lg rounded-xl p-8 md:p-12">
+        <div className="bg-gray-50 shadow-lg rounded-xl p-8 md:p-12 mb-8">
           <CourseContent
             activeSection={activeSection}
             setActiveSection={setActiveSection}
