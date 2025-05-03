@@ -8,7 +8,7 @@ using OLMS.Shared.DTO;
 namespace OLMS.API.Controllers;
 
 [ApiController]
-[Authorize(Roles = "Student")]
+//[Authorize(Roles = "Student")]
 [Route("api/student")]
 public class StudentController : Controller
 {
@@ -50,6 +50,7 @@ public class StudentController : Controller
 
         var courses = result.Value.Select(c => new
         {
+            c.Id,
             Code = c.Code.Value,
             c.Title,
             c.Description,
@@ -60,6 +61,35 @@ public class StudentController : Controller
         });
 
         return Ok(new { courses, Message = "Courses retrieve successful" });
+    }
+
+    [HttpPost("submit-exercise")]
+    public async Task<IActionResult> SubmitExercise([FromBody] SubmitExerciseCommand command)
+    {
+        var result = await _sender.Send(command);
+        if (!result.IsSuccess)
+        {
+            return BadRequest(new
+            {
+                Code = 400,
+                Message = result.Error.ErrorMessage,
+                Errors = result.Error.Code
+            });
+        }
+        return Ok(new { Message = "Submit exercise success" });
+    }
+
+    // Get all things related to student (assignement/quiz deadline, announements) 
+    // of every course that he or she enrolls
+    [HttpGet("{studentId}/dashboard")]
+    public async Task<IActionResult> GetStudentDashboard(Guid studentId) {
+        var result = await _sender.Send(new GetDashboardQuery(studentId));
+
+        if (result.IsSuccess) {
+            return Ok(result.Value);
+        }
+
+        return BadRequest(result.Error);
     }
 
 }

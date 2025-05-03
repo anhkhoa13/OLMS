@@ -3,9 +3,9 @@ import UserCalendar from "../components/UserCalendar";
 
 function Dashboard() {
   return (
-    <div className="flex flex-col justify-center min-h-screen bg-gray-100 px-32">
+    <div className="flex flex-col justify-start min-h-screen bg-gray-100 px-32">
       <AcademicPlanner />
-      <UserCalendar />
+      {/* <UserCalendar /> */}
     </div>
   );
 }

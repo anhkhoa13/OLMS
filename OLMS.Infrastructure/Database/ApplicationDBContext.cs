@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
 using OLMS.Domain.Entities;
+using OLMS.Domain.Entities.AssignmentAttempt;
 using OLMS.Domain.Entities.CourseAggregate;
 using OLMS.Domain.Entities.ForumAggregate;
 using OLMS.Domain.Entities.ForumAggregate.PostAggregate;
@@ -41,10 +42,11 @@ public class ApplicationDbContext : DbContext
     public DbSet<Post> Posts { get; set; }
     public DbSet<Comment> Comments { get; set; }
     public DbSet<Vote> Votes { get; set; }
+    public DbSet<Announcement> Announcements { get; set; }
 
-
+    public DbSet<Admin> Admins { get; set; }
     public DbSet<QuizCourse> QuizCourses { get; set; }
-
+    public DbSet<ExerciseAttempt> ExerciseAttempts { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

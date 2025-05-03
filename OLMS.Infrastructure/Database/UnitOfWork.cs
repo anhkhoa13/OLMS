@@ -21,9 +21,4 @@ public class UnitOfWork : IUnitOfWork
     {
         _context.Dispose();
     }
-
-    public async Task<IDbContextTransaction> BeginTransactionAsync()
-    {
-        return await _context.Database.BeginTransactionAsync();
-    }
 }

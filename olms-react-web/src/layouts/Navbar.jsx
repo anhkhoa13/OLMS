@@ -23,19 +23,12 @@ function NavBar() {
     navigate("/"); // Redirect to home page after logout
   };
 
-  // Check if user has Instructor or Admin role
-  const canCreateContent = userRole === "Instructor" || userRole === "Admin";
-
   // Create base menu items that all authenticated users can see
   let menuItems = [{ name: "Profile", link: "/profile" }];
 
   // Add instructor/admin specific menu items if user has appropriate role
-  if (canCreateContent) {
-    menuItems = [
-      ...menuItems,
-      { name: "Create Quiz", link: "/createQuiz" },
-      { name: "Create Course", link: "/createCourse" },
-    ];
+  if (userRole === "Admin") {
+    menuItems = [...menuItems, { name: "Approve", link: "/approve" }];
   }
 
   // Add logout option for all authenticated users
@@ -43,42 +36,51 @@ function NavBar() {
     name: "Logout",
     link: "#",
     onClick: handleLogout,
-    icon: <ArrowRightOnRectangleIcon className="w-4 h-4 ml-2" />,
+    icon: <ArrowRightOnRectangleIcon className="w-4 h-4 ml-2 " />,
   });
 
   // Final user menu items based on authentication status
   const userMenuItems = isAuthenticated ? menuItems : userLogin;
 
   return (
-    <nav className="bg-white shadow-md px-6 py-4 flex items-center justify-between z-50">
+    <nav className="bg-white shadow-md px-6 py-1 flex items-center justify-between z-50">
       {/* Left side: Logo */}
       <div className="flex items-center space-x-3">
         <Logo className="" />
       </div>
 
       {/* Right side: Links */}
-      <div className="flex items-center space-x-10 text-gray-600 font-medium">
-        <Link
-          key="explore"
-          to="/explore"
-          className="px-6 py-3 hover:bg-gray-100 cursor-pointer transition-all duration-200"
-        >
-          ⭐ Explore
-        </Link>
-        <Link
-          key="dashboard"
-          to="/dashboard"
-          className="px-6 py-3 hover:bg-gray-100 cursor-pointer transition-all duration-200"
-        >
-          📅 Calendar
-        </Link>
-        <Link
-          key="courses"
-          to="/courses"
-          className="px-6 py-3 hover:bg-gray-100 cursor-pointer transition-all duration-200"
-        >
-          💻 My Courses
-        </Link>
+      <div className="flex items-center text-gray-600 font-medium">
+        <div className="flex items-center divide-x divide-gray-300">
+          <Link
+            key="explore"
+            to="/explore"
+            className="px-6 py-3 hover:bg-gray-200 cursor-pointer transition-all duration-200"
+          >
+            Explore
+          </Link>
+          <Link
+            key="dashboard"
+            to="/dashboard"
+            className="px-6 py-3 hover:bg-gray-200 cursor-pointer transition-all duration-200"
+          >
+            Dashboard
+          </Link>
+          <Link
+            key="courses"
+            to="/courses"
+            className="px-6 py-3 hover:bg-gray-200 cursor-pointer transition-all duration-200"
+          >
+            My Courses
+          </Link>
+        </div>
+        {/* UserRole display */}
+        {userRole && (
+          <span className="ml-6 px-3 py-1 rounded bg-[#b4d89d] text-sm text-gray-700 border border-gray-200 mr-5">
+            {userRole}
+          </span>
+        )}
+        {/* User dropdown */}
         <DropDownLink
           icon={<Avatar name={isAuthenticated ? currentUser?.fullName : ""} />}
           title="Người dùng"

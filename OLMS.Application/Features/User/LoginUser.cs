@@ -31,19 +31,29 @@ public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, Result<
     {
         _userRepository = userRepository;
     }
-    public async Task<Result<UserBase>> Handle(LoginUserCommand request, CancellationToken cancellationToken)
-    {
-        var username = Username.Create(request.Username);
-        var user = await _userRepository.GetByUsernameAsync(username, cancellationToken);
+    public async Task<Result<UserBase>> Handle(
+    LoginUserCommand request,
+    CancellationToken cancellationToken) {
+        try {
+            var username = Username.Create(request.Username);
+            var user = await _userRepository.GetByUsernameAsync(username, cancellationToken);
 
-        if (user is null)
-            return CannotLogin;
+            if (user is null)
+                return CannotLogin;
 
-        var password = Password.Create(request.Password);
-        if (!user.Password.Equals(password))
-            return CannotLogin;
+            var password = Password.Create(request.Password);
+            if (!user.Password.Equals(password))
+                return CannotLogin;
 
-        return user;
+            return user;
+        } catch (Exception ex) {
+            // Log the exception here if you have logging configured
+            // _logger.LogError(ex, "Error during user login");
+
+            return Result<UserBase>.Failure(
+                new Error("LoginError", $"An error occurred during login: {ex.Message}")
+            );
+        }
     }
 }
 

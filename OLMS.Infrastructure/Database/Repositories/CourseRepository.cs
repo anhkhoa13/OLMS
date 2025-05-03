@@ -2,6 +2,7 @@
 using OLMS.Domain.Entities.CourseAggregate;
 using OLMS.Domain.Repositories;
 using OLMS.Domain.ValueObjects;
+using System.Threading;
 
 namespace OLMS.Infrastructure.Database.Repositories;
 
@@ -27,6 +28,22 @@ public class CourseRepository(ApplicationDbContext context) : Repository<Course>
     public override async Task<IEnumerable<Course>> GetAllAsync(CancellationToken cancellationToken) {
         return await _context.Courses
             .Include(c => c.Instructor)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<IEnumerable<Course>> GetAllEnrollingCourses() {
+        return await _context.Courses
+            .Where(c => c.Status == CourseStatus.Enrolling)
+            .Include(c => c.Instructor)
+            .ToListAsync();
+    }
+    public async Task<List<Course>> GetCoursesByStudentIdAsync(Guid studentId, CancellationToken cancellationToken) {
+        return await _context.Courses
+            .Where(c => c.Students.Any(s => s.Id == studentId))
+            .Include(c => c.Instructor)
+            .Include(c => c.Sections)
+                .ThenInclude(s => s.Assignments)
+            .Include(c => c.Announcements)
             .ToListAsync(cancellationToken);
     }
 }

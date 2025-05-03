@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import Courses from "../features/Course/Courses";
 import bgImage from "../assets/images/bg_main.png";
 
 const HomePage = () => {
-  const [quizCode, setQuizCode] = useState("");
+  // const [quizCode, setQuizCode] = useState("");
 
   // const handleJoinQuiz = () => {
   //   if (quizCode.trim()) {
@@ -89,42 +89,6 @@ const HomePage = () => {
       <Courses isEnroll={false} maxNoDisplay={3} title="OUR POPULAR COURSES" />
 
       {/* Quiz Section */}
-      <div className="py-20 px-4 md:px-8 lg:px-16 bg-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#89b46c] mb-6">
-            Participate in Quizzes!
-          </h2>
-          <p className="text-gray-700 mb-6 text-lg">
-            Our OLMS offers interactive quizzes to reinforce your learning. Join
-            quizzes directly using a code or access them through your enrolled
-            courses.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
-            <input
-              type="text"
-              placeholder="Enter quiz code"
-              value={quizCode}
-              onChange={(e) => setQuizCode(e.target.value)}
-              className="border border-gray-300 px-4 py-2 rounded-md w-full sm:w-72"
-            />
-            {/* <button
-              onClick={handleJoinQuiz}
-              className="bg-[#89b46c] hover:bg-[#76a55a] text-white px-6 py-2 rounded-md transition"
-            >
-              Join Quiz
-            </button> */}
-
-            <Link
-              key={quizCode}
-              to={`/quiz/${quizCode}`}
-              className="inline-block bg-[#89b46c] text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-[#78a05c] transition duration-200"
-            >
-              Join Quiz
-            </Link>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };

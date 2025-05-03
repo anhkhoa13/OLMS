@@ -22,6 +22,34 @@ namespace OLMS.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Announcement", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.ToTable("Announcements");
+                });
+
             modelBuilder.Entity("Assignment", b =>
                 {
                     b.Property<Guid>("Id")
@@ -182,6 +210,67 @@ namespace OLMS.Infrastructure.Migrations
                     b.ToTable("LessonAttachment");
                 });
 
+            modelBuilder.Entity("OLMS.Domain.Entities.AssignmentAttempt.ExerciseAttempt", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ExerciseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("Score")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("SubmitAt")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExerciseId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("ExerciseAttempts");
+                });
+
+            modelBuilder.Entity("OLMS.Domain.Entities.AssignmentAttempt.SubmitAttachment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("Data")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<Guid>("ExerciseAttemptId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExerciseAttemptId");
+
+                    b.ToTable("SubmitAttachment");
+                });
+
             modelBuilder.Entity("OLMS.Domain.Entities.CourseAggregate.Course", b =>
                 {
                     b.Property<Guid>("Id")
@@ -191,9 +280,6 @@ namespace OLMS.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
-
-                    b.Property<Guid>("ForumId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("InstructorId")
                         .HasColumnType("uniqueidentifier");
@@ -209,9 +295,6 @@ namespace OLMS.Infrastructure.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ForumId")
-                        .IsUnique();
 
                     b.HasIndex("InstructorId");
 
@@ -466,6 +549,9 @@ namespace OLMS.Infrastructure.Migrations
                     b.Property<Guid>("CourseId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -570,6 +656,13 @@ namespace OLMS.Infrastructure.Migrations
                     b.HasDiscriminator().HasValue("ShortAnswerQuestion");
                 });
 
+            modelBuilder.Entity("OLMS.Domain.Entities.Admin", b =>
+                {
+                    b.HasBaseType("OLMS.Domain.Entities.UserBase");
+
+                    b.ToTable("Admins");
+                });
+
             modelBuilder.Entity("OLMS.Domain.Entities.InstructorAggregate.Instructor", b =>
                 {
                     b.HasBaseType("OLMS.Domain.Entities.UserBase");
@@ -592,6 +685,15 @@ namespace OLMS.Infrastructure.Migrations
                         .HasColumnName("Major");
 
                     b.ToTable("Student", (string)null);
+                });
+
+            modelBuilder.Entity("Announcement", b =>
+                {
+                    b.HasOne("OLMS.Domain.Entities.CourseAggregate.Course", null)
+                        .WithMany("Announcements")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Assignment", b =>
@@ -651,14 +753,32 @@ namespace OLMS.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("OLMS.Domain.Entities.CourseAggregate.Course", b =>
+            modelBuilder.Entity("OLMS.Domain.Entities.AssignmentAttempt.ExerciseAttempt", b =>
                 {
-                    b.HasOne("OLMS.Domain.Entities.ForumAggregate.Forum", null)
-                        .WithOne()
-                        .HasForeignKey("OLMS.Domain.Entities.CourseAggregate.Course", "ForumId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                    b.HasOne("Exercise", null)
+                        .WithMany()
+                        .HasForeignKey("ExerciseId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("OLMS.Domain.Entities.StudentAggregate.Student", null)
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("OLMS.Domain.Entities.AssignmentAttempt.SubmitAttachment", b =>
+                {
+                    b.HasOne("OLMS.Domain.Entities.AssignmentAttempt.ExerciseAttempt", null)
+                        .WithMany("SubmitAttachtment")
+                        .HasForeignKey("ExerciseAttemptId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("OLMS.Domain.Entities.CourseAggregate.Course", b =>
+                {
                     b.HasOne("OLMS.Domain.Entities.InstructorAggregate.Instructor", "Instructor")
                         .WithMany("Courses")
                         .HasForeignKey("InstructorId")
@@ -696,7 +816,7 @@ namespace OLMS.Infrastructure.Migrations
             modelBuilder.Entity("OLMS.Domain.Entities.ForumAggregate.Forum", b =>
                 {
                     b.HasOne("OLMS.Domain.Entities.CourseAggregate.Course", null)
-                        .WithOne()
+                        .WithOne("Forum")
                         .HasForeignKey("OLMS.Domain.Entities.ForumAggregate.Forum", "CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -707,13 +827,13 @@ namespace OLMS.Infrastructure.Migrations
                     b.HasOne("OLMS.Domain.Entities.ForumAggregate.PostAggregate.Post", null)
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("OLMS.Domain.Entities.UserBase", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -737,7 +857,7 @@ namespace OLMS.Infrastructure.Migrations
                     b.HasOne("OLMS.Domain.Entities.UserBase", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -965,6 +1085,15 @@ namespace OLMS.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("OLMS.Domain.Entities.Admin", b =>
+                {
+                    b.HasOne("OLMS.Domain.Entities.UserBase", null)
+                        .WithOne()
+                        .HasForeignKey("OLMS.Domain.Entities.Admin", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("OLMS.Domain.Entities.InstructorAggregate.Instructor", b =>
                 {
                     b.HasOne("OLMS.Domain.Entities.UserBase", null)
@@ -988,8 +1117,18 @@ namespace OLMS.Infrastructure.Migrations
                     b.Navigation("LessonAttachments");
                 });
 
+            modelBuilder.Entity("OLMS.Domain.Entities.AssignmentAttempt.ExerciseAttempt", b =>
+                {
+                    b.Navigation("SubmitAttachtment");
+                });
+
             modelBuilder.Entity("OLMS.Domain.Entities.CourseAggregate.Course", b =>
                 {
+                    b.Navigation("Announcements");
+
+                    b.Navigation("Forum")
+                        .IsRequired();
+
                     b.Navigation("Sections");
                 });
 

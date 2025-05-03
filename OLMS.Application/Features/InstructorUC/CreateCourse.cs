@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using OLMS.Domain.Entities.InstructorAggregate;
 using OLMS.Domain.Repositories;
 using OLMS.Domain.Result;
@@ -38,9 +37,8 @@ public class CreateCourseCommandHandler(IUnitOfWork unitOfWork, IInstructorRepos
 
         var course = instructor.CreateCourse(request.Title, request.Description);
 
-        _instuctorRepository.Update(instructor);
-        await _courseRepository.AddAsync(course, cancellationToken);
 
+        await _courseRepository.AddAsync(course, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return course.Code;

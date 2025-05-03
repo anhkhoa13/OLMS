@@ -8,6 +8,9 @@ public sealed record Error(string Code, string? ErrorMessage = null)
     public static Error NotFound(string message) => new("NotFound", message);
     public static Error Validation(string message) => new("Validation", message);
     public static Error Failure(string message) => new("Failure", message);
+    public static Error Conflict(string message) => new("Conflict", message);
+    public static Error Forbidden(string message) => new("Forbidden", message);
+    public static Error Unauthorized(string message) => new("Unauthorized", message);
 }
 public static class UserError
 {   
@@ -45,5 +48,27 @@ public static class CourseError
 
     public static readonly Error CourseNotFound = new("Course Not Found", "Course not found");
 
+    public static readonly Error CourseInactive = new("Course.Inactive", "Course is not active");
+    public static readonly Error EnrollmentClosed = new("Course.Enrollment.Closed", "Course enrollment is closed");
+
+}
+public static class SectionError {
+    public static readonly Error EmptyTitle = new("Section.EmptyTitle", "Section title cannot be empty");
+    public static readonly Error InvalidTitleLength = new("Section.InvalidTitleLength",
+        "Section title must be between 3 and 100 characters");
+    public static readonly Error SectionNotFound = new("Section.NotFound", "Section not found");
+    public static readonly Error DuplicateTitle = new("Section.DuplicateTitle",
+        "A section with this title already exists in the course");
+    public static readonly Error InvalidOrder = new("Section.InvalidOrder",
+        "Section order must be a positive integer");
+}
+
+public static class ContentError {
+    public static readonly Error InvalidContentType = new("Content.InvalidType",
+        "Invalid content type specified");
+    public static readonly Error FileTooLarge = new("Content.FileTooLarge",
+        "File size exceeds maximum allowed limit");
+    public static readonly Error UnsupportedFormat = new("Content.UnsupportedFormat",
+        "File format is not supported");
 }
 

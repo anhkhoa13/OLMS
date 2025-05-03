@@ -1,4 +1,5 @@
-﻿using OLMS.Domain.Entities.QuestionEntity;
+﻿using OLMS.Domain.Entities.InstructorAggregate;
+using OLMS.Domain.Entities.QuestionEntity;
 using OLMS.Domain.Primitives;
 using OLMS.Domain.ValueObjects;
 using System;
@@ -53,8 +54,8 @@ public class Quiz : Assignment, IAggregateRoot
         bool isTimeLimited,
         TimeSpan? timeLimit,
         int numberOfAttempts,
-        Guid sectionId,
-        Guid instructorId
+        Guid instructorId,
+        Guid sectionId
         ) {
         Validate(title, description, startDate, dueDate, numberOfAttempts, sectionId, instructorId);
 
@@ -77,6 +78,28 @@ public class Quiz : Assignment, IAggregateRoot
             sectionId,
             instructorId
         );
+    }
+    public void Update(
+    string title,
+    string description,
+    DateTime startTime,
+    DateTime endTime,
+    bool allowLateSubmission,
+    bool isTimeLimited,
+    TimeSpan? timeLimit,
+    int numberOfAttempts,
+    Guid instructorId,
+    Guid sectionId) {
+        Title = title;
+        Description = description;
+        StartDate = startTime;
+        DueDate = endTime;
+        AllowLateSubmission = allowLateSubmission;
+        IsTimeLimited = isTimeLimited;
+        TimeLimit = timeLimit;
+        NumberOfAttempts = numberOfAttempts;
+        InstructorID = instructorId;
+        SectionId = sectionId;
     }
 
 

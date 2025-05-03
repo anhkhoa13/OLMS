@@ -23,11 +23,13 @@ public class PostConfiguration : IEntityTypeConfiguration<Post>
 
         builder.HasMany(p => p.Votes)
             .WithOne()
-            .HasForeignKey(v => v.PostId);
+            .HasForeignKey(v => v.PostId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(p => p.Comments)
             .WithOne()
-            .HasForeignKey(c => c.PostId);
+            .HasForeignKey(c => c.PostId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne<Forum>()
             .WithMany(f => f.Posts)

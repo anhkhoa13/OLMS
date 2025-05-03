@@ -2,7 +2,7 @@
 
 public class ShortAnswerQuestion : Question
 {
-    public string CorrectAnswer { get; private set; }
+    public string CorrectAnswer { get; set; }
     public override QuestionType Type { get; protected set; } = QuestionType.ShortAnswer;
 
     public ShortAnswerQuestion(Guid id, string content, string correctAnswer, Guid quizId)
@@ -21,6 +21,9 @@ public class ShortAnswerQuestion : Question
             throw new ArgumentException("Correct answer cannot be empty", nameof(correctAnswer));
 
         return new ShortAnswerQuestion(Guid.NewGuid(), content, correctAnswer, quizId);
+    }
+    public void UpdateCorrectAnswer(string answer) {
+        CorrectAnswer = answer;
     }
     public override bool IsCorrect(string answer)
     {

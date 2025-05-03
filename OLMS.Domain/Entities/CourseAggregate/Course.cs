@@ -1,8 +1,10 @@
-﻿using OLMS.Domain.Entities.InstructorAggregate;
+﻿using OLMS.Domain.Entities.ForumAggregate;
+using OLMS.Domain.Entities.InstructorAggregate;
 using OLMS.Domain.Entities.SectionEntity;
 using OLMS.Domain.Entities.StudentAggregate;
 using OLMS.Domain.Primitives;
 using OLMS.Domain.ValueObjects;
+using System.Linq;
 
 namespace OLMS.Domain.Entities.CourseAggregate;
 
@@ -10,7 +12,7 @@ public class Course : AggregateRoot
 {
     #region Properties
     public Code Code { get; private set; } = default!;
-    public string Title { get; private set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
     public string? Description { get; set; } = string.Empty;
     public CourseStatus Status { get; private set; }
     #endregion
@@ -24,7 +26,11 @@ public class Course : AggregateRoot
     private readonly List<Section> _sections = [];
     public IReadOnlyCollection<Section> Sections => _sections.AsReadOnly();
 
-    public Guid ForumId { get; private set; }
+    // Announcements collection
+    private readonly List<Announcement> _announcements = [];
+    public IReadOnlyCollection<Announcement> Announcements => _announcements.AsReadOnly();
+
+    public Forum Forum { get; private set; } = default!;
     #endregion
 
     private Course() : base() { }
@@ -43,12 +49,15 @@ public class Course : AggregateRoot
         if (string.IsNullOrWhiteSpace(title)) throw new ArgumentNullException(nameof(title), "Title cannot be null");
 
         if (title.Length < 3 || title.Length > 100) throw new ArgumentException("Title must be 3-100 characters long", nameof(title));
-        if (description.Length > 100) throw new ArgumentException("Description must be less than 100 characters", nameof(description));
+        if (description.Length > 1000) throw new ArgumentException("Description must be less than 100 characters", nameof(description));
 
         Guid id = Guid.NewGuid();
 
         var code = Code.Generate(id);
-        return new Course(id, code, title, description, instructorId, CourseStatus.Enrolling);
+
+        Course course = new(id, code, title, description, instructorId, CourseStatus.Pending);
+        course.CreateForum();
+        return course;
     }
 
     public void AddStudent(Student student)
@@ -61,17 +70,24 @@ public class Course : AggregateRoot
 
         _students.Add(student);
     }
+    public void AddSection(Section section) {
+        _sections.Add(section);
+    }
 
-    //public void EnrollStudent(Student student)
-    //{
-    //    if (_enrollments.Any(e => e.StudentId == student.Id))
-    //        throw new InvalidOperationException("Student is already enrolled in this course.");
+    private void CreateForum()
+    {
+        if (Forum is not null)
+        {
+            throw new InvalidOperationException("Forum already created for this course.");
+        }
 
-    //    _enrollments.Add(new Enrollment(student.Id, Id));
-    //}
-    //public void UploadMaterial(Material material)
-    //{
-    //    material.MaterialType = MaterialType.CourseContent;
-    //    _materialCourse.Add(new MaterialCourse(Id, material.Id));
-    //}
+        Forum = Forum.Create(Title + " Forum", Id);
+    }
+
+    public void Approve()
+    {
+        if (Status != CourseStatus.Pending)
+            throw new InvalidOperationException("Course already approved");
+        Status = CourseStatus.Enrolling;
+    }
 }

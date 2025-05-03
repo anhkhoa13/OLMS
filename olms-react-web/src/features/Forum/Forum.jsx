@@ -1,25 +1,31 @@
-// components/CourseForum.jsx
-import React, { useState, useEffect } from "react";
-import DiscussionList from "./DiscussionList";
+import React, { useEffect, useState } from "react";
+import Posts from "./Posts";
+import PostForm from "./PostForm";
 
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 
-function Forum({ courseId, currentUser }) {
-  const [discussions, setDiscussions] = useState([]);
+const Forum = ({ courseId }) => {
+  const [forum, setForum] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showForm, setShowForm] = useState(false);
-  const [content, setContent] = useState("");
-  const [documentUrl, setDocumentUrl] = useState("");
+  const token = localStorage.getItem("token");
 
-  // Fetch existing discussions
+  const [refresh, setRefresh] = useState(0);
+
   useEffect(() => {
-    const fetchDiscussions = async () => {
+    const fetchForum = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/discussions/${courseId}`);
-        if (!response.ok) throw new Error("Failed to fetch discussions");
+        const response = await fetch(
+          `${API_URL}/api/forum/course/${courseId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (!response.ok) throw new Error("Failed to fetch forum");
         const data = await response.json();
-        setDiscussions(data);
+        setForum(data);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -27,112 +33,57 @@ function Forum({ courseId, currentUser }) {
       }
     };
 
-    fetchDiscussions();
-  }, [courseId]);
+    fetchForum();
+  }, [courseId, refresh]);
 
-  // Handle new post submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch(`${API_URL}/api/discussions`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          courseId,
-          creatorId: currentUser.id,
-          content,
-          documentUrl: documentUrl || null,
-        }),
-      });
+  // const handleVote = async (postId, voteType) => {
+  //   try {
+  //     const response = await fetch(`/api/posts/${postId}/vote`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ voteType }),
+  //     });
 
-      if (!response.ok) throw new Error("Failed to create post");
+  //     if (!response.ok) throw new Error("Vote failed");
 
-      const newDiscussion = await response.json();
-      setDiscussions([...discussions, newDiscussion]);
-      setShowForm(false);
-      setContent("");
-      setDocumentUrl("");
-    } catch (err) {
-      setError(err.message);
-    }
-  };
+  //     setForum((prev) => ({
+  //       ...prev,
+  //       posts: prev.posts.map((post) =>
+  //         post.id === postId
+  //           ? {
+  //               ...post,
+  //               voteScore:
+  //                 voteType === "up" ? post.voteScore + 1 : post.voteScore - 1,
+  //             }
+  //           : post
+  //       ),
+  //     }));
+  //   } catch (err) {
+  //     console.error("Vote error:", err);
+  //   }
+  // };
 
-  if (loading) return <div className="p-4 text-gray-600">Loading forum...</div>;
-  if (error) return <div className="p-4 text-red-600">Error: {error}</div>;
+  if (loading) return <div className="p-4 text-gray-500">Loading forum...</div>;
+  if (error) return <div className="p-4 text-red-500">Error: {error}</div>;
 
   return (
-    <div>
-      <h2 className="text-xl font-bold text-gray-800 mb-6">Course Forum</h2>
-      <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-        <p className="text-gray-600 mb-6">
-          Welcome to the course forum! Here you can discuss topics with your
-          peers and instructors.
-        </p>
+    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto">
+        {/* Forum Header */}
+        <div className="mb-10 p-6 bg-white rounded-xl shadow-sm border border-gray-200">
+          <h1 className="text-4xl font-bold text-[black] tracking-tight">
+            {forum.title}
+          </h1>
+        </div>
 
-        {/* Discussions List */}
-        <DiscussionList discussions={discussions} />
+        {/* Posts List */}
+        <Posts forum={forum} onRefresh={setRefresh} />
 
         {/* New Post Form */}
-        {showForm ? (
-          <form
-            onSubmit={handleSubmit}
-            className="bg-white p-4 rounded-lg border border-gray-300"
-          >
-            <textarea
-              className="w-full p-2 border rounded mb-3"
-              placeholder="Write your post..."
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              required
-            />
-            <input
-              type="url"
-              className="w-full p-2 border rounded mb-3"
-              placeholder="Document URL (optional)"
-              value={documentUrl}
-              onChange={(e) => setDocumentUrl(e.target.value)}
-            />
-            <div className="flex gap-2">
-              <button
-                type="submit"
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-              >
-                Post
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowForm(false)}
-                className="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300"
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        ) : (
-          <button
-            onClick={() => setShowForm(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 inline-flex items-center"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 mr-2"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-              />
-            </svg>
-            Create New Post
-          </button>
-        )}
+        <PostForm forum={forum} setForum={setForum} courseId={courseId} />
       </div>
     </div>
   );
-}
+};
 
 export default Forum;

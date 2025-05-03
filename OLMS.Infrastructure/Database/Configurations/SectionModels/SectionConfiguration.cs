@@ -33,6 +33,8 @@ public sealed class SectionConfiguration : IEntityTypeConfiguration<Section>
         builder.HasMany(s => s.Assignments)
             .WithOne()
             .HasForeignKey(a => a.SectionId);
+
+        builder.Property(s => s.Order).IsRequired();
     }
 }
 

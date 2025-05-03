@@ -1,11 +1,11 @@
 //using MediatR;
 //using OLMS.Domain.Entities;
 //using OLMS.Domain.Repositories;
-//using OLMS.Domain.Result;
+//using OLMS.Domain.ExerciseAttempt;
 
-//using static OLMS.Domain.Result.Result;
-//using static OLMS.Domain.Result.UserError;
-//using static OLMS.Domain.Result.CourseError;
+//using static OLMS.Domain.ExerciseAttempt.ExerciseAttempt;
+//using static OLMS.Domain.ExerciseAttempt.UserError;
+//using static OLMS.Domain.ExerciseAttempt.CourseError;
 
 //using Microsoft.AspNetCore.Http;
 
@@ -14,9 +14,9 @@
 //    Guid UserId,
 //    Guid ForumId,
 //    IFormFile File
-//) : IRequest<Result>;
+//) : IRequest<ExerciseAttempt>;
 
-//public class UploadMaterialCommandHandler : IRequestHandler<UploadMaterialCommand, Result>
+//public class UploadMaterialCommandHandler : IRequestHandler<UploadMaterialCommand, ExerciseAttempt>
 //{
 //    private readonly IUnitOfWork _unitOfWork;
 //    private readonly ICourseRepository _courseRepository;
@@ -35,7 +35,7 @@
 //        _materialRepository = materialRepository;
 //    }
 
-//    public async Task<Result> Handle(UploadMaterialCommand request, CancellationToken cancellationToken)
+//    public async Task<ExerciseAttempt> Handle(UploadMaterialCommand request, CancellationToken cancellationToken)
 //    {
 //        //if (!await _instuctorRepository.IsUserExist(request.UserId, cancellationToken)) return UserNotFound;
 

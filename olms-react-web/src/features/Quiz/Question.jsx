@@ -8,7 +8,7 @@ function Question({ question, userAnswer, onAnswer }) {
     <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow-md space-y-6">
       <h3 className="text-xl font-semibold text-gray-800">{content}</h3>
 
-      {type === "MultipleChoiceQuestion" && (
+      {type === "MultipleChoice" && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {options.map((option, index) => (
             <Options
@@ -22,7 +22,7 @@ function Question({ question, userAnswer, onAnswer }) {
         </div>
       )}
 
-      {type === "ShortAnswerQuestion" && (
+      {type === "ShortAnswer" && (
         <input
           type="text"
           className="w-full border rounded-lg p-3"

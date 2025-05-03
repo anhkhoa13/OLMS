@@ -2,7 +2,7 @@ import Logo from "../components/Logo";
 
 function Footer() {
   return (
-    <footer className="bg-gray-200 text-lime px-4 md:px-8 lg:px-16 py-10">
+    <footer className="bg-gray-200 text-lime px-4 md:px-8 lg:px-16 py-6">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Logo / Brand */}
         <div className="flex flex-col items-start">
@@ -44,7 +44,7 @@ function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-white/30 mt-10 pt-6 text-center text-sm text-black/70">
+      <div className="border-t border-white/30 mt-2 pt-6 text-center text-sm text-black/70">
         © {new Date().getFullYear()} OLMS. All rights reserved.
       </div>
     </footer>

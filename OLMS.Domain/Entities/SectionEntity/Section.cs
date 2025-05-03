@@ -1,18 +1,12 @@
-﻿using OLMS.Domain.Entities.CourseAggregate;
-using OLMS.Domain.Primitives;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using OLMS.Domain.Primitives;
 
-namespace OLMS.Domain.Entities.SectionEntity; 
+namespace OLMS.Domain.Entities.SectionEntity;
 
-public class Section : Entity 
-{
+public class Section : Entity {
     #region Properties
     public string Title { get; set; }
     public Guid CourseId { get; set; }
+    public int Order {  get; set; }
     #endregion
 
     private readonly List<Lesson> _lessons = [];
@@ -25,68 +19,103 @@ public class Section : Entity
     public IReadOnlyCollection<Assignment> Assignments => _assignments.AsReadOnly();
 
     // Constructor
-    public Section(Guid id, string title, Guid courseId) : base(id) {
+    public Section(Guid id, string title, Guid courseId, int order) : base(id) {
         Title = title;
         CourseId = courseId;
+        Order = order;
     }
 
     // Static factory method to create a SectionItem
-    public static Section Create(string title, Guid courseId) {
-        return new Section(new Guid(), title, courseId);
+    public static Section Create(string title, Guid courseId, int order) {
+        return new Section(new Guid(), title, courseId, order);
     }
 
-    public void AddLesson(Lesson lesson, int order)
-    {
+    public SectionItem AddLesson(Lesson lesson, int order) {
         // Dồn các order lớn hơn hoặc bằng order mới
-        foreach (var item in _sectionItems.Where(item => item.Order >= order).OrderByDescending(item => item.Order))
-        {
+        foreach (var item in _sectionItems.Where(item => item.Order >= order).OrderByDescending(item => item.Order)) {
             item.IncreaseOrder();
         }
 
         _lessons.Add(lesson);
-        _sectionItems.Add(SectionItem.Create(Guid.NewGuid(), lesson.Id, order, SectionItemType.Lesson, Id));
+        SectionItem sectionItem = SectionItem.Create(Guid.NewGuid(), lesson.Id, order, SectionItemType.Lesson, Id);
+        _sectionItems.Add(sectionItem);
+        return sectionItem;
     }
 
-    public void AddAssigment(Assignment assignment, int order)
-    {
-        foreach (var item in _sectionItems.Where(item => item.Order >= order).OrderByDescending(item => item.Order))
-        {
+    public SectionItem AddAssigment(Assignment assignment, int order) {
+        foreach (var item in _sectionItems.Where(item => item.Order >= order).OrderByDescending(item => item.Order)) {
             item.IncreaseOrder();
         }
 
         _assignments.Add(assignment);
-        _sectionItems.Add(SectionItem.Create(Guid.NewGuid(), assignment.Id, order, SectionItemType.Assignment, Id));
+        SectionItem sectionItem = SectionItem.Create(Guid.NewGuid(), assignment.Id, order, SectionItemType.Assignment, Id);
+        _sectionItems.Add(sectionItem);
+        return sectionItem;
     }
 
-    public void RemoveItem(Guid itemId)
-    {
+    public void RemoveItem(Guid itemId) {
         var item = _sectionItems.FirstOrDefault(i => i.ItemId == itemId);
-        if (item != null)
-        {
+        if (item != null) {
             _sectionItems.Remove(item);
-            foreach (var sectionItem in _sectionItems.Where(i => i.Order > item.Order))
-            {
+            foreach (var sectionItem in _sectionItems.Where(i => i.Order > item.Order)) {
                 sectionItem.DecreaseOrder();
             }
 
-            switch (item.ItemType)
-            {
+            switch (item.ItemType) {
                 case SectionItemType.Assignment:
                     var assignment = _assignments.FirstOrDefault(a => a.Id == item.ItemId);
-                    if (assignment != null)
-                    {
+                    if (assignment != null) {
                         _assignments.Remove(assignment);
                     }
                     break;
                 case SectionItemType.Lesson:
                     var lesson = _lessons.FirstOrDefault(l => l.Id == item.ItemId);
-                    if (lesson != null)
-                    {
+                    if (lesson != null) {
                         _lessons.Remove(lesson);
                     }
                     break;
                 default:
                     throw new ArgumentException("Invalid item type");
+            }
+        }
+    }
+
+    public void UpdateLesson(Lesson lesson, int order)
+    {
+        foreach (var item in _sectionItems.Where(item => item.Order >= order).OrderByDescending(item => item.Order))
+        {
+            item.IncreaseOrder();
+        }
+
+        var sectionItems = _sectionItems.SingleOrDefault(i => i.ItemId == lesson.Id);
+
+        if (sectionItems == null)
+        {
+            throw new Exception("SectionItem not found");
+        }
+
+        if (sectionItems.Order == order)
+        {
+            return;
+        }
+        if (sectionItems.Order < order)
+        {
+            // Move down: decrease order of items between old and new positions
+            foreach (var item in _sectionItems
+                         .Where(i => i.Order > sectionItems.Order && i.Order <= order)
+                         .OrderBy(i => i.Order))
+            {
+                item.DecreaseOrder();
+            }
+        }
+        else
+        {
+            // Move up: increase order of items between new and old positions
+            foreach (var item in _sectionItems
+                         .Where(i => i.Order >=  order && i.Order < sectionItems.Order)
+                         .OrderByDescending(i => i.Order))
+            {
+                item.IncreaseOrder();
             }
         }
     }

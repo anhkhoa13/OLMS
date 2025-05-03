@@ -1,6 +1,6 @@
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { ArrowRightEndOnRectangleIcon } from "@heroicons/react/24/solid";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import axios from "axios";
@@ -10,13 +10,13 @@ const API_URL = import.meta.env.VITE_BACKEND_URL;
 
 function Login() {
   const navigate = useNavigate();
-  const location = useLocation();
+  // const location = useLocation();
   const { login } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [apiError, setApiError] = useState("");
 
   // Get the redirect path from location state or default to dashboard
-  const from = location.state?.from?.pathname || "/dashboard";
+  // const from = location.state?.from?.pathname || "/dashboard";
 
   const {
     register,
@@ -59,7 +59,8 @@ function Login() {
         console.log("Login successful:", userData);
 
         // Redirect to the page the user was trying to access, or dashboard
-        navigate(from, { replace: true });
+        // navigate(from, { replace: true });
+        navigate("/dashboard", { replace: true });
       } else {
         throw new Error("No token received from server");
       }
