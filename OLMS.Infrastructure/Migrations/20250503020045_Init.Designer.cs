@@ -12,8 +12,8 @@ using OLMS.Infrastructure.Database;
 namespace OLMS.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250429052259_init-merge")]
-    partial class initmerge
+    [Migration("20250503020045_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -211,6 +211,67 @@ namespace OLMS.Infrastructure.Migrations
                     b.HasIndex("LessonId");
 
                     b.ToTable("LessonAttachment");
+                });
+
+            modelBuilder.Entity("OLMS.Domain.Entities.AssignmentAttempt.ExerciseAttempt", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ExerciseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("Score")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("SubmitAt")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExerciseId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("ExerciseAttempts");
+                });
+
+            modelBuilder.Entity("OLMS.Domain.Entities.AssignmentAttempt.SubmitAttachment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("Data")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<Guid>("ExerciseAttemptId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExerciseAttemptId");
+
+                    b.ToTable("SubmitAttachment");
                 });
 
             modelBuilder.Entity("OLMS.Domain.Entities.CourseAggregate.Course", b =>
@@ -695,6 +756,30 @@ namespace OLMS.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("OLMS.Domain.Entities.AssignmentAttempt.ExerciseAttempt", b =>
+                {
+                    b.HasOne("Exercise", null)
+                        .WithMany()
+                        .HasForeignKey("ExerciseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OLMS.Domain.Entities.StudentAggregate.Student", null)
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("OLMS.Domain.Entities.AssignmentAttempt.SubmitAttachment", b =>
+                {
+                    b.HasOne("OLMS.Domain.Entities.AssignmentAttempt.ExerciseAttempt", null)
+                        .WithMany("SubmitAttachtment")
+                        .HasForeignKey("ExerciseAttemptId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("OLMS.Domain.Entities.CourseAggregate.Course", b =>
                 {
                     b.HasOne("OLMS.Domain.Entities.InstructorAggregate.Instructor", "Instructor")
@@ -1033,6 +1118,11 @@ namespace OLMS.Infrastructure.Migrations
             modelBuilder.Entity("Lesson", b =>
                 {
                     b.Navigation("LessonAttachments");
+                });
+
+            modelBuilder.Entity("OLMS.Domain.Entities.AssignmentAttempt.ExerciseAttempt", b =>
+                {
+                    b.Navigation("SubmitAttachtment");
                 });
 
             modelBuilder.Entity("OLMS.Domain.Entities.CourseAggregate.Course", b =>

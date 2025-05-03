@@ -29,7 +29,7 @@ public class ExerciseAttemptConfiguration : IEntityTypeConfiguration<ExerciseAtt
         builder.HasOne<Student>()
             .WithMany()
             .HasForeignKey(ea => ea.StudentId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasOne<Exercise>()
             .WithMany()

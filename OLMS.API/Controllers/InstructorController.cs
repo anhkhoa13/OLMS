@@ -86,6 +86,6 @@ public class InstructorController : Controller
                 Errors = result.Error.Code
             });
         }
-        return Ok(result);
+        return Ok(result.Value);
     }
 }

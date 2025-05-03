@@ -131,7 +131,7 @@ function AcademicPlanner() {
   if (error) return <div className="p-4 text-red-500">Error: {error}</div>;
 
   return (
-    <div className="p-4 bg-white rounded-lg mt-6">
+    <div className="p-8 bg-white rounded-lg mt-6">
       <div className="flex flex-wrap gap-4 mb-6 items-center">
         <select
           value={sortMode}

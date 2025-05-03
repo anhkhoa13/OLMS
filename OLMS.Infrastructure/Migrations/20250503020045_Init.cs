@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace OLMS.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class initmerge : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -401,6 +401,33 @@ namespace OLMS.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ExerciseAttempts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Score = table.Column<double>(type: "float", nullable: false),
+                    SubmitAt = table.Column<DateTime>(type: "datetime", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    ExerciseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExerciseAttempts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ExerciseAttempts_Assignments_ExerciseId",
+                        column: x => x.ExerciseId,
+                        principalTable: "Assignments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ExerciseAttempts_Student_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Student",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Questions",
                 columns: table => new
                 {
@@ -468,6 +495,27 @@ namespace OLMS.Infrastructure.Migrations
                         principalTable: "Lessons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SubmitAttachment",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Data = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    ExerciseAttemptId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SubmitAttachment", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SubmitAttachment_ExerciseAttempts_ExerciseAttemptId",
+                        column: x => x.ExerciseAttemptId,
+                        principalTable: "ExerciseAttempts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -551,6 +599,16 @@ namespace OLMS.Infrastructure.Migrations
                 column: "ExerciseId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ExerciseAttempts_ExerciseId",
+                table: "ExerciseAttempts",
+                column: "ExerciseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExerciseAttempts_StudentId",
+                table: "ExerciseAttempts",
+                column: "StudentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Forums_CourseId",
                 table: "Forums",
                 column: "CourseId",
@@ -612,6 +670,11 @@ namespace OLMS.Infrastructure.Migrations
                 column: "QuizAttemptId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SubmitAttachment_ExerciseAttemptId",
+                table: "SubmitAttachment",
+                column: "ExerciseAttemptId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_User_Email",
                 table: "User",
                 column: "Email",
@@ -668,13 +731,13 @@ namespace OLMS.Infrastructure.Migrations
                 name: "StudentAnswers");
 
             migrationBuilder.DropTable(
+                name: "SubmitAttachment");
+
+            migrationBuilder.DropTable(
                 name: "Votes");
 
             migrationBuilder.DropTable(
                 name: "Lessons");
-
-            migrationBuilder.DropTable(
-                name: "Student");
 
             migrationBuilder.DropTable(
                 name: "Questions");
@@ -683,10 +746,16 @@ namespace OLMS.Infrastructure.Migrations
                 name: "QuizAttempt");
 
             migrationBuilder.DropTable(
+                name: "ExerciseAttempts");
+
+            migrationBuilder.DropTable(
                 name: "Posts");
 
             migrationBuilder.DropTable(
                 name: "Assignments");
+
+            migrationBuilder.DropTable(
+                name: "Student");
 
             migrationBuilder.DropTable(
                 name: "Forums");

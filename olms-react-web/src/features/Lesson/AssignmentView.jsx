@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import downloadBase64File from "../../utils/ConvertToFile";
 import FileUpload from "../../components/FileUpload"; // Adjust path as needed
 import { useAuth } from "../../contexts/AuthContext";
+import { ExerciseAttemptsList } from "./ExerciseAttemptsList";
 
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -26,7 +27,7 @@ function AssignmentView() {
   const [assignment, setAssignment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { currentUser } = useAuth();
+  const { currentUser, userRole } = useAuth();
 
   const [attachments, setAttachments] = useState([]);
   const [submitting, setSubmitting] = useState(false);
@@ -77,7 +78,9 @@ function AssignmentView() {
       );
 
       if (!response.ok) {
-        throw new Error("Failed to submit assignment.");
+        const errorData = await response.json();
+        console.log(errorData);
+        throw new Error(errorData.errors);
       }
 
       setSubmitSuccess(true);
@@ -114,8 +117,8 @@ function AssignmentView() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#b9d6a142] py-8 px-2">
-      <div className="w-full max-w-6xl bg-white rounded-2xl shadow-lg border border-gray-100 p-12 flex flex-col md:flex-row gap-12 min-h-[80vh]">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#b9d6a142] py-8 px-2">
+      <div className="w-full max-w-6xl bg-white rounded-2xl shadow-lg border border-gray-100 p-12 flex flex-col md:flex-row gap-12 min-h-[80vh] mb-8">
         {/* Assignment Details (Left) */}
         <div className="flex-1 flex flex-col justify-between">
           <section>
@@ -184,33 +187,37 @@ function AssignmentView() {
             </div>
           </section>
           {/* Submission Box */}
-          <section className="mt-8">
-            <h2 className="text-2xl font-bold text-[#6f8f54] mb-4">
-              Assignment Submission
-            </h2>
-            <form onSubmit={handleSubmit}>
-              <FileUpload value={attachments} onFilesChange={setAttachments} />
-              <button
-                type="submit"
-                className="mt-4 px-6 py-2 bg-[#6f8f54] text-white rounded-lg font-semibold hover:bg-[#5e7d4a] disabled:opacity-50"
-                disabled={submitting || attachments.length === 0}
-              >
-                {submitting ? "Submitting..." : "Submit Assignment"}
-              </button>
-              {submitSuccess && (
-                <div className="mt-2 text-green-600 font-medium">
-                  Submission successful!
-                </div>
-              )}
-              {submitError && (
-                <div className="mt-2 text-red-600 font-medium">
-                  {submitError}
-                </div>
-              )}
-            </form>
-          </section>
+          {userRole != "Instructor" && (
+            <section className="mt-8">
+              <h2 className="text-2xl font-bold text-[#6f8f54] mb-4">
+                Assignment Submission
+              </h2>
+              <form onSubmit={handleSubmit}>
+                <FileUpload
+                  value={attachments}
+                  onFilesChange={setAttachments}
+                />
+                <button
+                  type="submit"
+                  className="mt-4 px-6 py-2 bg-[#6f8f54] text-white rounded-lg font-semibold hover:bg-[#5e7d4a] disabled:opacity-50"
+                  disabled={submitting || attachments.length === 0}
+                >
+                  {submitting ? "Submitting..." : "Submit Assignment"}
+                </button>
+                {submitSuccess && (
+                  <div className="mt-2 text-green-600 font-medium">
+                    Submission successful!
+                  </div>
+                )}
+                {submitError && (
+                  <div className="mt-2 text-red-600 font-medium">
+                    {submitError}
+                  </div>
+                )}
+              </form>
+            </section>
+          )}
         </div>
-
         {/* Attachments (Right) */}
         <div className="w-full md:w-96">
           <h2 className="text-2xl font-bold text-[#6f8f54] mb-4">
@@ -265,6 +272,14 @@ function AssignmentView() {
           )}
         </div>
       </div>
+      {userRole == "Instructor" && (
+        <div className="w-full max-w-6xl bg-white rounded-2xl shadow-lg border border-gray-100 p-12 flex flex-col gap-12 min-h-[80vh] ">
+          <h2 className="text-2xl font-bold text-[#6f8f54] mb-4">
+            All Submissions for This Exercise
+          </h2>
+          <ExerciseAttemptsList exerciseId={assignmentId} />
+        </div>
+      )}
     </div>
   );
 }

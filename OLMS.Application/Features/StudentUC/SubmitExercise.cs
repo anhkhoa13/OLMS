@@ -18,25 +18,28 @@ public class SubmitExerciseCommandHandler(
 
     public async Task<Result> Handle(SubmitExerciseCommand request, CancellationToken cancellationToken)
     {
-        var existingAttempt = await _exerciseAttemptRepository.FindByExerciseIdAndStudentId(request.ExerciseId, request.StudentId, cancellationToken);
-        if (existingAttempt != null)
-        {
-            return new Error("Student already do the exam");
-        }
-        var exerciseAttempt = new ExerciseAttempt(Guid.NewGuid(), DateTime.UtcNow, request.ExerciseId, request.StudentId);
+        try {
+            var existingAttempt = await _exerciseAttemptRepository.FindByExerciseIdAndStudentId(request.ExerciseId, request.StudentId, cancellationToken);
+            //Console.WriteLine(existingAttempt == null ? "Attempt is null" : $"Attempt ID: {existingAttempt.Id}");
+            if (existingAttempt is not null) {
+                return new Error("You already do the exam");
+            }
+            var exerciseAttempt = new ExerciseAttempt(Guid.NewGuid(), DateTime.UtcNow, request.ExerciseId, request.StudentId);
 
-        foreach (var attachmentDto in request.Attachments)
-        {
-            var attachment = SubmitAttachment.Create(
-                attachmentDto.Name,
-                attachmentDto.Data,
-                exerciseAttempt.Id);
-            exerciseAttempt.AddAttachment(attachment);
-        }
+            foreach (var attachmentDto in request.Attachments) {
+                var attachment = SubmitAttachment.Create(
+                    attachmentDto.Name,
+                    attachmentDto.Data,
+                    exerciseAttempt.Id);
+                exerciseAttempt.AddAttachment(attachment);
+            }
 
-        await _exerciseAttemptRepository.AddAsync(exerciseAttempt, cancellationToken);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
-        return Result.Success();
+            await _exerciseAttemptRepository.AddAsync(exerciseAttempt, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            return Result.Success();
+        } catch(Exception ex) {
+            return new Error(ex.Message);
+        }  
     }
 }
 
