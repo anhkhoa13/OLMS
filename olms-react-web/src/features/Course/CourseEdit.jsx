@@ -95,7 +95,7 @@ function CourseEdit() {
 
       {/* Right Column: Fixed Buttons */}
       <div className="w-full md:w-64 flex-shrink-0">
-        <div className="sticky top-8 z-20">
+        <div className="z-20">
           <div className="flex flex-col gap-4 bg-white shadow-lg rounded-xl px-6 py-8">
             <button
               type="button"

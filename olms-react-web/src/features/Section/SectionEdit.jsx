@@ -16,7 +16,6 @@ function SectionEdit() {
   const [showAddMenu, setShowAddMenu] = useState(false);
   const [modalType, setModalType] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
-  // ... existing state ...
   const [isEditing, setIsEditing] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
 

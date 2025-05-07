@@ -44,4 +44,15 @@ public class SectionController : ControllerBase {
             return BadRequest(result.Error);
         return Ok(new { Message = "Update section successfully"});
     }
+
+    [HttpPut("order")]
+    public async Task<IActionResult> UpdateSectionOrder([FromBody] UpdateSectionOrderCommand command) {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var result = await _sender.Send(command);
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+
+        return Ok(new { Message = "Section order updated successfully" });
+    }
 }

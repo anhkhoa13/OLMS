@@ -32,5 +32,16 @@ public class SectionRepository(ApplicationDbContext context) : Repository<Sectio
             .OrderBy(s => s.Title)  // Or your preferred ordering
             .ToListAsync();
     }
+
+    public async Task<List<Section>> GetByCourseIdAsync(Guid courseId) {
+        return await _context.Sections
+            .Where(s => s.CourseId == courseId)
+            .OrderBy(s => s.Order)  // Important for maintaining order
+            .AsNoTracking()  // Recommended for read-only operations
+            .ToListAsync();
+    }
+    public void UpdateRange(IEnumerable<Section> sections) {
+        _context.Sections.UpdateRange(sections);
+    }
 }
 
