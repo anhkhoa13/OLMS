@@ -5,5 +5,6 @@ namespace OLMS.Domain.Repositories;
 
 public interface ISectionItemRepository : IRepository<SectionItem>
 {
-
+    Task<List<SectionItem>> GetBySectionIdAsync(Guid sectionId);
+    void UpdateRange(IEnumerable<SectionItem> sectionItems);
 }

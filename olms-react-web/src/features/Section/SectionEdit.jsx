@@ -7,6 +7,39 @@ import CreateQuiz from "../CreateQuiz/CreateQuiz";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+
+const SortableCourseContentItem = ({ item, ...props }) => {
+  // Use the actual sectionItem ID from the items array
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: item?.sectionItemId || "" });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} {...attributes}>
+      <CourseContentItem {...props} item={item} dragHandleProps={listeners} />
+    </div>
+  );
+};
+
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 
 function SectionEdit() {
@@ -22,6 +55,14 @@ function SectionEdit() {
   const location = useLocation();
   const sectionId = location.state?.sectionId;
   const courseId = location.state?.courseId;
+
+  const [items, setItems] = useState([]);
+  const [hasOrderChanged, setHasOrderChanged] = useState(false);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor)
+  );
 
   // Fetch section data on mount or when sectionId changes
   useEffect(() => {
@@ -46,6 +87,60 @@ function SectionEdit() {
     }
     fetchSection();
   }, [sectionId, refreshKey]);
+
+  useEffect(() => {
+    if (section?.sectionItems) {
+      const sortedItems = [...section.sectionItems].sort(
+        (a, b) => a.order - b.order
+      );
+      setItems(sortedItems);
+    }
+  }, [section]);
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = items.findIndex((s) => s.id === active.id);
+    const newIndex = items.findIndex((s) => s.id === over.id);
+
+    const newSections = arrayMove(items, oldIndex, newIndex).map(
+      (section, index) => ({
+        ...section,
+        order: index,
+      })
+    );
+
+    setItems(newSections);
+    setHasOrderChanged(true);
+  };
+
+  const handleSaveOrder = async () => {
+    try {
+      const orderUpdates = items.map((item, index) => ({
+        sectionItemId: item.id,
+        newOrder: index,
+      }));
+      console.log(orderUpdates);
+
+      await axios.put(`${API_URL}/api/section/item/order`, {
+        sectionId: section.id,
+        items: orderUpdates,
+      });
+
+      // Refresh the section data after successful update
+      const response = await fetch(
+        `${API_URL}/api/section?sectionId=${sectionId}`
+      );
+      const updatedSection = await response.json();
+      setSection(updatedSection);
+
+      setHasOrderChanged(false);
+      alert("Order saved successfully");
+    } catch (error) {
+      alert("Error saving order: " + error.message);
+    }
+  };
 
   const handleRefresh = () => setRefreshKey((prev) => prev + 1);
 
@@ -82,49 +177,27 @@ function SectionEdit() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="p-8 text-center text-gray-500">Loading section...</div>
-    );
-  }
-
-  if (error || !section) {
-    return (
-      <div className="p-8 text-center text-red-500">
-        {error || "No section data found."}
-      </div>
-    );
-  }
-
   // Create maps for quick lookup by id (case-insensitive)
   const lessonsMap = Object.fromEntries(
-    (section.lessons || []).map((l) => [l.id.toLowerCase(), l])
+    (section?.lessons || []).map((l) => [l.id.toLowerCase(), l])
   );
   const assignmentsMap = Object.fromEntries(
-    (section.assignments || []).map((a) => [a.id.toLowerCase(), a])
+    (section?.assignments || []).map((a) => [a.id.toLowerCase(), a])
   );
 
-  // Ordered items logic
-  const orderedItems = (section.sectionItems || [])
-    .sort((a, b) => a.order - b.order)
+  const orderedItems = items
     .map((sectionItem) => {
       const id = sectionItem.itemId.toLowerCase();
+      let item = null;
 
-      if (sectionItem.itemType === "Lesson" && lessonsMap[id]) {
-        return {
-          ...lessonsMap[id],
-          type: "lesson",
-          itemType: "lesson",
-        };
+      if (sectionItem.itemType === "Lesson") {
+        item = lessonsMap[id];
+        return { ...item, type: "lesson" };
       }
 
-      if (sectionItem.itemType === "Assignment" && assignmentsMap[id]) {
-        const assignment = assignmentsMap[id];
-        return {
-          ...assignment,
-          type: assignment.type?.toLowerCase() || "assignment",
-          itemType: "assignment",
-        };
+      if (sectionItem.itemType === "Assignment") {
+        item = assignmentsMap[id];
+        return { ...item, type: item.type?.toLowerCase() };
       }
 
       return null;
@@ -149,15 +222,41 @@ function SectionEdit() {
     return `Add ${modalType?.charAt(0).toUpperCase() + modalType?.slice(1)}`;
   };
 
+  if (loading) {
+    return (
+      <div className="p-8 text-center text-gray-500">Loading section...</div>
+    );
+  }
+
+  if (error || !section) {
+    return (
+      <div className="p-8 text-center text-red-500">
+        {error || "No section data found."}
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-3xl mx-auto p-8 bg-white rounded-xl shadow-md my-8">
-      <h2 className="text-3xl font-bold text-[#6f8f54] mb-2">
-        {section.title}
-      </h2>
-      <div className="mb-8 text-gray-500">Section ID: {section.id}</div>
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h2 className="text-3xl font-bold text-[#6f8f54] mb-1">
+            {section.title}
+          </h2>
+          <div className="text-gray-500 text-sm">Section ID: {section.id}</div>
+        </div>
+        {hasOrderChanged && (
+          <button
+            onClick={handleSaveOrder}
+            className="bg-[#6f8f54] hover:bg-[#5e7d4a] cursor-pointer text-white font-medium py-2 px-4 rounded-lg transition-colors"
+          >
+            Save Order
+          </button>
+        )}
+      </div>
 
       {/* Ordered List using CourseContentItem */}
-      <div className="space-y-2">
+      {/* <div className="space-y-2">
         {orderedItems.map((item, index) => (
           <CourseContentItem
             key={item.id}
@@ -170,7 +269,35 @@ function SectionEdit() {
             onDelete={handleDeleteItem}
           />
         ))}
-      </div>
+      </div> */}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={items.map((i) => i.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          <div className="space-y-2">
+            {items.map((sectionItem, index) => {
+              const item = orderedItems[index];
+              return (
+                <SortableCourseContentItem
+                  key={sectionItem.id} // Use sectionItem.id instead of item.id
+                  item={{ ...item, sectionItemId: sectionItem.id }}
+                  index={index + 1}
+                  type={item?.type}
+                  courseId={courseId}
+                  onEdit={handleEditItem}
+                  onDelete={handleDeleteItem}
+                  isEditMode={true}
+                />
+              );
+            })}
+          </div>
+        </SortableContext>
+      </DndContext>
       {/* Add Item Button */}
       <div className="flex justify-end mb-6">
         <div className="relative">
