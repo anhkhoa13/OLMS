@@ -7,6 +7,7 @@ export function CourseContentItem({
   type,
   courseId,
   onEdit,
+  onDelete,
   isEditMode,
 }) {
   let icon = null;
@@ -55,12 +56,30 @@ export function CourseContentItem({
       </Link>
 
       {isEditMode && (
-        <button
-          onClick={() => onEdit(item)}
-          className="bg-[#89b46c] hover:bg-[#6f8f54] text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 cursor-pointer"
-        >
-          Edit
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => onEdit(item)}
+            className="bg-[#89b46c] hover:bg-[#6f8f54] text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 cursor-pointer"
+            title="Edit"
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => {
+              if (
+                window.confirm(
+                  "Are you sure you want to delete this item? This action cannot be undone."
+                )
+              ) {
+                onDelete(item);
+              }
+            }}
+            className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 cursor-pointer"
+            title="Delete"
+          >
+            Delete
+          </button>
+        </div>
       )}
     </div>
   );

@@ -17,6 +17,22 @@ function CourseSection({
     });
   }
 
+  async function handleDeleteSection() {
+    try {
+      const response = await fetch(`/api/delete/${section.id}`, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        console.log("Section deleted successfully");
+        // Optionally, refresh the list or update state here
+      } else {
+        console.error("Failed to delete section");
+      }
+    } catch (error) {
+      console.error("Error deleting section:", error);
+    }
+  }
+
   const lessonsMap = Object.fromEntries(
     (section.lessons || []).map((l) => [l.id.toLowerCase(), l])
   );
@@ -84,13 +100,22 @@ function CourseSection({
         </button>
 
         {isEditMode && (
-          <button
-            className="ml-4 px-3 py-1 rounded-md bg-[#94be70] text-white font-medium text-sm hover:bg-[#6f8f54] transition cursor-pointer"
-            onClick={() => handleEditSection()}
-            type="button"
-          >
-            Edit
-          </button>
+          <>
+            <button
+              className="ml-4 px-3 py-1 rounded-md bg-[#94be70] text-white font-medium text-sm hover:bg-[#6f8f54] transition cursor-pointer"
+              onClick={() => handleEditSection()}
+              type="button"
+            >
+              Edit
+            </button>
+            <button
+              className="ml-4 px-3 py-1 rounded-md bg-red-600 text-white font-medium text-sm hover:bg-red-700 transition cursor-pointer"
+              onClick={() => handleDeleteSection()}
+              type="button"
+            >
+              Delete
+            </button>
+          </>
         )}
 
         <svg

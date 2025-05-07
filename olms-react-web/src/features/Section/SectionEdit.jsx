@@ -5,6 +5,7 @@ import LessonForm from "../Lesson/LessonForm";
 import ExerciseForm from "../Lesson/ExerciseForm";
 import CreateQuiz from "../CreateQuiz/CreateQuiz";
 import { useLocation } from "react-router-dom";
+import axios from "axios";
 
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -53,6 +54,33 @@ function SectionEdit() {
     setCurrentItem(item);
     setIsEditing(true);
     setModalType(item.type);
+  };
+  const handleDeleteItem = async (item) => {
+    try {
+      let endpoint = "";
+      if (item.type === "quiz") {
+        // const code = item.id.slice(0, 6);
+        endpoint = `${API_URL}/api/quiz/${item.id}`;
+      } else if (item.type === "exercise") {
+        endpoint = `${API_URL}/api/exercise/${item.id}`;
+      } else if (item.type === "lesson") {
+        endpoint = `${API_URL}/api/lesson/${item.id}`;
+      } else {
+        console.error("Unknown item type:", item.type);
+        return;
+      }
+
+      const response = await axios.delete(endpoint);
+
+      if (response.status === 200) {
+        alert(`${item.type} deleted successfully`);
+        // Optionally refresh or update state here
+      } else {
+        console.error(`Failed to delete ${item.type}`);
+      }
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
   };
 
   if (loading) {
@@ -140,6 +168,7 @@ function SectionEdit() {
             courseId={courseId}
             isEditMode={true}
             onEdit={handleEditItem}
+            onDelete={handleDeleteItem}
           />
         ))}
       </div>

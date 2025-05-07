@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
+import axios from "axios";
 
 function AnnouncementView({ courseId }) {
   const [announcements, setAnnouncements] = useState([]);
@@ -31,6 +32,24 @@ function AnnouncementView({ courseId }) {
 
     if (courseId) fetchAnnouncements();
   }, [courseId]);
+
+  const handleDeleteAnnouncement = async (announcementId) => {
+    if (
+      !window.confirm(
+        "Are you sure you want to delete this announcement? This action cannot be undone."
+      )
+    )
+      return;
+
+    try {
+      await axios.delete(`${API_URL}/api/announcement/${announcementId}`);
+      setAnnouncements((prev) => prev.filter((a) => a.id !== announcementId));
+    } catch (err) {
+      alert(
+        err.response?.data?.error?.message || "Failed to delete announcement"
+      );
+    }
+  };
 
   const handleCreateAnnouncement = async () => {
     setCreateError(null);
@@ -147,14 +166,37 @@ function AnnouncementView({ courseId }) {
           {announcements.map((announcement) => (
             <div
               key={announcement.id}
-              className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 hover:shadow-md transition-shadow"
+              className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 hover:shadow-md transition-shadow relative"
             >
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">
+              {userRole === "Instructor" && (
+                <button
+                  onClick={() => handleDeleteAnnouncement(announcement.id)}
+                  className="absolute top-4 right-4 p-2 text-red-600 hover:bg-red-50 rounded-full transition-colors cursor-pointer"
+                  title="Delete Announcement"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                    />
+                  </svg>
+                </button>
+              )}
+
+              <h3 className="text-lg font-semibold text-gray-800 mb-2 pr-8">
                 {announcement.title}
               </h3>
               <div className="flex items-center justify-start text-sm">
                 <span className="text-gray-400">
-                  Post on:&ensp;
+                  Posted:{" "}
                   {new Date(announcement.createdAt).toLocaleDateString(
                     "en-US",
                     {
@@ -167,8 +209,7 @@ function AnnouncementView({ courseId }) {
                   )}
                 </span>
               </div>
-              <br></br>
-              <p className="text-gray-600 mb-3 whitespace-pre-wrap">
+              <p className="mt-3 text-gray-600 whitespace-pre-wrap">
                 {announcement.content}
               </p>
             </div>

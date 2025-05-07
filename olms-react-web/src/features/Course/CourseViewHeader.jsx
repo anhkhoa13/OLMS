@@ -1,8 +1,8 @@
-import { useAuth } from "../../contexts/AuthContext";
+// import { useAuth } from "../../contexts/AuthContext";
 import React from "react";
 
-function CourseViewHeader({ bgImage, courseData, handleInstructorEditCourse }) {
-  const { userRole } = useAuth();
+function CourseViewHeader({ bgImage, courseData }) {
+  // const { userRole } = useAuth();
 
   return (
     <div
@@ -29,14 +29,14 @@ function CourseViewHeader({ bgImage, courseData, handleInstructorEditCourse }) {
             </p>
           )}
         </div>
-        {(userRole === "Instructor" || userRole === "admin") && (
+        {/* {(userRole === "Instructor" || userRole === "admin") && (
           <button
             className="bg-[#89b46c] text-white px-4 py-2 rounded-lg hover:bg-[#6f8f54] transition-colors cursor-pointer"
             onClick={() => handleInstructorEditCourse(courseData)}
           >
             Edit
           </button>
-        )}
+        )} */}
       </div>
     </div>
   );

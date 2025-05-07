@@ -6,8 +6,9 @@ const API_URL = import.meta.env.VITE_BACKEND_URL;
 function Posts({ forum, onRefresh }) {
   const [newComment, setNewComment] = useState({}); // { [postId]: commentText }
   const [submitting, setSubmitting] = useState(false);
+  const [deletingPostId, setDeletingPostId] = useState(null);
 
-  const { currentUser } = useAuth();
+  const { currentUser, userRole } = useAuth();
 
   const handleAddComment = async (postId) => {
     setSubmitting(true);
@@ -18,18 +19,27 @@ function Posts({ forum, onRefresh }) {
         content: newComment[postId],
       });
 
-      // Clear comment input
       setNewComment((prev) => ({ ...prev, [postId]: "" }));
       onRefresh((prev) => prev + 1);
-
-      // You would typically refresh comments here or update state
       console.log("Comment added successfully");
     } catch (error) {
-      // Prefer server error message if available
       const errorMsg = error.response?.data?.message || error.message;
       console.error("Comment submission error:", errorMsg);
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleDeletePost = async (postId) => {
+    if (!window.confirm("Are you sure you want to delete this post?")) return;
+    setDeletingPostId(postId);
+    try {
+      await axios.delete(`${API_URL}/api/post/${postId}`);
+      onRefresh((prev) => prev + 1);
+    } catch (error) {
+      alert(error.response?.data?.message || "Failed to delete post");
+    } finally {
+      setDeletingPostId(null);
     }
   };
 
@@ -38,8 +48,35 @@ function Posts({ forum, onRefresh }) {
       {forum.posts.map((post) => (
         <div
           key={post.id}
-          className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
+          className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden relative"
         >
+          {/* Delete Button (show for post author or instructor/admin) */}
+          {(currentUser?.id === post.userId ||
+            userRole === "Instructor" ||
+            userRole === "Admin") && (
+            <button
+              onClick={() => handleDeletePost(post.id)}
+              className="absolute top-4 right-4 p-2 text-red-600 hover:bg-red-50 rounded-full transition-colors cursor-pointer"
+              title="Delete Post"
+              disabled={deletingPostId === post.id}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
+              </svg>
+            </button>
+          )}
+
           <div className="p-6">
             <div className="flex gap-6">
               {/* Voting Controls */}
@@ -65,16 +102,6 @@ function Posts({ forum, onRefresh }) {
                         className="pl-4 border-l-4 border-[#6f8f54] bg-gray-50 rounded-r-lg p-4"
                       >
                         <p className="text-gray-700 mb-2">{comment.content}</p>
-                        {/* <div className="text-xs text-gray-500 font-medium">
-                          {new Date(comment.createdAt).toLocaleDateString(
-                            "en-US",
-                            {
-                              year: "numeric",
-                              month: "short",
-                              day: "numeric",
-                            }
-                          )}
-                        </div> */}
                       </div>
                     ))}
                   </div>
