@@ -165,13 +165,7 @@ function CourseContent({
         alert(errorData.message || "Failed to add section");
         return;
       }
-      setRefreshFlag((prev) => !prev); // Toggle the flag to trigger useEffect
-
-      // setSections([
-      //   ...sections,
-      //   // Use the new section from the backend if returned, otherwise use local
-      //   newSection.title ? newSection : { title: newSectionTitle, content: [] },
-      // ]);
+      setRefreshFlag((prev) => !prev);
       setNewSectionTitle("");
       setShowAddForm(false);
     } catch (err) {
@@ -263,6 +257,7 @@ function CourseContent({
                   setActiveSection={setActiveSection}
                   isEditMode={isEditMode}
                   courseId={courseId}
+                  onRefresh={setRefreshFlag}
                 />
               ))}
             </div>

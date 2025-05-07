@@ -63,4 +63,11 @@ public class SectionController : ControllerBase {
         var result = await _sender.Send(command);
         return result.IsSuccess ? Ok() : BadRequest(result.Error);
     }
+    [HttpDelete("delete/{sectionId}")]
+    public async Task<IActionResult> DeleteSection(Guid sectionId) {
+        var command = new DeleteSectionCommand(sectionId);
+        var result = await _sender.Send(command);
+
+        return result.IsSuccess ? NoContent() : BadRequest(result.Error);
+    }
 }

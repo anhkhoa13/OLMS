@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { CourseContentItem } from "./CourseContentItem";
 
+const API_URL = import.meta.env.VITE_BACKEND_URL;
+
 function CourseSection({
   section,
   index,
@@ -9,6 +11,7 @@ function CourseSection({
   isEditMode,
   courseId,
   dragHandleProps,
+  onRefresh,
 }) {
   const navigate = useNavigate();
 
@@ -20,14 +23,18 @@ function CourseSection({
 
   async function handleDeleteSection() {
     try {
-      const response = await fetch(`/api/delete/${section.id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `${API_URL}/api/section/delete/${section.id}`,
+        {
+          method: "DELETE",
+        }
+      );
       if (response.ok) {
-        console.log("Section deleted successfully");
+        onRefresh((prev) => !prev);
+        alert("Section deleted successfully");
         // Optionally, refresh the list or update state here
       } else {
-        console.error("Failed to delete section");
+        alert("Failed to delete section");
       }
     } catch (error) {
       console.error("Error deleting section:", error);
@@ -135,7 +142,15 @@ function CourseSection({
             </button>
             <button
               className="px-3 py-1 rounded-md bg-red-600 text-white font-medium text-sm hover:bg-red-700 transition cursor-pointer"
-              onClick={handleDeleteSection}
+              onClick={() => {
+                if (
+                  window.confirm(
+                    "Are you sure you want to delete this section? This will delete all the items. Action cannot be undone."
+                  )
+                ) {
+                  handleDeleteSection();
+                }
+              }}
               type="button"
             >
               Delete
