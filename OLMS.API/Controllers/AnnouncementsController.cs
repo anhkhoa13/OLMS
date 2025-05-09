@@ -5,15 +5,15 @@ namespace OLMS.API.Controllers {
     [ApiController]
     [Route("api/announcement")]
     public class AnnouncementsController : ControllerBase {
-        private readonly IMediator _mediator;
+        private readonly ISender _sender;
 
-        public AnnouncementsController(IMediator mediator) {
-            _mediator = mediator;
+        public AnnouncementsController(ISender sender) {
+            _sender = sender;
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateAnnouncement([FromBody] CreateAnnouncementCommand command) {
-            var result = await _mediator.Send(command);
+            var result = await _sender.Send(command);
 
             if (!result.IsSuccess)
                 return BadRequest(result.Error);
@@ -26,12 +26,20 @@ namespace OLMS.API.Controllers {
         [HttpGet("course/{courseId}")]
         public async Task<IActionResult> GetAnnouncementsByCourse(Guid courseId) {
             var query = new GetAnnouncementsByCourseQuery(courseId);
-            var result = await _mediator.Send(query);
+            var result = await _sender.Send(query);
 
             if (!result.IsSuccess)
                 return BadRequest(result.Error);
 
             return Ok(result.Value);
         }
+        [HttpDelete("delete/{announcementId}")]
+        public async Task<IActionResult> DeleteAnnouncement(Guid announcementId) {
+            var command = new DeleteAnnouncementCommand(announcementId);
+            var result = await _sender.Send(command);
+
+            return result.IsSuccess ? NoContent() : BadRequest(result.Error);
+        }
+
     }
 }

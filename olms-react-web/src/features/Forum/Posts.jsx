@@ -34,7 +34,7 @@ function Posts({ forum, onRefresh }) {
     if (!window.confirm("Are you sure you want to delete this post?")) return;
     setDeletingPostId(postId);
     try {
-      await axios.delete(`${API_URL}/api/post/${postId}`);
+      await axios.delete(`${API_URL}/api/post/delete/${postId}`);
       onRefresh((prev) => prev + 1);
     } catch (error) {
       alert(error.response?.data?.message || "Failed to delete post");

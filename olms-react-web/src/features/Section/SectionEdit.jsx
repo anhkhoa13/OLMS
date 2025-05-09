@@ -158,7 +158,7 @@ function SectionEdit() {
       } else if (item.type === "exercise") {
         endpoint = `${API_URL}/api/exercise/${item.id}`;
       } else if (item.type === "lesson") {
-        endpoint = `${API_URL}/api/lesson/${item.id}`;
+        endpoint = `${API_URL}/api/lesson/delete/${item.id}`;
       } else {
         console.error("Unknown item type:", item.type);
         return;

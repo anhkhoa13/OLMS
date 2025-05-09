@@ -92,4 +92,12 @@ public class PostController(ISender sender) : Controller
         }
         return Ok(result.Value);
     }
+
+    [HttpDelete("delete/{postId}")]
+    public async Task<IActionResult> DeletePost(Guid postId) {
+        var command = new DeletePostCommand(postId);
+        var result = await _sender.Send(command);
+
+        return result.IsSuccess ? NoContent() : BadRequest(result.Error);
+    }
 }

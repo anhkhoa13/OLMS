@@ -42,7 +42,9 @@ function AnnouncementView({ courseId }) {
       return;
 
     try {
-      await axios.delete(`${API_URL}/api/announcement/${announcementId}`);
+      await axios.delete(
+        `${API_URL}/api/announcement/delete/${announcementId}`
+      );
       setAnnouncements((prev) => prev.filter((a) => a.id !== announcementId));
     } catch (err) {
       alert(
@@ -104,7 +106,7 @@ function AnnouncementView({ courseId }) {
         Course Announcements
       </h2>
 
-      {userRole === "Instructor" && (
+      {(userRole === "Instructor" || userRole === "Admin") && (
         <div className="mt-8 p-6 bg-white border border-gray-200 rounded-lg shadow-sm mb-4">
           <h3 className="text-lg font-semibold mb-4">
             Create New Announcement
@@ -168,7 +170,7 @@ function AnnouncementView({ courseId }) {
               key={announcement.id}
               className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 hover:shadow-md transition-shadow relative"
             >
-              {userRole === "Instructor" && (
+              {(userRole === "Instructor" || userRole === "Admin") && (
                 <button
                   onClick={() => handleDeleteAnnouncement(announcement.id)}
                   className="absolute top-4 right-4 p-2 text-red-600 hover:bg-red-50 rounded-full transition-colors cursor-pointer"

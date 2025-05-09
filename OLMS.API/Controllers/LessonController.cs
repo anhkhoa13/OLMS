@@ -40,4 +40,12 @@ public class LessonController : ControllerBase {
         return Ok(new { Message = "Update lesson successfully" });
     }
 
+    [HttpDelete("delete/{lessonId}")]
+    public async Task<IActionResult> DeleteLesson(Guid lessonId) {
+        var command = new DeleteLessonCommand(lessonId);
+        var result = await _sender.Send(command);
+
+        return result.IsSuccess ? NoContent() : BadRequest(result.Error);
+    }
+
 }
