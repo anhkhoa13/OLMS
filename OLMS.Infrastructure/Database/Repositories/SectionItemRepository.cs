@@ -17,5 +17,16 @@ public class SectionItemRepository(ApplicationDbContext context) : Repository<Se
     public void UpdateRange(IEnumerable<SectionItem> sectionItems) {
         _context.SectionItems.UpdateRange(sectionItems);
     }
+    public async Task<SectionItem?> GetByItemIdAsync(Guid itemId) {
+        return await _context.SectionItems
+            .FirstOrDefaultAsync(si => si.ItemId == itemId);
+    }
+    public async Task<List<SectionItem>> GetBySectionIdAndOrderGreaterThanAsync(Guid sectionId, int order) {
+        return await _context.SectionItems
+            .Where(si => si.SectionId == sectionId && si.Order > order)
+            .ToListAsync();
+    }
+
+
 }
 

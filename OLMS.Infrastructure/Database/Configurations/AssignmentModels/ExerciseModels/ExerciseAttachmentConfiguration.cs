@@ -11,6 +11,9 @@ public class ExerciseAttachmentConfiguration : IEntityTypeConfiguration<Exercise
 
         builder.HasKey(a => a.Id);
 
+        builder.Property(x => x.Id)
+            .ValueGeneratedNever();
+
         builder.Property(a => a.Name)
             .IsRequired()
             .HasMaxLength(256);

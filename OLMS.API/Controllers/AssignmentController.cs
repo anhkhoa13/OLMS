@@ -30,4 +30,12 @@ public class AssignmentController : ControllerBase {
 
         return Ok(result.Value);
     }
+
+    [HttpDelete("delete/{exerciseId}")]
+    public async Task<IActionResult> DeleteExercise(Guid exerciseId) {
+        var command = new DeleteExerciseCommand(exerciseId);
+        var result = await _sender.Send(command);
+
+        return result.IsSuccess ? NoContent() : BadRequest(result.Error);
+    }
 }

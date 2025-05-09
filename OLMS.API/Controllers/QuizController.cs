@@ -125,6 +125,14 @@ public class QuizController : Controller {
         });
     }
 
+    [HttpDelete("delete/{quizId}")]
+    public async Task<IActionResult> DeleteQuiz(Guid quizId) {
+        var command = new DeleteQuizCommand(quizId);
+        var result = await _sender.Send(command);
+
+        return result.IsSuccess ? NoContent() : BadRequest(result.Error);
+    }
+
 
 
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { CourseContentItem } from "../Course/CourseSectionNav/CourseContentItem";
 import Modal from "../../components/Modal";
 import LessonForm from "../Lesson/LessonForm";
@@ -154,9 +154,9 @@ function SectionEdit() {
       let endpoint = "";
       if (item.type === "quiz") {
         // const code = item.id.slice(0, 6);
-        endpoint = `${API_URL}/api/quiz/${item.id}`;
+        endpoint = `${API_URL}/api/quiz/delete/${item.id}`;
       } else if (item.type === "exercise") {
-        endpoint = `${API_URL}/api/exercise/${item.id}`;
+        endpoint = `${API_URL}/api/assignment/delete/${item.id}`;
       } else if (item.type === "lesson") {
         endpoint = `${API_URL}/api/lesson/delete/${item.id}`;
       } else {
@@ -166,9 +166,11 @@ function SectionEdit() {
 
       const response = await axios.delete(endpoint);
 
-      if (response.status === 200) {
+      console.log(response);
+
+      if (response.status === 200 || response.status === 204) {
         alert(`${item.type} deleted successfully`);
-        // Optionally refresh or update state here
+        handleRefresh();
       } else {
         console.error(`Failed to delete ${item.type}`);
       }
@@ -178,31 +180,64 @@ function SectionEdit() {
   };
 
   // Create maps for quick lookup by id (case-insensitive)
-  const lessonsMap = Object.fromEntries(
-    (section?.lessons || []).map((l) => [l.id.toLowerCase(), l])
+  // const lessonsMap = Object.fromEntries(
+  //   (section?.lessons || []).map((l) => [l.id.toLowerCase(), l])
+  // );
+  // const assignmentsMap = Object.fromEntries(
+  //   (section?.assignments || []).map((a) => [a.id.toLowerCase(), a])
+  // );
+  // const orderedItems = items
+  //   .map((sectionItem) => {
+  //     const id = sectionItem.itemId.toLowerCase();
+  //     let item = null;
+
+  //     if (sectionItem.itemType === "Lesson") {
+  //       item = lessonsMap[id];
+  //       return { ...item, type: "lesson" };
+  //     }
+
+  //     if (sectionItem.itemType === "Assignment") {
+  //       item = assignmentsMap[id];
+  //       return { ...item, type: item.type?.toLowerCase() };
+  //     }
+
+  //     return null;
+  //   })
+  //   .filter(Boolean);
+
+  const lessonsMap = useMemo(
+    () =>
+      Object.fromEntries(
+        (section?.lessons || []).map((l) => [l.id.toLowerCase(), l])
+      ),
+    [section]
   );
-  const assignmentsMap = Object.fromEntries(
-    (section?.assignments || []).map((a) => [a.id.toLowerCase(), a])
+  const assignmentsMap = useMemo(
+    () =>
+      Object.fromEntries(
+        (section?.assignments || []).map((a) => [a.id.toLowerCase(), a])
+      ),
+    [section]
   );
 
-  const orderedItems = items
-    .map((sectionItem) => {
-      const id = sectionItem.itemId.toLowerCase();
-      let item = null;
-
-      if (sectionItem.itemType === "Lesson") {
-        item = lessonsMap[id];
-        return { ...item, type: "lesson" };
-      }
-
-      if (sectionItem.itemType === "Assignment") {
-        item = assignmentsMap[id];
-        return { ...item, type: item.type?.toLowerCase() };
-      }
-
-      return null;
-    })
-    .filter(Boolean);
+  const orderedItems = useMemo(
+    () =>
+      items
+        .map((sectionItem) => {
+          const id = sectionItem.itemId.toLowerCase();
+          if (sectionItem.itemType === "Lesson") {
+            const item = lessonsMap[id];
+            return item ? { ...item, type: "lesson" } : null;
+          }
+          if (sectionItem.itemType === "Assignment") {
+            const item = assignmentsMap[id];
+            return item ? { ...item, type: item.type?.toLowerCase() } : null;
+          }
+          return null;
+        })
+        .filter(Boolean),
+    [items, lessonsMap, assignmentsMap]
+  );
 
   function handleAdd(type) {
     setModalType(type);

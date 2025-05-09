@@ -12,5 +12,10 @@ public class ExerciseRepository(ApplicationDbContext context) : Repository<Exerc
             .Include(e => e.ExerciseAttachments)
             .FirstOrDefaultAsync(e => e.Id == id);
     }
+    public async Task<Exercise?> GetByIdWithAttachmentsAsync(Guid id) {
+        return await _context.Exercises
+            .Include(e => e.ExerciseAttachments)
+            .FirstOrDefaultAsync(e => e.Id == id);
+    }
 }
 
