@@ -88,4 +88,13 @@ public class InstructorController : Controller
         }
         return Ok(result.Value);
     }
+    [HttpPost("scoreExerciseAttempt")]
+    public async Task<IActionResult> ScoreExerciseAttempt([FromBody] ScoreExerciseAttemptCommand command) {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var result = await _sender.Send(command);
+
+        return result.IsSuccess ? Ok() : BadRequest(result.Error);
+    }
 }

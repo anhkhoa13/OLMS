@@ -5,6 +5,7 @@ using OLMS.Domain.Result;
 namespace OLMS.Application.Features.InstructorUC;
 
 public record ExerciseAttemptDTO(
+    Guid ExerciseAttemptId,
     Guid ExerciseId,
     Guid StudentId,
     string StudentName,
@@ -45,6 +46,7 @@ public class GetListOfExerciseCommandHandler(
         {
             var studentName = studentDict.TryGetValue(attempt.StudentId, out var name) ? name : "Unknown";
             return new ExerciseAttemptDTO(
+                attempt.Id,
                 attempt.ExerciseId,
                 attempt.StudentId,
                 studentName,

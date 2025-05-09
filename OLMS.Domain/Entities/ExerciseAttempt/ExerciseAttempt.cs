@@ -26,6 +26,10 @@ public class ExerciseAttempt : AggregateRoot
         ExerciseId = exerciseId;
         StudentId = studentId;
     }
+    public void SetScore(float score) {
+        Score = score;
+        Status = ExerciseAttemptStatus.Scored;
+    }
 
     public void AddAttachment(SubmitAttachment attachment)
     {

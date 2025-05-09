@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -17,6 +18,10 @@ function downloadBase64File(base64, type, fileName) {
 export function ExerciseAttemptsList({ exerciseId }) {
   const [attempts, setAttempts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [scores, setScores] = useState({});
+  const [saving, setSaving] = useState({});
+
+  console.log(attempts);
 
   useEffect(() => {
     async function fetchAttempts() {
@@ -29,6 +34,12 @@ export function ExerciseAttemptsList({ exerciseId }) {
         });
         const data = await res.json();
         setAttempts(data);
+        // Initialize scores state
+        const initialScores = {};
+        data.forEach((attempt) => {
+          initialScores[attempt.exerciseAttemptId] = attempt.score ?? "";
+        });
+        setScores(initialScores);
       } catch (e) {
         console.log(e);
         setAttempts([]);
@@ -37,6 +48,36 @@ export function ExerciseAttemptsList({ exerciseId }) {
     }
     if (exerciseId) fetchAttempts();
   }, [exerciseId]);
+
+  const handleScoreChange = (exerciseAttemptId, value) => {
+    // Allow only integers 0-100 or empty string
+    if (value === "" || (/^\d{1,3}$/.test(value) && +value <= 100)) {
+      setScores((prev) => ({ ...prev, [exerciseAttemptId]: value }));
+    }
+  };
+
+  const handleSaveScore = async (exerciseAttemptId) => {
+    const scoreValue = Number(scores[exerciseAttemptId]);
+    if (isNaN(scoreValue) || scoreValue < 0 || scoreValue > 100) {
+      alert("Score must be a number between 0 and 100.");
+      return;
+    }
+    setSaving((prev) => ({ ...prev, [exerciseAttemptId]: true }));
+    try {
+      var json = {
+        exerciseAttemptId,
+        score: scoreValue,
+      };
+      console.log(json);
+      await axios.post(`${API_URL}/api/instructor/scoreExerciseAttempt`, json);
+      alert("Score saved successfully.");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to save score.");
+    } finally {
+      setSaving((prev) => ({ ...prev, [exerciseAttemptId]: false }));
+    }
+  };
 
   if (loading) {
     return (
@@ -74,6 +115,9 @@ export function ExerciseAttemptsList({ exerciseId }) {
             <th className="px-4 py-3 text-left font-semibold text-[#6f8f54]">
               Attachments
             </th>
+            <th className="px-4 py-3 text-left font-semibold text-[#6f8f54]">
+              Actions
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -85,7 +129,19 @@ export function ExerciseAttemptsList({ exerciseId }) {
               <td className="px-4 py-3 font-medium text-gray-800">
                 {attempt.studentName}
               </td>
-              <td className="px-4 py-3 text-gray-700">{attempt.score}</td>
+              <td className="px-4 py-3 text-gray-700">
+                <input
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={scores[attempt.exerciseAttemptId] ?? ""}
+                  onChange={(e) =>
+                    handleScoreChange(attempt.exerciseAttemptId, e.target.value)
+                  }
+                  className="w-20 p-1 border border-gray-300 rounded-md text-center"
+                  disabled={saving[attempt.studentId]}
+                />
+              </td>
               <td className="px-4 py-3 text-gray-700">
                 {formatDateTime(attempt.submitAt)}
               </td>
@@ -128,6 +184,15 @@ export function ExerciseAttemptsList({ exerciseId }) {
                     <span className="text-gray-400 italic">No files</span>
                   )}
                 </div>
+              </td>
+              <td className="px-4 py-3">
+                <button
+                  onClick={() => handleSaveScore(attempt.exerciseAttemptId)}
+                  disabled={saving[attempt.exerciseAttemptId]}
+                  className="bg-[#6f8f54] hover:bg-[#5e7d4a] cursor-pointer text-white font-medium py-1 px-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {saving[attempt.exerciseAttemptId] ? "Saving..." : "Save"}
+                </button>
               </td>
             </tr>
           ))}
